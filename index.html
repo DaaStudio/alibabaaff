@@ -1675,26 +1675,26 @@
   }
 
   function detectColumns(headers) {
-    var lower = headers.map(function(h){ return (h||"").toLowerCase().trim(); });
-    function find(keys) {
-      for (var k = 0; k < keys.length; k++) {
-        var idx = lower.indexOf(keys[k]);
-        if (idx !== -1) return idx;
-      }
-      for (var i2 = 0; i2 < lower.length; i2++) {
-        for (var j = 0; j < keys.length; j++) {
-          if (lower[i2].indexOf(keys[j]) !== -1) return i2;
-        }
-      }
-      return -1;
+  var lower = headers.map(function(h){ return (h||"").toLowerCase().trim(); });
+  function find(keys) {
+    for (var k = 0; k < keys.length; k++) {
+      var idx = lower.indexOf(keys[k]);
+      if (idx !== -1) return idx;
     }
-    var titleIdx = find(["title","product name","name","product","product_title","product_name","urun","ürün","nombre","nombre del producto","nom","nome","produkt","製品名","제품명","产品名称","产品标题"]);
-    var imgIdx = find(["image","img","image url","image_url","picture","photo","thumbnail","resim","imagen","bild","immagine","imagem","画像","이미지","图片"]);
-    var urlIdx = find(["url","link","product url","product_url","affiliate","affiliate link","affiliate_url","link url","link_url","baglanti","enlace","lien","link prodotto","リンク","링크","链接"]);
-    var priceIdx = find(["price","fiyat","precio","prix","prezzo","preço","preis","価格","가격","价格"]);
-    var moqIdx = find(["moq","min order","minimum order","min_order","moq (pieces)","min sipariş","pedido minimo","commande minimum","mindestbestellung","注文最小","최소 주문","最小起订"]);
-    return { titleIdx: titleIdx, imgIdx: imgIdx, urlIdx: urlIdx, priceIdx: priceIdx, moqIdx: moqIdx };
+    for (var i2 = 0; i2 < lower.length; i2++) {
+      for (var j = 0; j < keys.length; j++) {
+        if (lower[i2].indexOf(keys[j]) !== -1) return i2;
+      }
+    }
+    return -1;
   }
+  var titleIdx = find(["title","product name","name","product","product_title","product_name"]);
+  var imgIdx   = find(["image_url","image url","image","img","picture","photo","thumbnail"]);
+  var urlIdx   = find(["deep_link","deeplink","product_url","product url","url","link","affiliate_url","affiliate"]);
+  var priceIdx = find(["price","fiyat"]);
+  var moqIdx   = find(["moq","min_order","minimum_order","description"]); // description'ı MOQ yerine kullan
+  return { titleIdx: titleIdx, imgIdx: imgIdx, urlIdx: urlIdx, priceIdx: priceIdx, moqIdx: moqIdx };
+}
 
   function parseProductData(text) {
     var trimmed = text.replace(/^\uFEFF/, "").trim();
