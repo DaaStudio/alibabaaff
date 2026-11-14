@@ -184,7 +184,6 @@
     padding: 2px 8px; border-radius: 999px; margin-left:auto;
   }
 
-  /* Category grid */
   .cat-grid {
     display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 9px;
@@ -224,7 +223,6 @@
   .cat-tile .cat-share:hover { opacity:1; border-color: var(--accent2); }
   .cat-tile .cat-share:active { transform: scale(0.85); }
 
-  /* Promo cards */
   .promo-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
   .promo-card {
     background: var(--card); border:1px solid var(--border);
@@ -247,7 +245,6 @@
   .promo-card .promo-share:hover { border-color: var(--accent2); }
   .promo-card .promo-share:active { transform: scale(0.85); }
 
-  /* Hot product categories (files) */
   .file-cat-list { display:flex; flex-direction:column; gap: 10px; }
   .file-cat {
     display:flex; align-items:center; gap:12px;
@@ -276,7 +273,6 @@
   }
   .file-cat .fc-del:active { transform: scale(0.85); }
 
-  /* Product cards */
   .product-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
   .product-card {
     background: var(--card); border:1px solid var(--border);
@@ -756,7 +752,7 @@
 (function () {
   "use strict";
 
-  /* ============ CATEGORY DATA with Alibaba affiliate links ============ */
+  /* ============ CATEGORY DATA ============ */
   var CATEGORIES = [
     { name: "Main Part", icon: "🏠", url: "https://offer.alibaba.com/cps/578enqbs?bm=cps&src=saf" },
     { name: "New Arrivals", icon: "🆕", url: "https://offer.alibaba.com/cps/qj75l1o9?bm=cps&src=saf" },
@@ -809,15 +805,15 @@
   ];
 
   /* ============ HOT PRODUCT FILES ============ */
-    var HOT_PRODUCT_FILES = [
-    { title: "EU Local Stock Products - Ready to Ship",                    file: "hot_products/eu_local_stock.csv",      icon: "🇪🇺" },
-    { title: "Alibaba.com hot-selling Products",                           file: "hot_products/alibaba_hot-selling.csv", icon: "🔥" },
-    { title: "EU Special Offer: Save €15 on every €150 spent (2M)",        file: "hot_products/eu_special_2m.csv",       icon: "💶" },
-    { title: "EU Special Offer: Save €15 on every €150 spent (30k)",       file: "hot_products/eu_special_30k.do",       icon: "💶" },
-    { title: "1M+ new products. Exclusive perks up to US$500 off",         file: "hot_products/new_products_perks.csv",  icon: "🆕" },
-    { title: "Ready to Ship: Hot Selling Products with MOQ=1",             file: "hot_products/ready_to_ship_moq1.csv",  icon: "🚚" },
-    { title: "Enjoy Up to 50% Off: No Minimum Purchase!",                  file: "hot_products/up_to_50_off.csv",        icon: "🏷️" }, // Tamamen küçük harf
-    { title: "Trending Products: Quick Shipping and Guaranteed Arrival!",  file: "hot_products/trending_products.csv",   icon: "📈" }
+  var HOT_PRODUCT_FILES = [
+    { title: "EU Local Stock Products - Ready to Ship", file: "hot_products/eu_local_stock.csv", icon: "🇪🇺" },
+    { title: "Alibaba.com hot-selling Products", file: "hot_products/alibaba_hot-selling.csv", icon: "🔥" },
+    { title: "EU Special Offer: Save €15 on every €150 spent (2M)", file: "hot_products/eu_special_2m.csv", icon: "💶" },
+    { title: "EU Special Offer: Save €15 on every €150 spent (30k)", file: "hot_products/eu_special_30k.do", icon: "💶" },
+    { title: "1M+ new products. Exclusive perks up to US$500 off", file: "hot_products/new_products_perks.csv", icon: "🆕" },
+    { title: "Ready to Ship: Hot Selling Products with MOQ=1", file: "hot_products/ready_to_ship_moq1.csv", icon: "🚚" },
+    { title: "Enjoy Up to 50% Off: No Minimum Purchase!", file: "hot_products/up_to_50_off.csv", icon: "🏷️" },
+    { title: "Trending Products: Quick Shipping and Guaranteed Arrival!", file: "hot_products/trending_products.csv", icon: "📈" }
   ];
 
   /* ============ PLAY STORE ============ */
@@ -839,599 +835,18 @@
 
   /* ============ TRANSLATIONS ============ */
   var I18N = {
-    en: {
-      heroTitle: "Alibaba Affiliate Marketing, One Tap Away",
-      heroSub: "Browse categories and never miss the best deals. Shop directly from Alibaba.",
-      categories: "Categories",
-      searchPlaceholder: "Search categories...",
-      searchProductsPlaceholder: "Search products...",
-      noResults: "No results found",
-      noResultsSub: "Try a different search term.",
-      noProducts: "No products found",
-      noProductsSub: "Check back later or try a different search.",
-      back: "Back",
-      navHome: "Home",
-      navPromo: "Promo Codes",
-      navHot: "Hot Products",
-      navInfo: "Info",
-      promoTitle: "Promo Codes",
-      promoSub: "Exclusive promo codes for Alibaba Affiliate Marketing. Check back soon!",
-      promoActive: "Active Promo Codes",
-      promoEmptyTitle: "No Promo Codes Yet",
-      promoEmptyText: "We don't have any promo codes right now. Stay tuned — new codes are coming soon!",
-      hotTitle: "Hot Products",
-      hotSub: "Browse hot-selling products by category. Powered by live CSV/DO data.",
-      hotCategories: "Hot Categories",
-      infoPageTitle: "About & Info",
-      infoPageSub: "Learn more about the app and get in touch.",
-      infoSectionTitle: "App Purpose",
-      infoText: "This app was developed to give you quick access to Alibaba affiliate products and to bring you the latest deals through affiliate links. Our goal is to simplify your shopping experience and deliver the best offers from a single place.",
-      infoShareText: "Share campaigns with your friends and enjoy discounts together! The more people you share with, the more deals everyone can benefit from.",
-      rateTitle: "Rate the App",
-      rateSub: "If you like our app, give us 5 stars on Google Play!",
-      rateBtn: "Rate on Google Play",
-      contactTitle: "Contact",
-      copy: "Copy",
-      importantTitle: "Important",
-      importantBold: "Keep the app always up to date.",
-      importantText: "Deals and links are regularly updated. Make sure you are using the latest version.",
-      legalTitle: "Legal",
-      privacy: "Privacy Policy",
-      terms: "Terms & Conditions",
-      settingsTitle: "Settings",
-      appearance: "Appearance",
-      darkMode: "Dark Mode",
-      language: "Language",
-      copied: "Copied!",
-      shareCopied: "Link copied! You can share it with your friends.",
-      shareTitle: "Share",
-      promoCopy: "Copy Code",
-      viewProducts: "View Products",
-      products: "Products",
-      loading: "Loading...",
-      fileNotFound: "File not found or empty.",
-      shareProduct: "Share"
-    },
-    tr: {
-      heroTitle: "Alibaba Affiliate Marketing Fırsatlarına Tek Dokunuşla Ulaşın",
-      heroSub: "Kategorilere göz atın, en iyi fırsatları kaçırmayın. Doğrudan Alibaba'dan alışveriş yapın.",
-      categories: "Kategoriler",
-      searchPlaceholder: "Kategori ara...",
-      searchProductsPlaceholder: "Ürün ara...",
-      noResults: "Sonuç bulunamadı",
-      noResultsSub: "Farklı bir arama terimi deneyin.",
-      noProducts: "Ürün bulunamadı",
-      noProductsSub: "Daha sonra tekrar kontrol edin veya farklı bir arama deneyin.",
-      back: "Geri",
-      navHome: "Ana Sayfa",
-      navPromo: "Promosyon Kodları",
-      navHot: "Sıcak Ürünler",
-      navInfo: "Bilgi",
-      promoTitle: "Promosyon Kodları",
-      promoSub: "Alibaba Affiliate Marketing fırsatları için özel promosyon kodları. Yakında tekrar kontrol edin!",
-      promoActive: "Aktif Promosyon Kodları",
-      promoEmptyTitle: "Henüz Promosyon Kodu Yok",
-      promoEmptyText: "Şu anda promosyon kodumuz bulunmuyor. Yakında gelecek — takipte kalın!",
-      hotTitle: "Sıcak Ürünler",
-      hotSub: "Kategoriye göre çok satan ürünlere göz atın. Canlı CSV/DO verileriyle desteklenir.",
-      hotCategories: "Sıcak Kategoriler",
-      infoPageTitle: "Hakkında & Bilgi",
-      infoPageSub: "Uygulama hakkında daha fazla bilgi edinin ve bizimle iletişime geçin.",
-      infoSectionTitle: "Uygulama Amacı",
-      infoText: "Bu uygulama, Alibaba ürünlerine hızlı erişim sağlamak ve en güncel fırsatları affiliate linkler aracılığıyla sizlere sunmak amacıyla geliştirilmiştir. Amacımız, alışveriş deneyiminizi kolaylaştırmak ve size en iyi teklifleri tek bir yerden ulaştırmaktır.",
-      infoShareText: "Arkadaşlarınızla kampanyaları paylaşabilir, hep beraber indirimlerden yararlanabilirsiniz! Ne kadar çok kişiyle paylaşırsanız, o kadar çok kişi fırsatlardan faydalanır.",
-      rateTitle: "Uygulamaya Oy Ver",
-      rateSub: "Uygulamamızı beğendiyseniz Google Play'de 5 yıldız verin!",
-      rateBtn: "Google Play'de Oyla",
-      contactTitle: "İletişim",
-      copy: "Kopyala",
-      importantTitle: "Önemli",
-      importantBold: "Uygulamayı sürekli güncel tutunuz.",
-      importantText: "Fırsatlar ve linkler düzenli olarak güncellenmektedir. En son sürümü kullandığınızdan emin olun.",
-      legalTitle: "Yasal",
-      privacy: "Gizlilik Politikası",
-      terms: "Kullanım Şartları",
-      settingsTitle: "Ayarlar",
-      appearance: "Görünüm",
-      darkMode: "Karanlık Mod",
-      language: "Dil",
-      copied: "Kopyalandı!",
-      shareCopied: "Link kopyalandı! Arkadaşlarınızla paylaşabilirsiniz.",
-      shareTitle: "Paylaş",
-      promoCopy: "Kodu Kopyala",
-      viewProducts: "Ürünleri Gör",
-      products: "Ürünler",
-      loading: "Yükleniyor...",
-      fileNotFound: "Dosya bulunamadı veya boş.",
-      shareProduct: "Paylaş"
-    },
-    es: {
-      heroTitle: "Ofertas de Alibaba a un Toque",
-      heroSub: "Explora categorías y no te pierdas las mejores ofertas. Compra directamente en Alibaba.",
-      categories: "Categorías",
-      searchPlaceholder: "Buscar categorías...",
-      searchProductsPlaceholder: "Buscar productos...",
-      noResults: "Sin resultados",
-      noResultsSub: "Prueba con otro término de búsqueda.",
-      noProducts: "No se encontraron productos",
-      noProductsSub: "Vuelve más tarde o prueba otra búsqueda.",
-      back: "Atrás",
-      navHome: "Inicio",
-      navPromo: "Códigos Promo",
-      navHot: "Productos Calientes",
-      navInfo: "Info",
-      promoTitle: "Códigos Promocionales",
-      promoSub: "Códigos promocionales exclusivos para ofertas de Alibaba. ¡Vuelve pronto!",
-      promoActive: "Códigos Promocionales Activos",
-      promoEmptyTitle: "Aún No Hay Códigos Promocionales",
-      promoEmptyText: "No tenemos códigos promocionales en este momento. ¡Mantente atento — nuevos códigos llegarán pronto!",
-      hotTitle: "Productos Calientes",
-      hotSub: "Explora productos muy vendidos por categoría. Con datos CSV/DO en vivo.",
-      hotCategories: "Categorías Calientes",
-      infoPageTitle: "Acerca & Info",
-      infoPageSub: "Conoce más sobre la app y ponte en contacto.",
-      infoSectionTitle: "Propósito de la App",
-      infoText: "Esta app fue desarrollada para darte acceso rápido a los productos de Alibaba y traerte las mejores ofertas a través de enlaces de afiliado. Nuestro objetivo es simplificar tu experiencia de compra y ofrecerte las mejores ofertas desde un solo lugar.",
-      infoShareText: "¡Comparte las campañas con tus amigos y disfruten de los descuentos juntos! Cuantas más personas compartas, más gente podrá beneficiarse de las ofertas.",
-      rateTitle: "Valora la App",
-      rateSub: "Si te gusta nuestra app, ¡danos 5 estrellas en Google Play!",
-      rateBtn: "Valorar en Google Play",
-      contactTitle: "Contacto",
-      copy: "Copiar",
-      importantTitle: "Importante",
-      importantBold: "Mantén la app siempre actualizada.",
-      importantText: "Las ofertas y enlaces se actualizan regularmente. Asegúrate de usar la última versión.",
-      legalTitle: "Legal",
-      privacy: "Política de Privacidad",
-      terms: "Términos y Condiciones",
-      settingsTitle: "Ajustes",
-      appearance: "Apariencia",
-      darkMode: "Modo Oscuro",
-      language: "Idioma",
-      copied: "¡Copiado!",
-      shareCopied: "¡Enlace copiado! Puedes compartirlo con tus amigos.",
-      shareTitle: "Compartir",
-      promoCopy: "Copiar Código",
-      viewProducts: "Ver Productos",
-      products: "Productos",
-      loading: "Cargando...",
-      fileNotFound: "Archivo no encontrado o vacío.",
-      shareProduct: "Compartir"
-    },
-    de: {
-      heroTitle: "Alibaba Angebote mit einem Tipp",
-      heroSub: "Durchstöbere Kategorien und verpasse keine Top-Angebote. Kaufe direkt bei Alibaba.",
-      categories: "Kategorien",
-      searchPlaceholder: "Kategorien suchen...",
-      searchProductsPlaceholder: "Produkte suchen...",
-      noResults: "Keine Ergebnisse gefunden",
-      noResultsSub: "Versuche einen anderen Suchbegriff.",
-      noProducts: "Keine Produkte gefunden",
-      noProductsSub: "Schau später wieder vorbei oder versuche eine andere Suche.",
-      back: "Zurück",
-      navHome: "Start",
-      navPromo: "Promo-Codes",
-      navHot: "Heiße Produkte",
-      navInfo: "Info",
-      promoTitle: "Promo-Codes",
-      promoSub: "Exklusive Promo-Codes für Alibaba-Angebote. Schau bald wieder vorbei!",
-      promoActive: "Aktive Promo-Codes",
-      promoEmptyTitle: "Noch Keine Promo-Codes",
-      promoEmptyText: "Wir haben derzeit keine Promo-Codes. Bleib dran — neue Codes kommen bald!",
-      hotTitle: "Heiße Produkte",
-      hotSub: "Durchstöbere Bestseller nach Kategorie. Mit Live-CSV/DO-Daten.",
-      hotCategories: "Heiße Kategorien",
-      infoPageTitle: "Über & Info",
-      infoPageSub: "Erfahre mehr über die App und kontaktiere uns.",
-      infoSectionTitle: "Zweck der App",
-      infoText: "Diese App wurde entwickelt, um dir schnellen Zugriff auf Alibaba-Produkte zu ermöglichen und dir die neuesten Angebote über Affiliate-Links zu präsentieren. Unser Ziel ist es, dein Einkaufserlebnis zu vereinfachen und dir die besten Angebote an einem Ort zu bieten.",
-      infoShareText: "Teile Kampagnen mit deinen Freunden und genießt die Rabatte gemeinsam! Je mehr Menschen du teilst, desto mehr können von den Angeboten profitieren.",
-      rateTitle: "App Bewerten",
-      rateSub: "Wenn dir unsere App gefällt, gib uns 5 Sterne auf Google Play!",
-      rateBtn: "Auf Google Play Bewerten",
-      contactTitle: "Kontakt",
-      copy: "Kopieren",
-      importantTitle: "Wichtig",
-      importantBold: "Halte die App immer aktuell.",
-      importantText: "Angebote und Links werden regelmäßig aktualisiert. Stelle sicher, dass du die neueste Version verwendest.",
-      legalTitle: "Rechtliches",
-      privacy: "Datenschutzrichtlinie",
-      terms: "AGB",
-      settingsTitle: "Einstellungen",
-      appearance: "Erscheinungsbild",
-      darkMode: "Dunkelmodus",
-      language: "Sprache",
-      copied: "Kopiert!",
-      shareCopied: "Link kopiert! Du kannst ihn mit deinen Freunden teilen.",
-      shareTitle: "Teilen",
-      promoCopy: "Code Kopieren",
-      viewProducts: "Produkte Ansehen",
-      products: "Produkte",
-      loading: "Wird geladen...",
-      fileNotFound: "Datei nicht gefunden oder leer.",
-      shareProduct: "Teilen"
-    },
-    fr: {
-      heroTitle: "Offres Alibaba à Portée de Main",
-      heroSub: "Parcourez les catégories et ne manquez pas les meilleures offres. Achetez directement sur Alibaba.",
-      categories: "Catégories",
-      searchPlaceholder: "Rechercher des catégories...",
-      searchProductsPlaceholder: "Rechercher des produits...",
-      noResults: "Aucun résultat trouvé",
-      noResultsSub: "Essayez un autre terme de recherche.",
-      noProducts: "Aucun produit trouvé",
-      noProductsSub: "Revenez plus tard ou essayez une autre recherche.",
-      back: "Retour",
-      navHome: "Accueil",
-      navPromo: "Codes Promo",
-      navHot: "Produits Chauds",
-      navInfo: "Info",
-      promoTitle: "Codes Promotionnels",
-      promoSub: "Codes promo exclusifs pour les offres Alibaba. Revenez bientôt !",
-      promoActive: "Codes Promo Actifs",
-      promoEmptyTitle: "Pas Encore de Codes Promo",
-      promoEmptyText: "Nous n'avons pas de codes promo pour le moment. Restez à l'écoute — de nouveaux codes arrivent bientôt !",
-      hotTitle: "Produits Chauds",
-      hotSub: "Parcourez les produits les plus vendus par catégorie. Avec données CSV/DO en direct.",
-      hotCategories: "Catégories Chaudes",
-      infoPageTitle: "À Propos & Info",
-      infoPageSub: "En savoir plus sur l'app et nous contacter.",
-      infoSectionTitle: "Objectif de l'App",
-      infoText: "Cette application a été développée pour vous donner un accès rapide aux produits Alibaba et vous apporter les meilleures offres via des liens d'affiliation. Notre objectif est de simplifier votre expérience d'achat et de vous offrir les meilleures offres depuis un seul endroit.",
-      infoShareText: "Partagez les campagnes avec vos amis et profitez des réductions ensemble ! Plus vous partagez avec de personnes, plus de gens peuvent bénéficier des offres.",
-      rateTitle: "Noter l'App",
-      rateSub: "Si vous aimez notre app, donnez-nous 5 étoiles sur Google Play !",
-      rateBtn: "Noter sur Google Play",
-      contactTitle: "Contact",
-      copy: "Copier",
-      importantTitle: "Important",
-      importantBold: "Gardez l'app toujours à jour.",
-      importantText: "Les offres et les liens sont régulièrement mis à jour. Assurez-vous d'utiliser la dernière version.",
-      legalTitle: "Mentions Légales",
-      privacy: "Politique de Confidentialité",
-      terms: "Conditions d'Utilisation",
-      settingsTitle: "Paramètres",
-      appearance: "Apparence",
-      darkMode: "Mode Sombre",
-      language: "Langue",
-      copied: "Copié !",
-      shareCopied: "Lien copié ! Vous pouvez le partager avec vos amis.",
-      shareTitle: "Partager",
-      promoCopy: "Copier le Code",
-      viewProducts: "Voir les Produits",
-      products: "Produits",
-      loading: "Chargement...",
-      fileNotFound: "Fichier introuvable ou vide.",
-      shareProduct: "Partager"
-    },
-    it: {
-      heroTitle: "Offerte Alibaba a Portata di Tap",
-      heroSub: "Sfoglia le categorie e non perdere le migliori offerte. Acquista direttamente su Alibaba.",
-      categories: "Categorie",
-      searchPlaceholder: "Cerca categorie...",
-      searchProductsPlaceholder: "Cerca prodotti...",
-      noResults: "Nessun risultato trovato",
-      noResultsSub: "Prova un altro termine di ricerca.",
-      noProducts: "Nessun prodotto trovato",
-      noProductsSub: "Torna più tardi o prova un'altra ricerca.",
-      back: "Indietro",
-      navHome: "Home",
-      navPromo: "Codici Promo",
-      navHot: "Prodotti Caldi",
-      navInfo: "Info",
-      promoTitle: "Codici Promozionali",
-      promoSub: "Codici promo esclusivi per le offerte Alibaba. Torna presto!",
-      promoActive: "Codici Promo Attivi",
-      promoEmptyTitle: "Ancora Nessun Codice Promo",
-      promoEmptyText: "Al momento non abbiamo codici promo. Resta sintonizzato — nuovi codici in arrivo!",
-      hotTitle: "Prodotti Caldi",
-      hotSub: "Sfoglia i prodotti più venduti per categoria. Con dati CSV/DO in tempo reale.",
-      hotCategories: "Categorie Calde",
-      infoPageTitle: "Informazioni & Info",
-      infoPageSub: "Scopri di più sull'app e contattaci.",
-      infoSectionTitle: "Scopo dell'App",
-      infoText: "Questa app è stata sviluppata per darti accesso rapido ai prodotti Alibaba e portarti le migliori offerte tramite link di affiliazione. Il nostro obiettivo è semplificare la tua esperienza di acquisto e offrirti le migliori offerte da un unico posto.",
-      infoShareText: "Condividi le campagne con i tuoi amici e godetevi gli sconti insieme! Più persone condividi, più persone possono beneficiare delle offerte.",
-      rateTitle: "Valuta l'App",
-      rateSub: "Se ti piace la nostra app, dacci 5 stelle su Google Play!",
-      rateBtn: "Valuta su Google Play",
-      contactTitle: "Contatti",
-      copy: "Copia",
-      importantTitle: "Importante",
-      importantBold: "Mantieni l'app sempre aggiornata.",
-      importantText: "Le offerte e i link vengono aggiornati regolarmente. Assicurati di utilizzare la versione più recente.",
-      legalTitle: "Legale",
-      privacy: "Informativa sulla Privacy",
-      terms: "Termini e Condizioni",
-      settingsTitle: "Impostazioni",
-      appearance: "Aspetto",
-      darkMode: "Modalità Scura",
-      language: "Lingua",
-      copied: "Copiato!",
-      shareCopied: "Link copiato! Puoi condividerlo con i tuoi amici.",
-      shareTitle: "Condividi",
-      promoCopy: "Copia Codice",
-      viewProducts: "Visualizza Prodotti",
-      products: "Prodotti",
-      loading: "Caricamento...",
-      fileNotFound: "File non trovato o vuoto.",
-      shareProduct: "Condividi"
-    },
-    pt: {
-      heroTitle: "Ofertas Alibaba a Um Toque",
-      heroSub: "Explore categorias e não perca as melhores ofertas. Compre diretamente na Alibaba.",
-      categories: "Categorias",
-      searchPlaceholder: "Pesquisar categorias...",
-      searchProductsPlaceholder: "Pesquisar produtos...",
-      noResults: "Nenhum resultado encontrado",
-      noResultsSub: "Tente um termo de pesquisa diferente.",
-      noProducts: "Nenhum produto encontrado",
-      noProductsSub: "Volte mais tarde ou tente uma pesquisa diferente.",
-      back: "Voltar",
-      navHome: "Início",
-      navPromo: "Códigos Promo",
-      navHot: "Produtos Quentes",
-      navInfo: "Info",
-      promoTitle: "Códigos Promocionais",
-      promoSub: "Códigos promocionais exclusivos para ofertas Alibaba. Volte em breve!",
-      promoActive: "Códigos Promo Ativos",
-      promoEmptyTitle: "Ainda Sem Códigos Promo",
-      promoEmptyText: "Não temos códigos promocionais no momento. Fique ligado — novos códigos em breve!",
-      hotTitle: "Produtos Quentes",
-      hotSub: "Explore produtos mais vendidos por categoria. Com dados CSV/DO ao vivo.",
-      hotCategories: "Categorias Quentes",
-      infoPageTitle: "Sobre & Info",
-      infoPageSub: "Saiba mais sobre o app e entre em contato.",
-      infoSectionTitle: "Objetivo do App",
-      infoText: "Este app foi desenvolvido para dar acesso rápido aos produtos Alibaba e trazer as melhores ofertas por meio de links de afiliado. Nosso objetivo é simplificar sua experiência de compra e oferecer as melhores ofertas de um só lugar.",
-      infoShareText: "Compartilhe as campanhas com seus amigos e aproveitem os descontos juntos! Quanto mais pessoas você compartilhar, mais gente pode se beneficiar das ofertas.",
-      rateTitle: "Avalie o App",
-      rateSub: "Se você gosta do nosso app, nos dê 5 estrelas no Google Play!",
-      rateBtn: "Avaliar no Google Play",
-      contactTitle: "Contato",
-      copy: "Copiar",
-      importantTitle: "Importante",
-      importantBold: "Mantenha o app sempre atualizado.",
-      importantText: "Ofertas e links são atualizados regularmente. Certifique-se de usar a versão mais recente.",
-      legalTitle: "Legal",
-      privacy: "Política de Privacidade",
-      terms: "Termos e Condições",
-      settingsTitle: "Configurações",
-      appearance: "Aparência",
-      darkMode: "Modo Escuro",
-      language: "Idioma",
-      copied: "Copiado!",
-      shareCopied: "Link copiado! Você pode compartilhá-lo com seus amigos.",
-      shareTitle: "Compartilhar",
-      promoCopy: "Copiar Código",
-      viewProducts: "Ver Produtos",
-      products: "Produtos",
-      loading: "Carregando...",
-      fileNotFound: "Arquivo não encontrado ou vazio.",
-      shareProduct: "Compartilhar"
-    },
-    ja: {
-      heroTitle: "Alibabaのお得情報をワンタップで",
-      heroSub: "カテゴリを閲覧して、最高のお得情報を見逃さないでください。Alibabaで直接お買い物。",
-      categories: "カテゴリ",
-      searchPlaceholder: "カテゴリを検索...",
-      searchProductsPlaceholder: "製品を検索...",
-      noResults: "結果が見つかりません",
-      noResultsSub: "別の検索キーワードを試してください。",
-      noProducts: "製品が見つかりません",
-      noProductsSub: "後でもう一度確認するか、別の検索を試してください。",
-      back: "戻る",
-      navHome: "ホーム",
-      navPromo: "プロモコード",
-      navHot: "ホット製品",
-      navInfo: "情報",
-      promoTitle: "プロモコード",
-      promoSub: "Alibabaのお得情報のための限定プロモコード。近日公開！",
-      promoActive: "有効なプロモコード",
-      promoEmptyTitle: "プロモコードはまだありません",
-      promoEmptyText: "現在プロモコードはありません。お楽しみに — 新しいコードが近日登場！",
-      hotTitle: "ホット製品",
-      hotSub: "カテゴリ別の売れ筋製品を閲覧。ライブCSV/DOデータを使用。",
-      hotCategories: "ホットカテゴリ",
-      infoPageTitle: "アプリについて",
-      infoPageSub: "アプリについて詳しく知り、お問い合わせください。",
-      infoSectionTitle: "アプリの目的",
-      infoText: "このアプリは、Alibabaの製品に素早くアクセスし、アフィリエイトリンクを通じて最新のお得情報をお届けするために開発されました。私たちの目標は、ショッピング体験を簡素化し、最高のオファーを一か所から提供することです。",
-      infoShareText: "キャンペーンを友達と共有して、一緒に割引を楽しみましょう！より多くの人と共有するほど、より多くの人がお得情報を利用できます。",
-      rateTitle: "アプリを評価",
-      rateSub: "アプリが気に入ったら、Google Playで5つ星をお願いします！",
-      rateBtn: "Google Playで評価",
-      contactTitle: "お問い合わせ",
-      copy: "コピー",
-      importantTitle: "重要",
-      importantBold: "アプリを常に最新の状態に保ってください。",
-      importantText: "お得情報とリンクは定期的に更新されます。最新バージョンを使用していることを確認してください。",
-      legalTitle: "法的情報",
-      privacy: "プライバシーポリシー",
-      terms: "利用規約",
-      settingsTitle: "設定",
-      appearance: "外観",
-      darkMode: "ダークモード",
-      language: "言語",
-      copied: "コピーしました！",
-      shareCopied: "リンクをコピーしました！友達と共有できます。",
-      shareTitle: "共有",
-      promoCopy: "コードをコピー",
-      viewProducts: "製品を見る",
-      products: "製品",
-      loading: "読み込み中...",
-      fileNotFound: "ファイルが見つからないか空です。",
-      shareProduct: "共有"
-    },
-    ko: {
-      heroTitle: "한 번의 탭으로 Alibaba 할인",
-      heroSub: "카테고리를 둘러보고 최고의 할인을 놓치지 마세요. Alibaba에서 직접 쇼핑하세요.",
-      categories: "카테고리",
-      searchPlaceholder: "카테고리 검색...",
-      searchProductsPlaceholder: "제품 검색...",
-      noResults: "결과를 찾을 수 없습니다",
-      noResultsSub: "다른 검색어를 시도해 보세요.",
-      noProducts: "제품을 찾을 수 없습니다",
-      noProductsSub: "나중에 다시 확인하거나 다른 검색을 시도해 보세요.",
-      back: "뒤로",
-      navHome: "홈",
-      navPromo: "프로모 코드",
-      navHot: "인기 제품",
-      navInfo: "정보",
-      promoTitle: "프로모 코드",
-      promoSub: "Alibaba 할인을 위한 독점 프로모 코드. 곧 다시 확인하세요!",
-      promoActive: "활성 프로모 코드",
-      promoEmptyTitle: "아직 프로모 코드가 없습니다",
-      promoEmptyText: "현재 프로모 코드가 없습니다. 기대해 주세요 — 곧 새로운 코드가 나옵니다!",
-      hotTitle: "인기 제품",
-      hotSub: "카테고리별 인기 제품을 둘러보세요. 실시간 CSV/DO 데이터 제공.",
-      hotCategories: "인기 카테고리",
-      infoPageTitle: "정보 & 안내",
-      infoPageSub: "앱에 대해 자세히 알아보고 문의하세요.",
-      infoSectionTitle: "앱 목적",
-      infoText: "이 앱은 Alibaba 제품에 빠르게 액세스하고 제휴 링크를 통해 최신 할인 정보를 제공하기 위해 개발되었습니다. 우리의 목표는 쇼핑 경험을 단순화하고 최고의 혜택을 한 곳에서 제공하는 것입니다.",
-      infoShareText: "친구들과 캠페인을 공유하고 함께 할인을 즐기세요! 더 많은 사람과 공유할수록 더 많은 사람이 혜택을 받을 수 있습니다.",
-      rateTitle: "앱 평가하기",
-      rateSub: "앱이 마음에 드시면 Google Play에서 별 5개를 주세요!",
-      rateBtn: "Google Play에서 평가",
-      contactTitle: "연락처",
-      copy: "복사",
-      importantTitle: "중요",
-      importantBold: "앱을 항상 최신 상태로 유지하세요.",
-      importantText: "할인 및 링크는 정기적으로 업데이트됩니다. 최신 버전을 사용하고 있는지 확인하세요.",
-      legalTitle: "법적 고지",
-      privacy: "개인정보 처리방침",
-      terms: "이용약관",
-      settingsTitle: "설정",
-      appearance: "화면",
-      darkMode: "다크 모드",
-      language: "언어",
-      copied: "복사됨!",
-      shareCopied: "링크가 복사되었습니다! 친구들과 공유할 수 있습니다.",
-      shareTitle: "공유",
-      promoCopy: "코드 복사",
-      viewProducts: "제품 보기",
-      products: "제품",
-      loading: "로드 중...",
-      fileNotFound: "파일을 찾을 수 없거나 비어 있습니다.",
-      shareProduct: "공유"
-    },
-    zh: {
-      heroTitle: "一键获取 Alibaba 优惠",
-      heroSub: "浏览分类，不错过最佳优惠。直接在 Alibaba 购物。",
-      categories: "分类",
-      searchPlaceholder: "搜索分类...",
-      searchProductsPlaceholder: "搜索产品...",
-      noResults: "未找到结果",
-      noResultsSub: "请尝试其他搜索词。",
-      noProducts: "未找到产品",
-      noProductsSub: "请稍后再试或尝试其他搜索。",
-      back: "返回",
-      navHome: "首页",
-      navPromo: "优惠码",
-      navHot: "热门产品",
-      navInfo: "信息",
-      promoTitle: "优惠码",
-      promoSub: "Alibaba 优惠专属优惠码。敬请期待！",
-      promoActive: "有效优惠码",
-      promoEmptyTitle: "暂无优惠码",
-      promoEmptyText: "我们目前没有优惠码。敬请关注 — 新优惠码即将推出！",
-      hotTitle: "热门产品",
-      hotSub: "按分类浏览热销产品。基于实时 CSV/DO 数据。",
-      hotCategories: "热门分类",
-      infoPageTitle: "关于 & 信息",
-      infoPageSub: "了解更多关于应用的信息并联系我们。",
-      infoSectionTitle: "应用目的",
-      infoText: "此应用旨在让您快速访问 Alibaba 产品，并通过联盟链接为您带来最新优惠。我们的目标是简化您的购物体验，从一个地方为您提供最佳优惠。",
-      infoShareText: "与朋友分享活动，一起享受折扣！您分享的人越多，受益的人就越多。",
-      rateTitle: "为应用评分",
-      rateSub: "如果您喜欢我们的应用，请在 Google Play 上给我们 5 星！",
-      rateBtn: "在 Google Play 上评分",
-      contactTitle: "联系",
-      copy: "复制",
-      importantTitle: "重要",
-      importantBold: "请始终保持应用为最新版本。",
-      importantText: "优惠和链接会定期更新。请确保您使用的是最新版本。",
-      legalTitle: "法律",
-      privacy: "隐私政策",
-      terms: "条款和条件",
-      settingsTitle: "设置",
-      appearance: "外观",
-      darkMode: "深色模式",
-      language: "语言",
-      copied: "已复制！",
-      shareCopied: "链接已复制！您可以与朋友分享。",
-      shareTitle: "分享",
-      promoCopy: "复制代码",
-      viewProducts: "查看产品",
-      products: "产品",
-      loading: "加载中...",
-      fileNotFound: "文件未找到或为空。",
-      shareProduct: "分享"
-    }
+    en: { heroTitle: "Alibaba Affiliate Marketing, One Tap Away", heroSub: "Browse categories and never miss the best deals. Shop directly from Alibaba.", categories: "Categories", searchPlaceholder: "Search categories...", searchProductsPlaceholder: "Search products...", noResults: "No results found", noResultsSub: "Try a different search term.", noProducts: "No products found", noProductsSub: "Check back later or try a different search.", back: "Back", navHome: "Home", navPromo: "Promo Codes", navHot: "Hot Products", navInfo: "Info", promoTitle: "Promo Codes", promoSub: "Exclusive promo codes for Alibaba Affiliate Marketing. Check back soon!", promoActive: "Active Promo Codes", promoEmptyTitle: "No Promo Codes Yet", promoEmptyText: "We don't have any promo codes right now. Stay tuned!", hotTitle: "Hot Products", hotSub: "Browse hot-selling products by category.", hotCategories: "Hot Categories", infoPageTitle: "About & Info", infoPageSub: "Learn more about the app and get in touch.", infoSectionTitle: "App Purpose", infoText: "This app was developed to give you quick access to Alibaba affiliate products.", infoShareText: "Share campaigns with your friends and enjoy discounts together!", rateTitle: "Rate the App", rateSub: "If you like our app, give us 5 stars on Google Play!", rateBtn: "Rate on Google Play", contactTitle: "Contact", copy: "Copy", importantTitle: "Important", importantBold: "Keep the app always up to date.", importantText: "Deals and links are regularly updated.", legalTitle: "Legal", privacy: "Privacy Policy", terms: "Terms & Conditions", settingsTitle: "Settings", appearance: "Appearance", darkMode: "Dark Mode", language: "Language", copied: "Copied!", shareCopied: "Link copied!", shareTitle: "Share", promoCopy: "Copy Code", viewProducts: "View Products", products: "Products", loading: "Loading...", fileNotFound: "File not found or empty.", shareProduct: "Share" },
+    tr: { heroTitle: "Alibaba Fırsatlarına Tek Dokunuşla Ulaşın", heroSub: "Kategorilere göz atın, en iyi fırsatları kaçırmayın.", categories: "Kategoriler", searchPlaceholder: "Kategori ara...", searchProductsPlaceholder: "Ürün ara...", noResults: "Sonuç bulunamadı", noResultsSub: "Farklı bir arama deneyin.", noProducts: "Ürün bulunamadı", noProductsSub: "Daha sonra tekrar deneyin.", back: "Geri", navHome: "Ana Sayfa", navPromo: "Promosyonlar", navHot: "Sıcak Ürünler", navInfo: "Bilgi", promoTitle: "Promosyon Kodları", promoSub: "Özel promosyon kodları.", promoActive: "Aktif Kodlar", promoEmptyTitle: "Kod Yok", promoEmptyText: "Şu an kod bulunmuyor.", hotTitle: "Sıcak Ürünler", hotSub: "Çok satan ürünler.", hotCategories: "Sıcak Kategoriler", infoPageTitle: "Hakkında", infoPageSub: "Bilgi edinin.", infoSectionTitle: "Amaç", infoText: "Hızlı erişim için geliştirildi.", infoShareText: "Arkadaşlarınızla paylaşın!", rateTitle: "Oy Verin", rateSub: "5 yıldız verin!", rateBtn: "Oy Ver", contactTitle: "İletişim", copy: "Kopyala", importantTitle: "Önemli", importantBold: "Güncel tutun.", importantText: "Linkler güncellenir.", legalTitle: "Yasal", privacy: "Gizlilik", terms: "Şartlar", settingsTitle: "Ayarlar", appearance: "Görünüm", darkMode: "Karanlık Mod", language: "Dil", copied: "Kopyalandı!", shareCopied: "Link kopyalandı!", shareTitle: "Paylaş", promoCopy: "Kopyala", viewProducts: "Görüntüle", products: "Ürünler", loading: "Yükleniyor...", fileNotFound: "Dosya bulunamadı.", shareProduct: "Paylaş" }
   };
 
-  /* ============ PRIVACY (reuse same structure for all languages, English fallback) ============ */
-  var PRIVACY_EN = [
-    "<p><strong>Privacy Policy</strong></p>",
-    "<p>Daa Studio built the Alibaba Affiliate Marketing app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p>",
-    "<p>This page is used to inform visitors regarding our policies with the collection, use, and disclosure of Personal Information if anyone decided to use our Service.</p>",
-    "<p>If you choose to use our Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that we collect is used for providing and improving the Service. We will not use or share your information with anyone except as described in this Privacy Policy.</p>",
-    "<p>The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at Alibaba Affiliate Marketing unless otherwise defined in this Privacy Policy.</p>",
-    "<h4>Information Collection and Use</h4>",
-    "<p>For a better experience, while using our Service, we may require you to provide us with certain personally identifiable information. The information that we request will be retained on your device and is not collected by us in any way.</p>",
-    "<p>The app does use third party services that may collect information used to identify you.</p>",
-    "<p>Link to privacy policy of third party service providers used by the app:</p>",
-    "<ul><li>Google Play Services</li><li>AdMob</li><li>Google Analytics for Firebase</li><li>Firebase Crashlytics</li></ul>",
-    "<h4>Log Data</h4>",
-    "<p>We want to inform you that whenever you use our Service, in a case of an error in the app we collect data and information (through third party products) on your phone called Log Data. This Log Data may include information such as your device Internet Protocol (\"IP\") address, device name, operating system version, the configuration of the app when utilizing our Service, the time and date of your use of the Service, and other statistics.</p>",
-    "<h4>Cookies</h4>",
-    "<p>Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device's internal memory.</p>",
-    "<p>This Service does not use these \"cookies\" explicitly. However, the app may use third party code and libraries that use \"cookies\" to collect information and improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device. If you choose to refuse our cookies, you may not be able to use some portions of this Service.</p>",
-    "<h4>Service Providers</h4>",
-    "<p>We may employ third-party companies and individuals due to the following reasons:</p>",
-    "<ul><li>To facilitate our Service;</li><li>To provide the Service on our behalf;</li><li>To perform Service-related services; or</li><li>To assist us in analyzing how our Service is used.</li></ul>",
-    "<p>We want to inform users of this Service that these third parties have access to your Personal Information. The reason is to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.</p>",
-    "<h4>Security</h4>",
-    "<p>Alibaba Affiliate Marketing app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. We value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and we cannot guarantee its absolute security.</p>",
-    "<h4>Links to Other Sites</h4>",
-    "<p>This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by us. Therefore, we strongly advise you to review the Privacy Policy of these websites. We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.</p>",
-    "<h4>Children's Privacy</h4>",
-    "<p>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13 years of age. In the case we discover that a child under 13 has provided us with personal information, we immediately delete this from our servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact us so that we will be able to do necessary actions.</p>",
-    "<h4>Changes to This Privacy Policy</h4>",
-    "<p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>",
-    "<p>This policy is effective as of 2021-11-01.</p>",
-    "<h4>Contact Us</h4>",
-    "<p>If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us at daastudio42@gmail.com.</p>"
-  ].join("");
+  var PRIVACY_EN = "<p><strong>Privacy Policy</strong></p><p>Daa Studio built the Alibaba Affiliate Marketing app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p><h4>Contact Us</h4><p>daastudio42@gmail.com</p>";
+  var TERMS_EN = "<p><strong>Terms & Conditions</strong></p><p>By downloading or using the app, these terms will automatically apply to you.</p><h4>Contact Us</h4><p>daastudio42@gmail.com</p>";
 
-  var TERMS_EN = [
-    "<p><strong>Terms & Conditions</strong></p>",
-    "<p>By downloading or using the app, these terms will automatically apply to you – you should make sure therefore that you read them carefully before using the app. Alibaba Affiliate Marketing app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. You're not allowed to copy, or modify the app, any part of the app, or our trademarks in any way. You're not allowed to attempt to extract the source code of the app, and you also shouldn't try to translate the app into other languages, or make derivative versions. The app itself, and all the trade marks, copyright, database rights and other intellectual property rights related to it, still belong to Daa Studio.</p>",
-    "<p>Daa Studio is committed to ensuring that the app is as useful and efficient as possible. For that reason, we reserve the right to make changes to the app or to charge for its services, at any time and for any reason. We will never charge you for the app or its services without making it very clear to you exactly what you're paying for.</p>",
-    "<p>The Alibaba Affiliate Marketing app stores and processes personal data that you have provided to us, in order to provide our Service. It's your responsibility to keep your phone and access to the app secure. We therefore recommend that you do not jailbreak or root your phone, which is the process of removing software restrictions and limitations imposed by the official operating system of your device. It could make your phone vulnerable to malware/viruses/malicious programs, compromise your phone's security features and it could mean that the Alibaba Affiliate Marketing app won't work properly or at all.</p>",
-    "<p>The app does use third party services that declare their own Terms and Conditions.</p>",
-    "<p>Link to Terms and Conditions of third party service providers used by the app:</p>",
-    "<ul><li>Google Play Services</li><li>AdMob</li><li>Google Analytics for Firebase</li><li>Firebase Crashlytics</li></ul>",
-    "<p>You should be aware that there are certain things that Daa Studio will not take responsibility for. Certain functions of the app will require the app to have an active internet connection. The connection can be Wi-Fi, or provided by your mobile network provider, but Daa Studio cannot take responsibility for the app not working at full functionality if you don't have access to Wi-Fi, and you don't have any of your data allowance left.</p>",
-    "<p>If you're using the app outside of an area with Wi-Fi, you should remember that your terms of the agreement with your mobile network provider will still apply. As a result, you may be charged by your mobile provider for the cost of data for the duration of the connection while accessing the app, or other third party charges. In using the app, you're accepting responsibility for any such charges, including roaming data charges if you use the app outside of your home territory (i.e. region or country) without turning off data roaming. If you are not the bill payer for the device on which you're using the app, please be aware that we assume that you have received permission from the bill payer for using the app.</p>",
-    "<p>Along the same lines, Daa Studio cannot always take responsibility for the way you use the app i.e. You need to make sure that your device stays charged – if it runs out of battery and you can't turn it on to avail the Service, Daa Studio cannot accept responsibility.</p>",
-    "<p>With respect to Daa Studio's responsibility for your use of the app, when you're using the app, it's important to bear in mind that although we endeavour to ensure that it is updated and correct at all times, we do rely on third parties to provide information to us so that we can make it available to you. Daa Studio accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.</p>",
-    "<p>At some point, we may wish to update the app. The app is currently available on Android – the requirements for system (and for any additional systems we decide to extend the availability of the app to) may change, and you'll need to download the updates if you want to keep using the app. Daa Studio does not promise that it will always update the app so that it is relevant to you and/or works with the Android version that you have installed on your device. However, you promise to always accept updates to the application when offered to you. We may also wish to stop providing the app, and may terminate use of it at any time without giving notice of termination to you. Unless we tell you otherwise, upon any termination, (a) the rights and licenses granted to you in these terms will end; (b) you must stop using the app, and (if needed) delete it from your device.</p>",
-    "<h4>Changes to This Terms and Conditions</h4>",
-    "<p>We may update our Terms and Conditions from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Terms and Conditions on this page.</p>",
-    "<p>These terms and conditions are effective as of 2021-11-01.</p>",
-    "<h4>Contact Us</h4>",
-    "<p>If you have any questions or suggestions about our Terms and Conditions, do not hesitate to contact us at daastudio42@gmail.com.</p>"
-  ].join("");
-
-  /* For non-English languages, fall back to English legal texts for simplicity */
   var PRIVACY = {}, TERMS = {};
   LANGS.forEach(function(L){ PRIVACY[L.code] = PRIVACY_EN; TERMS[L.code] = TERMS_EN; });
 
   function $(id) { return document.getElementById(id); }
 
-  /* ============ OPEN PLAY STORE ============ */
   function openPlayStore() { window.location.href = PLAY_URL; }
 
   /* ============ THEME ============ */
@@ -1532,7 +947,6 @@
       tile.className = "cat-tile";
       tile.href = cat.url;
       tile.rel = "noopener noreferrer";
-      tile.setAttribute("data-name", cat.name.toLowerCase());
 
       var icon = document.createElement("div");
       icon.className = "cat-icon"; icon.textContent = cat.icon;
@@ -1649,111 +1063,80 @@
     if (el) el.textContent = HOT_PRODUCT_FILES.length;
   }
 
-  /* ============ CSV / DO PARSER ============ */
-  function parseCSV(text) {
-    // Simple but robust CSV parser supporting quoted fields and commas inside quotes.
-    var rows = [];
-    var i = 0, len = text.length, cur = "", inQuotes = false, row = [];
-    while (i < len) {
-      var ch = text[i];
-      if (inQuotes) {
-        if (ch === '"') {
-          if (text[i+1] === '"') { cur += '"'; i += 2; continue; }
-          inQuotes = false; i++; continue;
-        }
-        cur += ch; i++; continue;
-      } else {
-        if (ch === '"') { inQuotes = true; i++; continue; }
-        if (ch === ',') { row.push(cur); cur = ""; i++; continue; }
-        if (ch === '\r') { i++; continue; }
-        if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ""; i++; continue; }
-        cur += ch; i++; continue;
-      }
-    }
-    if (cur.length > 0 || row.length > 0) { row.push(cur); rows.push(row); }
-    return rows;
-  }
-
-  function detectColumns(headers) {
-  var lower = headers.map(function(h){ return (h||"").toLowerCase().trim(); });
-  function find(keys) {
-    for (var k = 0; k < keys.length; k++) {
-      var idx = lower.indexOf(keys[k]);
-      if (idx !== -1) return idx;
-    }
-    for (var i2 = 0; i2 < lower.length; i2++) {
-      for (var j = 0; j < keys.length; j++) {
-        if (lower[i2].indexOf(keys[j]) !== -1) return i2;
-      }
-    }
-    return -1;
-  }
-  var titleIdx = find(["title","product name","name","product","product_title","product_name"]);
-  var imgIdx   = find(["image_url","image url","image","img","picture","photo","thumbnail"]);
-  var urlIdx   = find(["deep_link","deeplink","product_url","product url","url","link","affiliate_url","affiliate"]);
-  var priceIdx = find(["price","fiyat"]);
-  var moqIdx   = find(["moq","min_order","minimum_order","description"]); // description'ı MOQ yerine kullan
-  return { titleIdx: titleIdx, imgIdx: imgIdx, urlIdx: urlIdx, priceIdx: priceIdx, moqIdx: moqIdx };
-}
-
+  /* ============ CSV PARSER ============ */
   function parseProductData(text) {
-    var trimmed = text.replace(/^\uFEFF/, "").trim();
-    if (!trimmed) return [];
-    // Detect delimiter (comma or semicolon or tab)
-    var firstLine = trimmed.split(/\r?\n/)[0];
-    var comma = (firstLine.match(/,/g) || []).length;
-    var semi = (firstLine.match(/;/g) || []).length;
-    var tab = (firstLine.match(/\t/g) || []).length;
-    var delim = ",", max = comma;
-    if (semi > max) { max = semi; delim = ";"; }
-    if (tab > max) { max = tab; delim = "\t"; }
+    if (!text) return [];
+    // BOM karakterini temizle
+    text = text.replace(/^\uFEFF/, "");
+    
+    var lines = text.split(/\r?\n/);
+    if (lines.length < 2) return [];
 
-    // Simple parse with delimiter
+    // İlk satırdan ayırıcıyı bul (virgül mü, noktalı virgül mü, tab mı?)
+    var firstLine = lines[0];
+    var delim = ",";
+    if (firstLine.indexOf(";") > firstLine.indexOf(",")) delim = ";";
+    if (firstLine.indexOf("\t") > firstLine.indexOf(delim)) delim = "\t";
+
+    // Tırnaklı alanları (virgül içeren açıklamalar vs.) güvenli okuyan özel ayırıcı
     function splitLine(line) {
-      var out = []; var cur = ""; var inQ = false;
+      var out = [], cur = "", inQ = false;
       for (var i = 0; i < line.length; i++) {
         var ch = line[i];
         if (inQ) {
           if (ch === '"') {
-            if (line[i+1] === '"') { cur += '"'; i++; continue; }
-            inQ = false; continue;
-          }
-          cur += ch; continue;
+            if (line[i+1] === '"') { cur += '"'; i++; }
+            else { inQ = false; }
+          } else { cur += ch; }
         } else {
-          if (ch === '"') { inQ = true; continue; }
-          if (ch === delim) { out.push(cur); cur = ""; continue; }
-          cur += ch;
+          if (ch === '"') { inQ = true; }
+          else if (ch === delim) { out.push(cur); cur = ""; }
+          else { cur += ch; }
         }
       }
       out.push(cur);
       return out;
     }
 
-    var lines = trimmed.split(/\r?\n/);
-    var headers = splitLine(lines[0]).map(function(h){ return h.replace(/^"|"$/g,"").trim(); });
-    var cols = detectColumns(headers);
-    var products = [];
-    for (var li = 1; li < lines.length; li++) {
-      var line = lines[li];
-      if (!line.trim()) continue;
-      var cells = splitLine(line);
-      var obj = { title: "", img: "", url: "", price: "", moq: "" };
-      obj.title = cols.titleIdx >= 0 ? (cells[cols.titleIdx] || "").replace(/^"|"$/g, "").trim() : "";
-      if (!obj.title) {
-        // fallback: first non-empty cell as title
-        for (var c = 0; c < cells.length; c++) {
-          var v = (cells[c] || "").replace(/^"|"$/g, "").trim();
-          if (v) { obj.title = v; break; }
-        }
+    // Başlıkları al ve normalize et
+    var headers = splitLine(lines[0]).map(function(h){ return h.replace(/^"|"$/g, "").trim().toLowerCase(); });
+    
+    function findCol(keys) {
+      for (var k = 0; k < keys.length; k++) {
+        var idx = headers.indexOf(keys[k]);
+        if (idx !== -1) return idx;
       }
-      obj.img = cols.imgIdx >= 0 ? (cells[cols.imgIdx] || "").replace(/^"|"$/g, "").trim() : "";
-      obj.url = cols.urlIdx >= 0 ? (cells[cols.urlIdx] || "").replace(/^"|"$/g, "").trim() : "";
-      obj.price = cols.priceIdx >= 0 ? (cells[cols.priceIdx] || "").replace(/^"|"$/g, "").trim() : "";
-      obj.moq = cols.moqIdx >= 0 ? (cells[cols.moqIdx] || "").replace(/^"|"$/g, "").trim() : "";
-      if (!obj.title) continue;
-      // If no URL, fall back to main Alibaba affiliate
-      if (!obj.url) obj.url = "https://offer.alibaba.com/cps/578enqbs?bm=cps&src=saf";
-      products.push(obj);
+      return -1;
+    }
+
+    // Sütun indexlerini belirle
+    var colTitle = findCol(["title", "name", "product name"]);
+    var colImg   = findCol(["image_url", "image", "img"]);
+    var colUrl   = findCol(["deep_link", "url", "link"]);
+    var colPrice = findCol(["price"]);
+    var colDesc  = findCol(["description", "moq"]);
+
+    var products = [];
+    for (var i = 1; i < lines.length; i++) {
+      if (!lines[i].trim()) continue;
+      var cells = splitLine(lines[i]);
+      
+      var title = colTitle >= 0 ? cells[colTitle] : "";
+      title = title ? title.replace(/^"|"$/g, "").trim() : "Product";
+
+      var img = colImg >= 0 ? cells[colImg] : "";
+      img = img ? img.replace(/^"|"$/g, "").trim() : "";
+
+      var url = colUrl >= 0 ? cells[colUrl] : "";
+      url = url ? url.replace(/^"|"$/g, "").trim() : "https://offer.alibaba.com/cps/578enqbs?bm=cps&src=saf";
+
+      var price = colPrice >= 0 ? cells[colPrice] : "";
+      price = price ? price.replace(/^"|"$/g, "").trim() : "";
+
+      var desc = colDesc >= 0 ? cells[colDesc] : "";
+      desc = desc ? desc.replace(/^"|"$/g, "").trim() : "";
+
+      products.push({ title: title, img: img, url: url, price: price, desc: desc });
     }
     return products;
   }
@@ -1770,18 +1153,14 @@
   var hotSearchClear = $("hotSearchClear");
 
   var currentHotProducts = [];
-  var currentHotFileTitle = "";
-  var currentHotFileIdx = -1;
 
   function openHotFile(idx) {
     var f = HOT_PRODUCT_FILES[idx];
     if (!f) return;
-    currentHotFileIdx = idx;
-    currentHotFileTitle = f.title;
+    
     hotCatListEl.style.display = "none";
     hotProductView.style.display = "block";
     hotViewLabel.textContent = f.title;
-    hotProductTitle.innerHTML = "";
     hotProductTitle.textContent = I18N[currentLang].products;
     hotProductGrid.innerHTML = '<div class="empty-box"><div class="e-icon">⏳</div><p>' + I18N[currentLang].loading + '</p></div>';
     hotProductEmpty.style.display = "none";
@@ -1789,6 +1168,7 @@
     hotSearchClear.classList.remove("show");
     window.scrollTo({ top: 0, behavior: "smooth" });
 
+    // Önbelleği önlemek için zaman damgası ekle
     fetch(f.file + "?v=" + Date.now())
       .then(function (res) {
         if (!res.ok) throw new Error("HTTP " + res.status);
@@ -1804,7 +1184,7 @@
         }
       })
       .catch(function (err) {
-        console.warn("File load error:", f.file, err);
+        console.warn("Dosya yüklenemedi:", f.file, err);
         currentHotProducts = [];
         hotProductGrid.innerHTML = "";
         hotProductEmpty.style.display = "block";
@@ -1856,7 +1236,7 @@
       var meta = document.createElement("div");
       meta.className = "p-meta";
       var moq = document.createElement("span");
-      moq.className = "p-moq"; moq.textContent = p.moq ? p.moq : "";
+      moq.className = "p-moq"; moq.textContent = p.desc ? p.desc.substring(0, 30) + "..." : "";
       var share = document.createElement("button");
       share.type = "button"; share.className = "p-share";
       share.setAttribute("aria-label", "Share");
@@ -1878,8 +1258,6 @@
     hotCatListEl.style.display = "flex";
     hotProductView.style.display = "none";
     currentHotProducts = [];
-    currentHotFileTitle = "";
-    currentHotFileIdx = -1;
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
@@ -1889,7 +1267,6 @@
     if (hotProductView.style.display !== "none") {
       renderHotProducts(q);
     } else {
-      // Search across file titles when in category mode
       filterHotCategories(q);
     }
   });
