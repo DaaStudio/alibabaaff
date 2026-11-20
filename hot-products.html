@@ -124,10 +124,11 @@
 
   .container { max-width: 1100px; margin: 0 auto; padding: 0 14px 40px; }
 
+  /* Üst Kategori Çubuğu (3 Ana Dosya) */
   .category-strip {
     display:flex; gap:8px; overflow-x:auto;
     padding: 10px 4px;
-    margin: 0 0 14px;
+    margin: 0 0 10px;
     scrollbar-width:none; -ms-overflow-style:none;
     -webkit-overflow-scrolling: touch;
   }
@@ -146,6 +147,33 @@
   .cat-btn.active {
     background: var(--brand-soft); border-color: var(--brand);
     color: var(--brand2);
+  }
+
+  /* Alt Kategori Çubuğu (Dosya İçindeki Kategoriler) */
+  .subcategory-strip {
+    display:none;
+    gap:8px; overflow-x:auto;
+    padding: 0 4px 10px;
+    margin: 0 0 14px;
+    scrollbar-width:none; -ms-overflow-style:none;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1px dashed var(--border);
+    margin-bottom: 16px;
+  }
+  .subcategory-strip.show { display: flex; }
+  .subcategory-strip::-webkit-scrollbar { display:none; }
+  .subcat-btn {
+    flex-shrink:0;
+    padding: 6px 14px; border-radius: 999px;
+    background: transparent; border:1px solid var(--border);
+    color: var(--text-dim); font-size:.75rem; font-weight: 600;
+    cursor:pointer; white-space:nowrap;
+    transition: all .2s ease;
+  }
+  .subcat-btn:hover { border-color: var(--border-strong); color: var(--text); }
+  .subcat-btn.active {
+    background: var(--brand); border-color: var(--brand);
+    color: #fff;
   }
 
   .toolbar {
@@ -226,7 +254,7 @@
     padding: 4px 9px; border-radius:999px;
     background: rgba(255,106,0,0.92); color:#fff;
     font-size:.62rem; font-weight:800; letter-spacing:.03em;
-    text-transform:uppercase;
+    text-transform:capitalize;
     backdrop-filter: blur(4px);
   }
 
@@ -249,13 +277,6 @@
     font-size:.95rem; font-weight:900; color: var(--brand2);
     letter-spacing:-0.02em;
   }
-  .pc-meta {
-    display:flex; gap:8px; flex-wrap:wrap;
-    font-size:.65rem; color: var(--text-dim);
-    padding-top:4px; border-top:1px solid var(--border);
-    margin-top:4px;
-  }
-  .pc-meta span { display:flex; align-items:center; gap:3px; }
 
   .loading-more {
     text-align: center; padding: 20px;
@@ -376,12 +397,17 @@
 </section>
 
 <div class="container">
+  <!-- 3 Ana Kategori Butonları -->
   <div class="category-strip" id="categoryStrip"></div>
 
+  <!-- Alt Kategori Butonları (Dosya İçindeki) -->
+  <div class="subcategory-strip" id="subcategoryStrip"></div>
+
+  <!-- Arama Çubuğu -->
   <div class="toolbar">
     <div class="search-box">
       <span class="s-ico">🔍</span>
-      <input type="text" id="searchInput" placeholder="Tüm dosyalarda ürün ara... (Örn: phone, dress)" autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Tüm ürünlerde ara... (Örn: phone, dress)" autocomplete="off">
     </div>
   </div>
 
@@ -390,6 +416,7 @@
     <button id="clearSearchBtn">İptal Et / Temizle</button>
   </div>
 
+  <!-- Ürün Alanı -->
   <div id="productArea">
     <div class="loading-state">
       <div class="spinner"></div>
@@ -398,6 +425,7 @@
     </div>
   </div>
 
+  <!-- Sonsuz Kaydırma Yükleyici -->
   <div class="loading-more" id="loadingMore">
     <div class="spinner" style="width:24px; height:24px; border-width:3px; margin:0 auto 8px;"></div>
     Daha fazla ürün yükleniyor...
@@ -432,23 +460,12 @@
   "use strict";
 
   /* ============================================================
-     KONFİGÜRASYON — DOSYALAR DOĞRUDAN KLASÖRDEN OKUNACAK
+     KONFİGÜRASYON — SADECE 3 DOSYA
      ============================================================ */
-  // Dosyalar hot_products klasöründe olacağı için sadece dosya adı yeterli.
-  // Eğer GitHub'da ana dalın "main" değil de "master" ise, kodun çalışması için
-  // sayfayı GitHub Pages üzerinden açtığından emin ol (file:// çalışmaz).
-  
   var CATEGORIES = [
     { id: "eu_stock",    name: "EU Local Stock",        icon: "🇪🇺", file: "hot_products/eu_local_stock.csv" },
     { id: "special_30k", name: "Special Offer 30K",     icon: "🌟", file: "hot_products/eu_special_30k.do" },
-    { id: "up50",        name: "Up to 50% Off",         icon: "💸", file: "hot_products/up_to_50_off.csv" },
-    
-    // Aşağıdaki dosya isimlerini kendi klasöründeki isimlerle değiştir:
-    { id: "hot_selling", name: "Hot Selling",           icon: "🔥", file: "hot_products/alibaba_hot_selling.csv" },
-    { id: "special_2m",  name: "Special Offer (2M)",    icon: "💎", file: "hot_products/eu_special_2m.do" },
-    { id: "new_products",name: "New Products Perks",    icon: "🆕", file: "hot_products/1m_new_products.csv" },
-    { id: "moq1",        name: "Ready to Ship MOQ=1",   icon: "📦", file: "hot_products/ready_to_ship_moq1.csv" },
-    { id: "trending",    name: "Trending Quick Ship",   icon: "🚀", file: "hot_products/trending_products.csv" }
+    { id: "up50",        name: "Up to 50% Off",         icon: "💸", file: "hot_products/up_to_50_off.csv" }
   ];
 
   var BATCH_SIZE = 24; 
@@ -508,15 +525,13 @@
 
   function normKey(k) { return String(k || "").toLowerCase().replace(/[\s_\-\.]+/g, "").replace(/[^\w]/g, ""); }
 
-  // Verdiğin CSV örneğine göre başlık isimleri eşleştirildi
+  // Verdiğin CSV yapısına göre eşleştirildi
   var FIELD_ALIASES = {
     title: ["title", "productname", "name", "producttitle", "urunadi", "product"],
     image: ["image_url", "productimage", "image", "imageurl", "img", "picture", "photo"],
     url:   ["deep_link", "link", "url", "productlink", "affiliatelink", "afflink"],
     price: ["price", "currentprice", "saleprice", "promotionprice", "discountprice", "fiyat"],
-    oldPrice: ["originalprice", "oldprice", "listprice", "regularprice", "msrp"],
-    category: ["category_name", "category", "maincategory", "kategori"],
-    supplier: ["supplier", "suppliername", "seller", "store", "tedarikci", "satici"]
+    category: ["category_name", "category", "maincategory", "kategori"]
   };
 
   function detectColumns(headers) {
@@ -552,27 +567,31 @@
     var title = get("title");
     var url = get("url");
     var img = normalizeImg(get("image"));
+    var category = get("category");
     
-    // Resmi, başlığı veya linki olmayanları direkt reddet
+    // Resmi veya linki olmayanları direkt reddet
     if (!title || !url || !img) return null;
 
     return {
       title: title, image: img, url: url,
-      price: get("price"), oldPrice: get("oldPrice"), 
-      category: get("category"), supplier: get("supplier")
+      price: get("price"), category: category || "Genel"
     };
   }
 
+  /* ============================================================
+     STATE & MANTIK
+     ============================================================ */
   var state = {
     activeCategory: CATEGORIES[0].id,
+    activeSubCategory: "all",
     cache: {}, 
     searchQuery: "",
     isSearching: false,
     renderIndex: 0, 
-    currentList: []
+    currentList: [],
+    availableSubCats: []
   };
 
-  // Dosyalar doğrudan sunucuda olduğu için fetch sorunsuz çalışır
   function fetchText(url) {
     return fetch(url, { cache: "no-store" }).then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status);
@@ -627,7 +646,12 @@
     });
   }
 
-  function renderCategoryButtons() {
+  /* ============================================================
+     RENDER
+     ============================================================ */
+  
+  // 3 Ana Kategori Butonlarını Çiz
+  function renderMainCategories() {
     var strip = $("categoryStrip");
     strip.innerHTML = "";
     CATEGORIES.forEach(function(cat) {
@@ -642,26 +666,59 @@
           $("searchStatus").classList.remove("show");
         }
         state.activeCategory = cat.id;
-        renderCategoryButtons();
+        state.activeSubCategory = "all"; // Alt kategoriyi sıfırla
+        renderMainCategories();
         loadAndRenderActiveCategory();
       });
       strip.appendChild(btn);
     });
   }
 
+  // Dosya içindeki kategorileri (alt kategorileri) çiz
+  function renderSubCategories() {
+    var strip = $("subcategoryStrip");
+    strip.innerHTML = "";
+    
+    // Eğer arama yapılıyorsa veya alt kategori yoksa gizle
+    if (state.isSearching || state.availableSubCats.length <= 1) {
+      strip.classList.remove("show");
+      return;
+    }
+
+    strip.classList.add("show");
+
+    // "Tümü" Butonu
+    var allBtn = document.createElement("button");
+    allBtn.className = "subcat-btn" + (state.activeSubCategory === "all" ? " active" : "");
+    allBtn.textContent = "Tümü";
+    allBtn.addEventListener("click", function() {
+      state.activeSubCategory = "all";
+      renderSubCategories();
+      renderFilteredList();
+    });
+    strip.appendChild(allBtn);
+
+    // Diğer kategoriler
+    state.availableSubCats.forEach(function(sc) {
+      var btn = document.createElement("button");
+      btn.className = "subcat-btn" + (state.activeSubCategory === sc ? " active" : "");
+      btn.textContent = sc;
+      btn.addEventListener("click", function() {
+        state.activeSubCategory = sc;
+        renderSubCategories();
+        renderFilteredList();
+      });
+      strip.appendChild(btn);
+    });
+  }
+
   function renderProductCard(p) {
-    // onerror sayesinde resim yüklenemezse kart gizlenir
+    // Resim yüklenmezse kartı gizle
     var imgHtml = '<img class="pc-img" src="' + esc(p.image) + '" loading="lazy" referrerpolicy="no-referrer" onload="this.classList.add(\'loaded\')" onerror="this.closest(\'.product-card\').classList.add(\'broken\')">';
     
     var badgeHtml = p.category ? '<span class="pc-badge">' + esc(p.category) + '</span>' : '';
     
     var priceHtml = p.price ? '<span class="pc-price">' + esc(p.price) + '</span>' : '<span class="pc-price" style="color:var(--text-dim);font-size:.78rem;">Fiyat yok</span>';
-    if (p.oldPrice) priceHtml += '<span class="pc-oldprice" style="font-size:.7rem;color:var(--text-dim);text-decoration:line-through;">' + esc(p.oldPrice) + '</span>';
-
-    var metaHtml = '';
-    var metaParts = [];
-    if (p.supplier) metaParts.push('<span>🏭 ' + esc(p.supplier) + '</span>');
-    if (metaParts.length) metaHtml = '<div class="pc-meta">' + metaParts.join('') + '</div>';
 
     return (
       '<a class="product-card" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer sponsored">' +
@@ -669,7 +726,6 @@
         '<div class="pc-body">' +
           '<div class="pc-title">' + esc(p.title) + '</div>' +
           '<div class="pc-price-row">' + priceHtml + '</div>' +
-          metaHtml +
         '</div>' +
       '</a>'
     );
@@ -717,6 +773,20 @@
     appendProducts();
   }
 
+  // Kategori yüklendikten sonra filtreleme yapan fonksiyon
+  function renderFilteredList() {
+    var products = state.cache[state.activeCategory] || [];
+    
+    // Eğer alt kategori "all" değilse filtrele
+    if (state.activeSubCategory !== "all") {
+      products = products.filter(function(p) {
+        return p.category === state.activeSubCategory;
+      });
+    }
+
+    renderList(products, "Bu kategoride geçerli ürün bulunmuyor veya resimler yüklenemedi.");
+  }
+
   function loadAndRenderActiveCategory() {
     $("productArea").innerHTML = 
       '<div class="loading-state">' +
@@ -726,49 +796,61 @@
       '</div>';
     
     loadCategoryData(state.activeCategory).then(function(products) {
-      renderList(products, "Bu kategoride geçerli ürün bulunmuyor veya dosya adları hatalı.");
+      // Alt kategorileri bul (Benzersiz olanları al)
+      var catSet = {};
+      products.forEach(function(p) {
+        if (p.category) catSet[p.category] = 1;
+      });
+      state.availableSubCats = Object.keys(catSet).sort();
+
+      // Alt kategori menüsünü çiz
+      renderSubCategories();
+      
+      // Ürünleri çiz (aktif alt kategoriye göre)
+      renderFilteredList();
     });
   }
 
+  /* ============================================================
+     ARAMA MANTIĞI
+     ============================================================ */
   function performSearch(query) {
     if (!query) {
       state.isSearching = false;
       $("searchStatus").classList.remove("show");
-      loadAndRenderActiveCategory();
+      renderSubCategories();
+      renderFilteredList();
       return;
     }
 
     state.isSearching = true;
     $("searchStatus").classList.add("show");
-    $("searchStatusText").textContent = '"' + query + '" için aranıyor... (Tüm dosyalar)';
-    
+    $("searchStatusText").textContent = '"' + query + '" için aranıyor...';
+    renderSubCategories(); // Arama sırasında alt kategori çubuğunu gizle
+
     $("productArea").innerHTML = 
       '<div class="loading-state">' +
         '<div class="spinner"></div>' +
         '<h3>Aranıyor…</h3>' +
-        '<p>Tüm dosyalar taranıyor, lütfen bekleyin.</p>' +
+        '<p>Lütfen bekleyin.</p>' +
       '</div>';
 
     var q = query.toLowerCase();
+    var products = state.cache[state.activeCategory] || [];
     
-    var promises = CATEGORIES.map(function(cat) {
-      return loadCategoryData(cat.id);
+    // Arama seçili dosya içinde yapılır
+    var filtered = products.filter(function(p) {
+      var hay = (p.title || "").toLowerCase();
+      return hay.indexOf(q) !== -1;
     });
 
-    Promise.all(promises).then(function(results) {
-      var allProducts = [];
-      results.forEach(function(arr) { allProducts = allProducts.concat(arr); });
-      
-      var filtered = allProducts.filter(function(p) {
-        var hay = ((p.title || "") + " " + (p.supplier || "")).toLowerCase();
-        return hay.indexOf(q) !== -1;
-      });
-
-      $("searchStatusText").textContent = '"' + query + '" için ' + filtered.length + ' sonuç bulundu.';
-      renderList(filtered, '"' + query + '" için eşleşen geçerli ürün bulunamadı.');
-    });
+    $("searchStatusText").textContent = '"' + query + '" için ' + filtered.length + ' sonuç bulundu.';
+    renderList(filtered, '"' + query + '" için eşleşen ürün bulunamadı.');
   }
 
+  /* ============================================================
+     ETKİLEŞİMLER & BAŞLAT
+     ============================================================ */
   var searchTimer;
   $("searchInput").addEventListener("input", function(e) {
     clearTimeout(searchTimer);
@@ -784,7 +866,8 @@
     state.searchQuery = "";
     state.isSearching = false;
     $("searchStatus").classList.remove("show");
-    loadAndRenderActiveCategory();
+    renderSubCategories();
+    renderFilteredList();
   });
 
   window.addEventListener("scroll", function() {
@@ -818,7 +901,8 @@
     if (e.target === this) this.classList.remove("open");
   });
 
-  renderCategoryButtons();
+  // Başlat
+  renderMainCategories();
   loadAndRenderActiveCategory();
 
 })();
