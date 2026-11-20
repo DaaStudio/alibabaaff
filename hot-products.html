@@ -450,14 +450,11 @@
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
-  // Başlıklardaki ve linklerdeki gizli boşlukları, tırnakları ve satır sonlarını temizler
   function cleanString(str) {
     if (!str) return "";
     var s = String(str).trim();
-    // Başındaki ve sonundaki tırnakları sil
     if (s.startsWith('"') && s.endsWith('"')) s = s.slice(1, -1);
     if (s.startsWith("'") && s.endsWith("'")) s = s.slice(1, -1);
-    // Satır sonlarını ve sekmeleri sil
     return s.replace(/[\r\n\t]+/g, "").trim();
   }
 
@@ -527,7 +524,13 @@
   function normalizeImg(url) {
     var u = cleanString(url);
     if (!u) return "";
+    
+    // Resim linki // ile başlıyorsa başına https: ekle
     if (u.indexOf("//") === 0) u = "https:" + u;
+    // Resim linki direkt alan adıyla (sc01.alicdn.com vb) başlıyorsa https:// ekle
+    else if (u.indexOf("http://") === 0) u = u.replace("http://", "https://");
+    else if (u.indexOf("https://") !== 0 && u.indexOf(".") !== -1) u = "https://" + u;
+    
     return u;
   }
 
@@ -541,7 +544,13 @@
     var url = get("url");
     var img = normalizeImg(get("image"));
     
-    // Resmi, başlığı veya linki olmayanları direkt reddet
+    // Fallback: Eğer sütun isimleri tanınamazsa (colMap boşsa) ilk 3 sütunu baz al
+    if (!colMap.title && cells.length >= 3) {
+      title = cleanString(cells[1] || cells[0]);
+      img = normalizeImg(cells[2]);
+      url = cleanString(cells[3] || cells[cells.length-1]);
+    }
+
     if (!title || !url || !img) return null;
 
     return {
@@ -602,6 +611,9 @@
             var headers = rows[0];
             var colMap = detectColumns(headers);
             
+            // Konsola başlıkları yazdır (Hata ayıklama için)
+            if (partIndex === 1) console.log("CSV Başlıkları (" + cat.file + "):", headers);
+
             for (var r = 1; r < rows.length; r++) {
               var p = rowToProduct(rows[r], colMap);
               if (p) allProducts.push(p);
@@ -611,7 +623,6 @@
             fetchNextPart();
           })
           .catch(function(err) {
-            // Sessizce durdur
             var uniqueProducts = [];
             var seen = {};
             allProducts.forEach(function(p) {
@@ -654,7 +665,6 @@
   }
 
   function renderProductCard(p) {
-    // onerror sayesinde resim yüklenemezse kart gizlenir
     var imgHtml = '<img class="pc-img" src="' + esc(p.image) + '" loading="lazy" referrerpolicy="no-referrer" onload="this.classList.add(\'loaded\')" onerror="this.closest(\'.product-card\').classList.add(\'broken\')">';
     
     var badgeHtml = p.commission ? '<span class="pc-badge">' + esc(p.commission) + (/%/.test(p.commission)?'':'%') + ' Komisyon</span>' : '';
