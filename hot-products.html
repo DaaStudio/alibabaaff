@@ -565,45 +565,26 @@
     currentList: []
   };
 
-  // CORS engelini aşmak için iframe kullanan yeni fonksiyon
-  function fetchFileViaIframe(url) {
+  // CORS çift yöntemli okuma (Fetch başarısız olursa CORS Proxy kullanır)
+  function fetchFile(url) {
     return new Promise(function(resolve, reject) {
-      var iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = url;
-      
-      var loaded = false;
-      
-      iframe.onload = function() {
-        if (loaded) return;
-        loaded = true;
-        try {
-          var text = iframe.contentDocument.body.innerText || iframe.contentDocument.body.textContent;
-          document.body.removeChild(iframe);
-          resolve(text);
-        } catch (e) {
-          document.body.removeChild(iframe);
-          reject(new Error("Dosya okunamadı"));
-        }
-      };
-      
-      iframe.onerror = function() {
-        if (loaded) return;
-        loaded = true;
-        document.body.removeChild(iframe);
-        reject(new Error("Dosya yüklenemedi"));
-      };
-
-      // Zaman aşımı
-      setTimeout(function() {
-        if (!loaded) {
-          loaded = true;
-          if (iframe.parentNode) document.body.removeChild(iframe);
-          reject(new Error("Zaman aşımı"));
-        }
-      }, 15000);
-
-      document.body.appendChild(iframe);
+      fetch(url, { cache: "no-store" })
+        .then(function(res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.text();
+        })
+        .then(function(text) { resolve(text); })
+        .catch(function(err) {
+          // Hata alındıysa Proxy üzerinden dene
+          var proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
+          fetch(proxyUrl, { cache: "no-store" })
+            .then(function(res) {
+              if (!res.ok) throw new Error("Proxy HTTP " + res.status);
+              return res.text();
+            })
+            .then(function(text) { resolve(text); })
+            .catch(function(proxyErr) { reject(err); }); // Yine hata verirse asıl hatayı fırlat
+        });
     });
   }
 
@@ -614,7 +595,7 @@
       var cat = CATEGORIES.find(function(c) { return c.id === catId; });
       if (!cat) return resolve([]);
 
-      fetchFileViaIframe(cat.file)
+      fetchFile(cat.file)
         .then(function(text) {
           var rows = parseCSV(text);
           if (rows.length < 2) throw new Error("Boş dosya");
