@@ -386,7 +386,7 @@
   <div class="toolbar">
     <div class="search-box">
       <span class="s-ico">🔍</span>
-      <input type="text" id="searchInput" placeholder="Tüm dosyalarda ürün ara... (Örn: phone, dress, machine)" autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Tüm dosyalarda ürün ara... (Örn: phone, dress)" autocomplete="off">
     </div>
   </div>
 
@@ -441,21 +441,24 @@
   "use strict";
 
   /* ============================================================
-     KONFİGÜRASYON — RESİMDEKİ 8 KATEGORİ VE DOSYALAR
+     KONFİGÜRASYON — RESİMDEN VE GERÇEK DOSYA İSİMLERİNDEN
      ============================================================ */
+  // DİKKAT: GitHub büyük/küçük harfe duyarlıdır!
+  // Eğer dosya adları farklıysa aşağıdaki "file" kısımlarını kendi klasöründeki isimlerle birebir değiştir.
   var CATEGORIES = [
-    { id: "eu_stock", name: "EU Local Stock", icon: "🇪🇺", file: "hot_products/EU_Local_Stock.csv" },
-    { id: "hot_selling", name: "Alibaba Hot Selling", icon: "🔥", file: "hot_products/Alibaba_hot-selling.csv" },
-    { id: "special_2m", name: "Special Offer (2M)", icon: "💎", file: "hot_products/EU_Special_Offer_2M.csv" },
-    { id: "special_30k", name: "Special Offer (30k)", icon: "🌟", file: "hot_products/EU_Special_Offer_30k.csv" },
-    { id: "new_perks", name: "New Products Perks", icon: "🆕", file: "hot_products/New_Products_Perks.csv" },
-    { id: "moq1", name: "Ready to Ship MOQ=1", icon: "📦", file: "hot_products/Ready_to_Ship_MOQ1.csv" },
-    { id: "up50", name: "Up to 50% Off", icon: "💸", file: "hot_products/Up_to_50_Off.csv" },
-    { id: "trending", name: "Trending Quick Ship", icon: "🚀", file: "hot_products/Trending_Products_Quick_Shipping.csv" }
+    { id: "eu_stock",    name: "EU Local Stock",        icon: "🇪🇺", file: "hot_products/eu_local_stock.csv" },
+    { id: "special_30k", name: "Special Offer 30K",     icon: "🌟", file: "hot_products/eu_special_30k.do" },
+    { id: "up50",        name: "Up to 50% Off",         icon: "💸", file: "hot_products/up_to_50_off.csv" },
+    
+    // Aşağıdakiler resimde yoktu, tahmini isimler yazdım. Kendi dosyalarına göre güncelle:
+    { id: "hot_selling", name: "Hot Selling",           icon: "🔥", file: "hot_products/alibaba_hot-selling.csv" },
+    { id: "special_2m",  name: "Special Offer (2M)",    icon: "💎", file: "hot_products/eu_special_offer_2m.csv" },
+    { id: "new_perks",   name: "New Products Perks",    icon: "🆕", file: "hot_products/new_products_perks.csv" },
+    { id: "moq1",        name: "Ready to Ship MOQ=1",   icon: "📦", file: "hot_products/ready_to_ship_moq1.csv" },
+    { id: "trending",    name: "Trending Quick Ship",   icon: "🚀", file: "hot_products/trending_products_quick_shipping.csv" }
   ];
 
-  // Aynı anda kaç ürün gösterilecek (Performans için)
-  var BATCH_SIZE = 24; 
+  var BATCH_SIZE = 24; // Sonsuz kaydırma için her seferde yüklenecek ürün sayısı
 
   /* ============================================================
      YARDIMCILAR
@@ -557,9 +560,8 @@
      ============================================================ */
   var state = {
     activeCategory: CATEGORIES[0].id,
-    cache: {}, // Yüklenen dosyalar burada tutulur { id: [ürünler] }
+    cache: {}, 
     searchQuery: "",
-    searchResults: [],
     isSearching: false,
     renderIndex: 0, 
     currentList: []
@@ -577,10 +579,9 @@
     });
   }
 
-  // Tek bir dosyayı indirip parse eder
   function loadCategoryData(catId) {
     return new Promise(function(resolve, reject) {
-      if (state.cache[catId]) return resolve(state.cache[catId]); // Zaten yüklüyse
+      if (state.cache[catId]) return resolve(state.cache[catId]); 
       
       var cat = CATEGORIES.find(function(c) { return c.id === catId; });
       if (!cat) return reject("Kategori bulunamadı");
@@ -602,18 +603,16 @@
           resolve(products);
         })
         .catch(function(err) {
-          console.error("Hata: " + cat.file, err);
-          state.cache[catId] = []; // Hata olsa da boş dizi olarak işaretle ki tekrar denemesin
+          console.error("Dosya yüklenemedi: " + cat.file, err);
+          state.cache[catId] = [];
           resolve([]);
         });
     });
   }
 
   /* ============================================================
-     RENDER (GÖRSELLEŞTİRME)
+     RENDER
      ============================================================ */
-  
-  // Kategori Butonlarını Çiz
   function renderCategoryButtons() {
     var strip = $("categoryStrip");
     strip.innerHTML = "";
@@ -622,7 +621,6 @@
       btn.className = "cat-btn" + (state.activeCategory === cat.id ? " active" : "");
       btn.innerHTML = '<span class="ci">' + cat.icon + '</span><span>' + cat.name + '</span>';
       btn.addEventListener("click", function() {
-        // Arama açıksa kapat ve kategoriye geç
         if (state.isSearching) {
           $("searchInput").value = "";
           state.searchQuery = "";
@@ -666,7 +664,6 @@
     );
   }
 
-  // Ekrana ürünleri bas (Sonsuz kaydırma için parça parça)
   function appendProducts() {
     var area = $("productArea");
     var list = state.currentList;
@@ -684,7 +681,6 @@
     
     state.renderIndex = nextIndex;
 
-    // Daha fazla varsa yükleyiciyi göster
     if (state.renderIndex < list.length) {
       $("loadingMore").classList.add("show");
     } else {
@@ -723,11 +719,10 @@
       '</div>';
     
     loadCategoryData(state.activeCategory).then(function(products) {
-      renderList(products, "Bu kategoride şu an ürün bulunmuyor veya dosya okunamadı.");
+      renderList(products, "Bu kategoride şu an ürün bulunmuyor veya dosya bulunamadı. Lütfen konsolu kontrol edin.");
     });
   }
 
-  // TÜM DOSYALARDA ARAMA
   function performSearch(query) {
     if (!query) {
       state.isSearching = false;
@@ -749,17 +744,14 @@
 
     var q = query.toLowerCase();
     
-    // Tüm kategorilerin verisini indir (zaten indirilmişse cache'den alır)
     var promises = CATEGORIES.map(function(cat) {
       return loadCategoryData(cat.id);
     });
 
     Promise.all(promises).then(function(results) {
       var allProducts = [];
-      // Tüm dizileri birleştir
       results.forEach(function(arr) { allProducts = allProducts.concat(arr); });
       
-      // Filtrele
       var filtered = allProducts.filter(function(p) {
         var hay = ((p.title || "") + " " + (p.supplier || "")).toLowerCase();
         return hay.indexOf(q) !== -1;
@@ -773,8 +765,6 @@
   /* ============================================================
      ETKİLEŞİMLER & BAŞLAT
      ============================================================ */
-  
-  // Arama Kutusu Dinleyicisi (Debounce)
   var searchTimer;
   $("searchInput").addEventListener("input", function(e) {
     clearTimeout(searchTimer);
@@ -782,10 +772,9 @@
     searchTimer = setTimeout(function() {
       state.searchQuery = val;
       performSearch(val);
-    }, 400); // Kullanıcı yazmayı bırakınca 400ms sonra ara
+    }, 400);
   });
 
-  // Arama İptal
   $("clearSearchBtn").addEventListener("click", function() {
     $("searchInput").value = "";
     state.searchQuery = "";
@@ -794,20 +783,17 @@
     loadAndRenderActiveCategory();
   });
 
-  // Sonsuz Kaydırma (Scroll)
   window.addEventListener("scroll", function() {
     var loadingMore = $("loadingMore");
     if (!loadingMore.classList.contains("show")) return;
     
     var rect = loadingMore.getBoundingClientRect();
-    // Yükleyici ekrana girdiyse yeni ürünleri bas
     if (rect.top < window.innerHeight + 200) {
-      loadingMore.classList.remove("show"); // Kısa süreliğine gizle ki tekrar tekrar tetiklenmesin
-      setTimeout(appendProducts, 100); // Küçük bir gecikmeyle bas
+      loadingMore.classList.remove("show");
+      setTimeout(appendProducts, 100);
     }
   });
 
-  // Tema
   var currentTheme = "dark";
   try { currentTheme = localStorage.getItem("theme") || "dark"; } catch(e){}
   function applyTheme(theme) {
@@ -820,7 +806,6 @@
   });
   applyTheme(currentTheme);
 
-  // Modal
   $("settingsBtn").addEventListener("click", function() { $("settingsModal").classList.add("open"); });
   document.querySelectorAll("[data-close]").forEach(function(btn) {
     btn.addEventListener("click", function() { $("settingsModal").classList.remove("open"); });
@@ -829,7 +814,6 @@
     if (e.target === this) this.classList.remove("open");
   });
 
-  // Başlat
   renderCategoryButtons();
   loadAndRenderActiveCategory();
 
