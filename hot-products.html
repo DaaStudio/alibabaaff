@@ -432,23 +432,30 @@
   "use strict";
 
   /* ============================================================
-     KONFİGÜRASYON — GITHUB RELEASES + ALLORIGINS PROXY
+     KONFİGÜRASYON — DOSYALAR DOĞRUDAN KLASÖRDEN OKUNACAK
      ============================================================ */
-  var BASE_URL = "https://github.com/DaaStudio/alibabaaff/releases/download/v1.0/";
+  // Dosyalar hot_products klasöründe olacağı için sadece dosya adı yeterli.
+  // Eğer GitHub'da ana dalın "main" değil de "master" ise, kodun çalışması için
+  // sayfayı GitHub Pages üzerinden açtığından emin ol (file:// çalışmaz).
   
   var CATEGORIES = [
-    { id: "eu_stock",    name: "EU Local Stock",        icon: "🇪🇺", file: BASE_URL + "eu_local_stock.csv" },
-    { id: "special_30k", name: "Special Offer 30K",     icon: "🌟", file: BASE_URL + "eu_special_30k.do" },
-    { id: "up50",        name: "Up to 50% Off",         icon: "💸", file: BASE_URL + "up_to_50_off.csv" },
-    { id: "hot_selling", name: "Hot Selling",           icon: "🔥", file: BASE_URL + "alibaba_hot_selling.csv" },
-    { id: "special_2m",  name: "Special Offer (2M)",    icon: "💎", file: BASE_URL + "eu_special_2m.do" },
-    { id: "new_products",name: "New Products Perks",    icon: "🆕", file: BASE_URL + "1m_new_products.csv" },
-    { id: "moq1",        name: "Ready to Ship MOQ=1",   icon: "📦", file: BASE_URL + "ready_to_ship_moq1.csv" },
-    { id: "trending",    name: "Trending Quick Ship",   icon: "🚀", file: BASE_URL + "trending_products.csv" }
+    { id: "eu_stock",    name: "EU Local Stock",        icon: "🇪🇺", file: "hot_products/eu_local_stock.csv" },
+    { id: "special_30k", name: "Special Offer 30K",     icon: "🌟", file: "hot_products/eu_special_30k.do" },
+    { id: "up50",        name: "Up to 50% Off",         icon: "💸", file: "hot_products/up_to_50_off.csv" },
+    
+    // Aşağıdaki dosya isimlerini kendi klasöründeki isimlerle değiştir:
+    { id: "hot_selling", name: "Hot Selling",           icon: "🔥", file: "hot_products/alibaba_hot_selling.csv" },
+    { id: "special_2m",  name: "Special Offer (2M)",    icon: "💎", file: "hot_products/eu_special_2m.do" },
+    { id: "new_products",name: "New Products Perks",    icon: "🆕", file: "hot_products/1m_new_products.csv" },
+    { id: "moq1",        name: "Ready to Ship MOQ=1",   icon: "📦", file: "hot_products/ready_to_ship_moq1.csv" },
+    { id: "trending",    name: "Trending Quick Ship",   icon: "🚀", file: "hot_products/trending_products.csv" }
   ];
 
   var BATCH_SIZE = 24; 
 
+  /* ============================================================
+     YARDIMCILAR
+     ============================================================ */
   function $(id) { return document.getElementById(id); }
   function esc(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
@@ -501,16 +508,15 @@
 
   function normKey(k) { return String(k || "").toLowerCase().replace(/[\s_\-\.]+/g, "").replace(/[^\w]/g, ""); }
 
+  // Verdiğin CSV örneğine göre başlık isimleri eşleştirildi
   var FIELD_ALIASES = {
-    title: ["productname","title","name","producttitle","urunadi","product","product_title"],
-    image: ["productimage","image","imageurl","img","picture","photo","resim","gorsel","image_link"],
-    url:   ["link","url","productlink","affiliatelink","afflink","promotionlink","targeturl","landingpage"],
-    price: ["price","currentprice","saleprice","promotionprice","discountprice","fiyat","sale_price"],
-    oldPrice: ["originalprice","oldprice","listprice","regularprice","msrp"],
-    commission: ["commission","commissionrate","komisyon"],
-    sales: ["sales","totalsales","orders","ordercount","satis"],
-    rating: ["rating","starrating","score","puan"],
-    supplier: ["supplier","suppliername","seller","store","tedarikci","satici"]
+    title: ["title", "productname", "name", "producttitle", "urunadi", "product"],
+    image: ["image_url", "productimage", "image", "imageurl", "img", "picture", "photo"],
+    url:   ["deep_link", "link", "url", "productlink", "affiliatelink", "afflink"],
+    price: ["price", "currentprice", "saleprice", "promotionprice", "discountprice", "fiyat"],
+    oldPrice: ["originalprice", "oldprice", "listprice", "regularprice", "msrp"],
+    category: ["category_name", "category", "maincategory", "kategori"],
+    supplier: ["supplier", "suppliername", "seller", "store", "tedarikci", "satici"]
   };
 
   function detectColumns(headers) {
@@ -547,12 +553,13 @@
     var url = get("url");
     var img = normalizeImg(get("image"));
     
+    // Resmi, başlığı veya linki olmayanları direkt reddet
     if (!title || !url || !img) return null;
 
     return {
       title: title, image: img, url: url,
-      price: get("price"), oldPrice: get("oldPrice"), commission: get("commission"),
-      sales: get("sales"), rating: get("rating"), supplier: get("supplier")
+      price: get("price"), oldPrice: get("oldPrice"), 
+      category: get("category"), supplier: get("supplier")
     };
   }
 
@@ -565,14 +572,17 @@
     currentList: []
   };
 
-  // allorigins Proxy kullanan fonksiyon
-  function fetchFile(url) {
-    var proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
-    return fetch(proxyUrl, { cache: "no-store" })
-      .then(function(res) {
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        return res.text();
-      });
+  // Dosyalar doğrudan sunucuda olduğu için fetch sorunsuz çalışır
+  function fetchText(url) {
+    return fetch(url, { cache: "no-store" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.arrayBuffer();
+    }).then(function (buffer) {
+      var uint8 = new Uint8Array(buffer);
+      var isUtf16 = (uint8[0] === 0xFF && uint8[1] === 0xFE) || (uint8[0] === 0xFE && uint8[1] === 0xFF);
+      var decoder = new TextDecoder(isUtf16 ? "utf-16" : "utf-8");
+      return decoder.decode(buffer);
+    });
   }
 
   function loadCategoryData(catId) {
@@ -582,7 +592,7 @@
       var cat = CATEGORIES.find(function(c) { return c.id === catId; });
       if (!cat) return resolve([]);
 
-      fetchFile(cat.file)
+      fetchText(cat.file)
         .then(function(text) {
           var rows = parseCSV(text);
           if (rows.length < 2) throw new Error("Boş dosya");
@@ -640,17 +650,17 @@
   }
 
   function renderProductCard(p) {
+    // onerror sayesinde resim yüklenemezse kart gizlenir
     var imgHtml = '<img class="pc-img" src="' + esc(p.image) + '" loading="lazy" referrerpolicy="no-referrer" onload="this.classList.add(\'loaded\')" onerror="this.closest(\'.product-card\').classList.add(\'broken\')">';
     
-    var badgeHtml = p.commission ? '<span class="pc-badge">' + esc(p.commission) + (/%/.test(p.commission)?'':'%') + ' Komisyon</span>' : '';
+    var badgeHtml = p.category ? '<span class="pc-badge">' + esc(p.category) + '</span>' : '';
     
     var priceHtml = p.price ? '<span class="pc-price">' + esc(p.price) + '</span>' : '<span class="pc-price" style="color:var(--text-dim);font-size:.78rem;">Fiyat yok</span>';
     if (p.oldPrice) priceHtml += '<span class="pc-oldprice" style="font-size:.7rem;color:var(--text-dim);text-decoration:line-through;">' + esc(p.oldPrice) + '</span>';
 
     var metaHtml = '';
     var metaParts = [];
-    if (p.rating) metaParts.push('<span>⭐ ' + esc(p.rating) + '</span>');
-    if (p.sales) metaParts.push('<span>📈 ' + esc(p.sales) + '</span>');
+    if (p.supplier) metaParts.push('<span>🏭 ' + esc(p.supplier) + '</span>');
     if (metaParts.length) metaHtml = '<div class="pc-meta">' + metaParts.join('') + '</div>';
 
     return (
