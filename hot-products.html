@@ -101,7 +101,7 @@
   }
   .icon-btn:active { transform: scale(0.9); }
 
-  /* ====== ANA EKRAN ====== */
+  /* ====== ANA EKRAN (VİTRİN) ====== */
   .page-view {
     display: none;
     opacity: 0;
@@ -181,18 +181,18 @@
   .mcc-arrow { font-size: 1.5rem; color: var(--brand2); opacity: .5; transition: transform .2s; }
   .main-cat-card:hover .mcc-arrow { transform: translateX(5px); opacity: 1; }
 
-  /* ====== KATEGORİ İÇERİK EKRANI ====== */
-  .category-screen {
-    position: fixed; inset: 0; z-index: 50;
+  /* ====== ADIM 1: ALT KATEGORİ SEÇİM EKRANI ====== */
+  .subcat-screen {
+    position: fixed; inset: 0; z-index: 40;
     background: var(--bg);
     display: none;
     flex-direction: column;
     overflow-y: auto;
   }
-  .category-screen.open { display: flex; animation: slideUp .3s ease; }
+  .subcat-screen.open { display: flex; animation: slideUp .3s ease; }
   @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 
-  .category-header {
+  .subcat-header {
     position: sticky; top: 0; z-index: 10;
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     background: var(--header-bg);
@@ -209,7 +209,42 @@
     font-size: 1.1rem; font-weight: 800; flex: 1;
     display: flex; align-items: center; gap: 8px;
   }
-  /* Kategori Değiştirme Butonu */
+
+  .subcat-list {
+    padding: 20px;
+    max-width: 800px; margin: 0 auto; width: 100%;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .subcat-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px;
+    color: var(--text); text-decoration: none;
+    cursor: pointer; transition: all .2s;
+  }
+  .subcat-item:hover { border-color: var(--brand); background: var(--card2); transform: translateX(4px); }
+  .subcat-name { font-size: 1rem; font-weight: 700; text-transform: capitalize; }
+  .subcat-arrow { color: var(--brand2); font-size: 1.2rem; }
+
+  /* ====== ADIM 2: ÜRÜN GÖSTERİM EKRANI ====== */
+  .category-screen {
+    position: fixed; inset: 0; z-index: 50;
+    background: var(--bg);
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .category-screen.open { display: flex; animation: slideUp .3s ease; }
+
+  .category-header {
+    position: sticky; top: 0; z-index: 10;
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
   .change-cat-btn {
     display: flex; align-items: center; gap: 6px;
     padding: 8px 14px; border-radius: 10px;
@@ -218,27 +253,6 @@
     cursor: pointer; transition: all .2s;
   }
   .change-cat-btn:hover { border-color: var(--brand); color: var(--brand2); }
-
-  .subcategory-strip {
-    display: flex; gap: 8px; overflow-x: auto;
-    padding: 16px;
-    scrollbar-width: none; -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-    border-bottom: 1px solid var(--border);
-  }
-  .subcategory-strip::-webkit-scrollbar { display: none; }
-  .subcat-btn {
-    flex-shrink: 0;
-    padding: 8px 18px; border-radius: 999px;
-    background: transparent; border: 1px solid var(--border);
-    color: var(--text-dim); font-size: .8rem; font-weight: 600;
-    cursor: pointer; transition: all .2s ease;
-  }
-  .subcat-btn:hover { border-color: var(--border-strong); color: var(--text); }
-  .subcat-btn.active {
-    background: var(--brand); border-color: var(--brand);
-    color: #fff; font-weight: 700;
-  }
 
   .category-content {
     flex: 1;
@@ -430,7 +444,7 @@
   </div>
 </header>
 
-<!-- ====== GÖRÜNÜM 1: ANA EKRAN ====== -->
+<!-- ====== GÖRÜNÜM 1: ANA EKRAN (VİTRİN) ====== -->
 <div class="page-view active" id="homeView">
   <section class="home-hero">
     <h1><span data-i18n="heroTitle1">Hot</span> <span class="accent" data-i18n="heroTitle2">Products</span></h1>
@@ -440,16 +454,26 @@
   <div class="main-cat-grid" id="mainCatGrid"></div>
 </div>
 
-<!-- ====== GÖRÜNÜM 2: KATEGORİ İÇERİK EKRANI ====== -->
+<!-- ====== GÖRÜNÜM 2: ADIM 1 - ALT KATEGORİ SEÇİM EKRANI ====== -->
+<div class="subcat-screen" id="subcatScreen">
+  <div class="subcat-header">
+    <button class="back-btn" id="backToHomeBtn">←</button>
+    <div class="cat-screen-title" id="subcatScreenTitle">Kategori</div>
+    <button class="icon-btn" id="settingsBtnSub">⚙️</button>
+  </div>
+  <div class="subcat-list" id="subcatList">
+    <!-- JS ile doldurulacak -->
+  </div>
+</div>
+
+<!-- ====== GÖRÜNÜM 3: ADIM 2 - ÜRÜN GÖSTERİM EKRANI ====== -->
 <div class="category-screen" id="categoryScreen">
   <div class="category-header">
-    <button class="back-btn" id="backBtn">←</button>
-    <div class="cat-screen-title" id="catScreenTitle">Kategori</div>
+    <button class="back-btn" id="backToSubcatBtn">←</button>
+    <div class="cat-screen-title" id="productScreenTitle">Ürünler</div>
     <button class="change-cat-btn" id="changeCatBtn">Değiştir</button>
-    <button class="icon-btn" id="settingsBtn2">⚙️</button>
+    <button class="icon-btn" id="settingsBtnProd">⚙️</button>
   </div>
-
-  <div class="subcategory-strip" id="subcategoryStrip"></div>
 
   <div class="category-content">
     <div class="search-toolbar">
@@ -509,7 +533,7 @@
   </div>
 </div>
 
-<!-- KATEGORİ DEĞİŞTİRME MODAL (Yeni) -->
+<!-- KATEGORİ DEĞİŞTİRME MODAL -->
 <div class="modal-ov" id="changeCatModal">
   <div class="modal">
     <div class="modal-head">
@@ -540,7 +564,7 @@
   var BATCH_SIZE = 24; 
 
   /* ============================================================
-     DİL DESTEĞİ (TAM ÇEVİRİ)
+     DİL DESTEĞİ
      ============================================================ */
   var LANGS = [
     { code: "en", label: "English", flag: "🇬🇧" },
@@ -556,86 +580,16 @@
   ];
 
   var I18N = {
-    en: { 
-      heroTitle1: "Hot", heroTitle2: "Products", heroSub: "Select a category to browse.", 
-      searchPlaceholder: "Search...", clearBtn: "Clear", loading: "Loading…", loadingSub: "Please wait.", 
-      loadingMore: "Loading more...", navHome: "Home", navPromo: "Promo", navHot: "Hot", navInfo: "Info", 
-      settingsTitle: "Settings", appearance: "Appearance", darkMode: "Dark Mode", language: "Language", 
-      emptyTitle: "No Products", emptyText: "No products or images unavailable.",
-      catAll: "All", changeCatTitle: "Change Category", changeCatBtn: "Change"
-    },
-    tr: { 
-      heroTitle1: "Sıcak", heroTitle2: "Ürünler", heroSub: "İncelemek için kategori seçin.", 
-      searchPlaceholder: "Ara...", clearBtn: "Temizle", loading: "Yükleniyor…", loadingSub: "Lütfen bekleyin.", 
-      loadingMore: "Daha fazla yükleniyor...", navHome: "Ana Sayfa", navPromo: "Promosyon", navHot: "Sıcak", 
-      navInfo: "Bilgi", settingsTitle: "Ayarlar", appearance: "Görünüm", darkMode: "Karanlık Mod", 
-      language: "Dil", emptyTitle: "Ürün Bulunamadı", emptyText: "Ürün yok veya resimler yüklenemedi.",
-      catAll: "Tümü", changeCatTitle: "Kategori Değiştir", changeCatBtn: "Değiştir"
-    },
-    es: { 
-      heroTitle1: "Productos", heroTitle2: "Calientes", heroSub: "Selecciona una categoría.", 
-      searchPlaceholder: "Buscar...", clearBtn: "Limpiar", loading: "Cargando…", loadingSub: "Espera...", 
-      loadingMore: "Cargando...", navHome: "Inicio", navPromo: "Promo", navHot: "Calientes", navInfo: "Info", 
-      settingsTitle: "Ajustes", appearance: "Apariencia", darkMode: "Oscuro", language: "Idioma", 
-      emptyTitle: "Sin Productos", emptyText: "No hay productos o imágenes.",
-      catAll: "Todo", changeCatTitle: "Cambiar Categoría", changeCatBtn: "Cambiar"
-    },
-    de: { 
-      heroTitle1: "Heiße", heroTitle2: "Produkte", heroSub: "Wähle eine Kategorie.", 
-      searchPlaceholder: "Suchen...", clearBtn: "Löschen", loading: "Lädt…", loadingSub: "Bitte warten.", 
-      loadingMore: "Mehr laden...", navHome: "Start", navPromo: "Promo", navHot: "Heiß", navInfo: "Info", 
-      settingsTitle: "Einstellungen", appearance: "Aussehen", darkMode: "Dunkel", language: "Sprache", 
-      emptyTitle: "Keine Produkte", emptyText: "Keine Produkte oder Bilder.",
-      catAll: "Alle", changeCatTitle: "Kategorie Wechseln", changeCatBtn: "Wechseln"
-    },
-    fr: { 
-      heroTitle1: "Produits", heroTitle2: "Populaires", heroSub: "Choisissez une catégorie.", 
-      searchPlaceholder: "Rechercher...", clearBtn: "Effacer", loading: "Chargement…", loadingSub: "Patientez.", 
-      loadingMore: "Charger plus...", navHome: "Accueil", navPromo: "Promo", navHot: "Populaires", navInfo: "Info", 
-      settingsTitle: "Paramètres", appearance: "Apparence", darkMode: "Sombre", language: "Langue", 
-      emptyTitle: "Aucun Produit", emptyText: "Pas de produits ou d'images.",
-      catAll: "Tout", changeCatTitle: "Changer de Catégorie", changeCatBtn: "Changer"
-    },
-    it: { 
-      heroTitle1: "Prodotti", heroTitle2: "Calda", heroSub: "Seleziona una categoria.", 
-      searchPlaceholder: "Cerca...", clearBtn: "Cancella", loading: "Caricamento…", loadingSub: "Attendere.", 
-      loadingMore: "Carica altri...", navHome: "Home", navPromo: "Promo", navHot: "Caldi", navInfo: "Info", 
-      settingsTitle: "Impostazioni", appearance: "Aspetto", darkMode: "Scuro", language: "Lingua", 
-      emptyTitle: "Nessun Prodotto", emptyText: "Nessun prodotto o immagine.",
-      catAll: "Tutto", changeCatTitle: "Cambia Categoria", changeCatBtn: "Cambia"
-    },
-    pt: { 
-      heroTitle1: "Produtos", heroTitle2: "Quentes", heroSub: "Selecione uma categoria.", 
-      searchPlaceholder: "Pesquisar...", clearBtn: "Limpar", loading: "Carregando…", loadingSub: "Aguarde.", 
-      loadingMore: "Carregar mais...", navHome: "Início", navPromo: "Promo", navHot: "Quentes", navInfo: "Info", 
-      settingsTitle: "Configurações", appearance: "Aparência", darkMode: "Escuro", language: "Idioma", 
-      emptyTitle: "Sem Produtos", emptyText: "Nenhum produto ou imagem.",
-      catAll: "Todos", changeCatTitle: "Mudar Categoria", changeCatBtn: "Mudar"
-    },
-    ja: { 
-      heroTitle1: "人気", heroTitle2: "商品", heroSub: "カテゴリを選択してください。", 
-      searchPlaceholder: "検索...", clearBtn: "クリア", loading: "読み込み中…", loadingSub: "お待ちください。", 
-      loadingMore: "さらに読み込む...", navHome: "ホーム", navPromo: "プロモ", navHot: "人気", navInfo: "情報", 
-      settingsTitle: "設定", appearance: "外観", darkMode: "ダーク", language: "言語", 
-      emptyTitle: "商品なし", emptyText: "商品または画像がありません。",
-      catAll: "すべて", changeCatTitle: "カテゴリ変更", changeCatBtn: "変更"
-    },
-    ko: { 
-      heroTitle1: "인기", heroTitle2: "상품", heroSub: "카테고리를 선택하세요.", 
-      searchPlaceholder: "검색...", clearBtn: "지우기", loading: "로딩 중…", loadingSub: "잠시만요.", 
-      loadingMore: "더 로드 중...", navHome: "홈", navPromo: "프로모", navHot: "인기", navInfo: "정보", 
-      settingsTitle: "설정", appearance: "화면", darkMode: "다크", language: "언어", 
-      emptyTitle: "상품 없음", emptyText: "상품 또는 이미지가 없습니다.",
-      catAll: "전체", changeCatTitle: "카테고리 변경", changeCatBtn: "변경"
-    },
-    zh: { 
-      heroTitle1: "热门", heroTitle2: "产品", heroSub: "选择一个类别。", 
-      searchPlaceholder: "搜索...", clearBtn: "清除", loading: "加载中…", loadingSub: "请稍候。", 
-      loadingMore: "加载更多...", navHome: "首页", navPromo: "促销", navHot: "热门", navInfo: "信息", 
-      settingsTitle: "设置", appearance: "外观", darkMode: "深色", language: "语言", 
-      emptyTitle: "无产品", emptyText: "没有产品或图片。",
-      catAll: "全部", changeCatTitle: "更换分类", changeCatBtn: "更换"
-    }
+    en: { heroTitle1: "Hot", heroTitle2: "Products", heroSub: "Select a category to browse.", searchPlaceholder: "Search...", clearBtn: "Clear", loading: "Loading…", loadingSub: "Please wait.", loadingMore: "Loading more...", navHome: "Home", navPromo: "Promo", navHot: "Hot", navInfo: "Info", settingsTitle: "Settings", appearance: "Appearance", darkMode: "Dark Mode", language: "Language", emptyTitle: "No Products", emptyText: "No products or images unavailable.", changeCatTitle: "Change Category", changeCatBtn: "Change", allSubcats: "View All Products" },
+    tr: { heroTitle1: "Sıcak", heroTitle2: "Ürünler", heroSub: "İncelemek için kategori seçin.", searchPlaceholder: "Ara...", clearBtn: "Temizle", loading: "Yükleniyor…", loadingSub: "Lütfen bekleyin.", loadingMore: "Daha fazla yükleniyor...", navHome: "Ana Sayfa", navPromo: "Promosyon", navHot: "Sıcak", navInfo: "Bilgi", settingsTitle: "Ayarlar", appearance: "Görünüm", darkMode: "Karanlık Mod", language: "Dil", emptyTitle: "Ürün Bulunamadı", emptyText: "Ürün yok veya resimler yüklenemedi.", changeCatTitle: "Kategori Değiştir", changeCatBtn: "Değiştir", allSubcats: "Tüm Ürünleri Gör" },
+    es: { heroTitle1: "Productos", heroTitle2: "Calientes", heroSub: "Selecciona una categoría.", searchPlaceholder: "Buscar...", clearBtn: "Limpiar", loading: "Cargando…", loadingSub: "Espera...", loadingMore: "Cargando...", navHome: "Inicio", navPromo: "Promo", navHot: "Calientes", navInfo: "Info", settingsTitle: "Ajustes", appearance: "Apariencia", darkMode: "Oscuro", language: "Idioma", emptyTitle: "Sin Productos", emptyText: "No hay productos o imágenes.", changeCatTitle: "Cambiar Categoría", changeCatBtn: "Cambiar", allSubcats: "Ver Todos los Productos" },
+    de: { heroTitle1: "Heiße", heroTitle2: "Produkte", heroSub: "Wähle eine Kategorie.", searchPlaceholder: "Suchen...", clearBtn: "Löschen", loading: "Lädt…", loadingSub: "Bitte warten.", loadingMore: "Mehr laden...", navHome: "Start", navPromo: "Promo", navHot: "Heiß", navInfo: "Info", settingsTitle: "Einstellungen", appearance: "Aussehen", darkMode: "Dunkel", language: "Sprache", emptyTitle: "Keine Produkte", emptyText: "Keine Produkte oder Bilder.", changeCatTitle: "Kategorie Wechseln", changeCatBtn: "Wechseln", allSubcats: "Alle Produkte Anzeigen" },
+    fr: { heroTitle1: "Produits", heroTitle2: "Populaires", heroSub: "Choisissez une catégorie.", searchPlaceholder: "Rechercher...", clearBtn: "Effacer", loading: "Chargement…", loadingSub: "Patientez.", loadingMore: "Charger plus...", navHome: "Accueil", navPromo: "Promo", navHot: "Populaires", navInfo: "Info", settingsTitle: "Paramètres", appearance: "Apparence", darkMode: "Sombre", language: "Langue", emptyTitle: "Aucun Produit", emptyText: "Pas de produits ou d'images.", changeCatTitle: "Changer de Catégorie", changeCatBtn: "Changer", allSubcats: "Voir Tous les Produits" },
+    it: { heroTitle1: "Prodotti", heroTitle2: "Calda", heroSub: "Seleziona una categoria.", searchPlaceholder: "Cerca...", clearBtn: "Cancella", loading: "Caricamento…", loadingSub: "Attendere.", loadingMore: "Carica altri...", navHome: "Home", navPromo: "Promo", navHot: "Caldi", navInfo: "Info", settingsTitle: "Impostazioni", appearance: "Aspetto", darkMode: "Scuro", language: "Lingua", emptyTitle: "Nessun Prodotto", emptyText: "Nessun prodotto o immagine.", changeCatTitle: "Cambia Categoria", changeCatBtn: "Cambia", allSubcats: "Vedi Tutti i Prodotti" },
+    pt: { heroTitle1: "Produtos", heroTitle2: "Quentes", heroSub: "Selecione uma categoria.", searchPlaceholder: "Pesquisar...", clearBtn: "Limpar", loading: "Carregando…", loadingSub: "Aguarde.", loadingMore: "Carregar mais...", navHome: "Início", navPromo: "Promo", navHot: "Quentes", navInfo: "Info", settingsTitle: "Configurações", appearance: "Aparência", darkMode: "Escuro", language: "Idioma", emptyTitle: "Sem Produtos", emptyText: "Nenhum produto ou imagem.", changeCatTitle: "Mudar Categoria", changeCatBtn: "Mudar", allSubcats: "Ver Todos os Produtos" },
+    ja: { heroTitle1: "人気", heroTitle2: "商品", heroSub: "カテゴリを選択してください。", searchPlaceholder: "検索...", clearBtn: "クリア", loading: "読み込み中…", loadingSub: "お待ちください。", loadingMore: "さらに読み込む...", navHome: "ホーム", navPromo: "プロモ", navHot: "人気", navInfo: "情報", settingsTitle: "設定", appearance: "外観", darkMode: "ダーク", language: "言語", emptyTitle: "商品なし", emptyText: "商品または画像がありません。", changeCatTitle: "カテゴリ変更", changeCatBtn: "変更", allSubcats: "すべての商品を見る" },
+    ko: { heroTitle1: "인기", heroTitle2: "상품", heroSub: "카테고리를 선택하세요.", searchPlaceholder: "검색...", clearBtn: "지우기", loading: "로딩 중…", loadingSub: "잠시만요.", loadingMore: "더 로드 중...", navHome: "홈", navPromo: "프로모", navHot: "인기", navInfo: "정보", settingsTitle: "설정", appearance: "화면", darkMode: "다크", language: "언어", emptyTitle: "상품 없음", emptyText: "상품 또는 이미지가 없습니다.", changeCatTitle: "카테고리 변경", changeCatBtn: "변경", allSubcats: "모든 상품 보기" },
+    zh: { heroTitle1: "热门", heroTitle2: "产品", heroSub: "选择一个类别。", searchPlaceholder: "搜索...", clearBtn: "清除", loading: "加载中…", loadingSub: "请稍候。", loadingMore: "加载更多...", navHome: "首页", navPromo: "促销", navHot: "热门", navInfo: "信息", settingsTitle: "设置", appearance: "外观", darkMode: "深色", language: "语言", emptyTitle: "无产品", emptyText: "没有产品或图片。", changeCatTitle: "更换分类", changeCatBtn: "更换", allSubcats: "查看所有产品" }
   };
 
   function $(id) { return document.getElementById(id); }
@@ -680,14 +634,14 @@
     renderHomeCategories();
     if(state.activeCategory) {
        var cat = CATEGORIES.find(function(c) { return c.id === state.activeCategory; });
-       if(cat) $("catScreenTitle").innerHTML = '<span>' + cat.icon + '</span> ' + esc(cat.name);
+       if(cat) $("subcatScreenTitle").innerHTML = '<span>' + cat.icon + '</span> ' + esc(cat.name);
     }
     renderChangeCatList();
+    renderSubcatList(); // Alt kategori listesini yeniden çiz
 
     if (state.isSearching) {
       performSearch(state.searchQuery);
     } else if (state.currentList.length > 0) {
-      renderSubCategories();
       renderFilteredList();
     }
   }
@@ -861,9 +815,8 @@
   }
 
   /* ============================================================
-     RENDER FONKSİYONLARI
+     ADIM 1: ALT KATEGORİ LİSTESİ
      ============================================================ */
-  
   function renderHomeCategories() {
     var grid = $("mainCatGrid");
     grid.innerHTML = "";
@@ -878,64 +831,98 @@
         '</div>' +
         '<div class="mcc-arrow">→</div>';
       
-      card.addEventListener("click", function() { openCategoryScreen(cat.id); });
+      card.addEventListener("click", function() { openSubcatScreen(cat.id); });
       grid.appendChild(card);
     });
   }
 
-  function openCategoryScreen(catId) {
+  function openSubcatScreen(catId) {
     state.activeCategory = catId;
     var cat = CATEGORIES.find(function(c) { return c.id === catId; });
     
-    $("catScreenTitle").innerHTML = '<span>' + cat.icon + '</span> ' + esc(cat.name);
+    $("subcatScreenTitle").innerHTML = '<span>' + cat.icon + '</span> ' + esc(cat.name);
     $("homeView").classList.remove("active");
-    $("categoryScreen").classList.add("open");
-    state.activeSubCategory = "all";
+    $("subcatScreen").classList.add("open");
+    $("categoryScreen").classList.remove("open"); // Ürün ekranı kapalı olsun
+
+    // Veriyi yükle ve alt kategori listesini oluştur
+    $("subcatList").innerHTML = '<div class="loading-state" style="background:transparent; border:none;"><div class="spinner"></div></div>';
     
-    loadAndRenderActiveCategory();
+    loadCategoryData(catId).then(function(products) {
+      var catSet = {};
+      products.forEach(function(p) { if (p.category) catSet[p.category] = 1; });
+      state.availableSubCats = Object.keys(catSet).sort();
+      renderSubcatList();
+    });
   }
 
-  function closeCategoryScreen() {
-    $("categoryScreen").classList.remove("open");
-    $("homeView").classList.add("active");
+  function renderSubcatList() {
+    var list = $("subcatList");
+    list.innerHTML = "";
+
+    if (state.availableSubCats.length === 0) {
+      list.innerHTML = '<p style="text-align:center; color:var(--text-dim); padding:20px;">' + t("emptyText") + '</p>';
+      return;
+    }
+
+    // "Tümünü Gör" Butonu
+    var allItem = document.createElement("div");
+    allItem.className = "subcat-item";
+    allItem.innerHTML = 
+      '<span class="subcat-name">' + t("allSubcats") + '</span>' +
+      '<span class="subcat-arrow">→</span>';
+    allItem.addEventListener("click", function() {
+      state.activeSubCategory = "all";
+      openProductScreen();
+    });
+    list.appendChild(allItem);
+
+    // Diğer Alt Kategoriler
+    state.availableSubCats.forEach(function(sc) {
+      var item = document.createElement("div");
+      item.className = "subcat-item";
+      item.innerHTML = 
+        '<span class="subcat-name">' + esc(sc) + '</span>' +
+        '<span class="subcat-arrow">→</span>';
+      item.addEventListener("click", function() {
+        state.activeSubCategory = sc;
+        openProductScreen();
+      });
+      list.appendChild(item);
+    });
+  }
+
+  /* ============================================================
+     ADIM 2: ÜRÜN EKRANI
+     ============================================================ */
+  function openProductScreen() {
+    // Başlığı güncelle
+    var title = (state.activeSubCategory === "all") ? t("allSubcats") : state.activeSubCategory;
+    $("productScreenTitle").textContent = title;
+    
+    // Ekranları değiştir
+    $("subcatScreen").classList.remove("open");
+    $("categoryScreen").classList.add("open");
+    
+    // Arama çubuğunu temizle
     $("searchInput").value = "";
     state.searchQuery = "";
     state.isSearching = false;
     $("searchStatus").classList.remove("show");
+
+    // Ürünleri göster
+    renderFilteredList();
   }
 
-  function renderSubCategories() {
-    var strip = $("subcategoryStrip");
-    strip.innerHTML = "";
-    
-    if (state.isSearching || state.availableSubCats.length <= 1) {
-      strip.style.display = "none";
-      return;
-    }
-    strip.style.display = "flex";
+  function closeProductScreen() {
+    $("categoryScreen").classList.remove("open");
+    $("subcatScreen").classList.add("open");
+  }
 
-    // "Tümü" Butonu - Dil desteği eklendi
-    var allBtn = document.createElement("button");
-    allBtn.className = "subcat-btn" + (state.activeSubCategory === "all" ? " active" : "");
-    allBtn.textContent = t("catAll");
-    allBtn.addEventListener("click", function() {
-      state.activeSubCategory = "all";
-      renderSubCategories();
-      renderFilteredList();
-    });
-    strip.appendChild(allBtn);
-
-    state.availableSubCats.forEach(function(sc) {
-      var btn = document.createElement("button");
-      btn.className = "subcat-btn" + (state.activeSubCategory === sc ? " active" : "");
-      btn.textContent = sc;
-      btn.addEventListener("click", function() {
-        state.activeSubCategory = sc;
-        renderSubCategories();
-        renderFilteredList();
-      });
-      strip.appendChild(btn);
-    });
+  function closeAllToHome() {
+    $("subcatScreen").classList.remove("open");
+    $("categoryScreen").classList.remove("open");
+    $("homeView").classList.add("active");
   }
 
   function renderProductCard(p) {
@@ -1009,24 +996,6 @@
     renderList(products, "");
   }
 
-  function loadAndRenderActiveCategory() {
-    $("productArea").innerHTML = 
-      '<div class="loading-state">' +
-        '<div class="spinner"></div>' +
-        '<h3>' + t("loading") + '</h3>' +
-        '<p>' + t("loadingSub") + '</p>' +
-      '</div>';
-    
-    loadCategoryData(state.activeCategory).then(function(products) {
-      var catSet = {};
-      products.forEach(function(p) { if (p.category) catSet[p.category] = 1; });
-      state.availableSubCats = Object.keys(catSet).sort();
-
-      renderSubCategories();
-      renderFilteredList();
-    });
-  }
-
   /* ============================================================
      YENİ: KATEGORİ DEĞİŞTİRME MODALI
      ============================================================ */
@@ -1042,7 +1011,7 @@
       
       item.addEventListener("click", function() {
         $("changeCatModal").classList.remove("open");
-        openCategoryScreen(cat.id);
+        openSubcatScreen(cat.id);
       });
       list.appendChild(item);
     });
@@ -1055,7 +1024,6 @@
     if (!query) {
       state.isSearching = false;
       $("searchStatus").classList.remove("show");
-      renderSubCategories();
       renderFilteredList();
       return;
     }
@@ -1063,7 +1031,6 @@
     state.isSearching = true;
     $("searchStatus").classList.add("show");
     $("searchStatusText").textContent = '"' + query + '"...';
-    renderSubCategories();
 
     $("productArea").innerHTML = 
       '<div class="loading-state">' +
@@ -1074,6 +1041,11 @@
 
     var q = query.toLowerCase();
     var products = state.cache[state.activeCategory] || [];
+    
+    // Arama, aktif alt kategori içinde yapılır
+    if (state.activeSubCategory !== "all") {
+      products = products.filter(function(p) { return p.category === state.activeSubCategory; });
+    }
     
     var filtered = products.filter(function(p) {
       var hay = (p.title || "").toLowerCase();
@@ -1087,9 +1059,9 @@
   /* ============================================================
      ETKİLEŞİMLER
      ============================================================ */
-  $("backBtn").addEventListener("click", closeCategoryScreen);
+  $("backToHomeBtn").addEventListener("click", closeAllToHome);
+  $("backToSubcatBtn").addEventListener("click", closeProductScreen);
 
-  // Kategori Değiştir Butonu
   $("changeCatBtn").addEventListener("click", function() {
     $("changeCatModal").classList.add("open");
   });
@@ -1109,7 +1081,6 @@
     state.searchQuery = "";
     state.isSearching = false;
     $("searchStatus").classList.remove("show");
-    renderSubCategories();
     renderFilteredList();
   });
 
@@ -1140,7 +1111,8 @@
 
   /* ============ MODAL ============ */
   $("settingsBtn").addEventListener("click", function() { $("settingsModal").classList.add("open"); });
-  $("settingsBtn2").addEventListener("click", function() { $("settingsModal").classList.add("open"); });
+  $("settingsBtnSub").addEventListener("click", function() { $("settingsModal").classList.add("open"); });
+  $("settingsBtnProd").addEventListener("click", function() { $("settingsModal").classList.add("open"); });
   
   document.querySelectorAll("[data-close]").forEach(function(btn) {
     btn.addEventListener("click", function() {
