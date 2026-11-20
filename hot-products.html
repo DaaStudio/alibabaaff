@@ -124,7 +124,7 @@
 
   .container { max-width: 1100px; margin: 0 auto; padding: 0 14px 40px; }
 
-  /* Üst Kategori Çubuğu (3 Ana Dosya) */
+  /* Üst Kategori Çubuğu */
   .category-strip {
     display:flex; gap:8px; overflow-x:auto;
     padding: 10px 4px;
@@ -149,7 +149,7 @@
     color: var(--brand2);
   }
 
-  /* Alt Kategori Çubuğu (Dosya İçindeki Kategoriler) */
+  /* Alt Kategori Çubuğu */
   .subcategory-strip {
     display:none;
     gap:8px; overflow-x:auto;
@@ -231,23 +231,34 @@
     overflow:hidden;
     text-decoration:none; color: var(--text);
     position:relative;
-    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, opacity .3s ease;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    /* GÖRSEL YÜKLENENE KADAR GÖRÜNMEZ YAP */
+    opacity: 0; 
+    visibility: hidden;
   }
+  /* Görsel yüklendiğinde (onload) bu class eklenecek */
+  .product-card.loaded {
+    opacity: 1;
+    visibility: visible;
+    animation: fadeIn .3s ease forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   .product-card:hover { transform: translateY(-3px); border-color: rgba(255,106,0,0.55); box-shadow: 0 12px 30px var(--shadow); }
   .product-card:active { transform: scale(0.98); }
-  .product-card.broken { display: none !important; animation: none; }
-
+  
   .pc-img-wrap {
     position:relative; width:100%; aspect-ratio: 1/1;
     background: var(--card2); overflow:hidden;
   }
   .pc-img {
     width:100%; height:100%; object-fit:cover; display:block;
-    transition: transform .3s ease, opacity .3s ease;
+    transition: transform .3s ease;
   }
   .product-card:hover .pc-img { transform: scale(1.05); }
-  .pc-img.loading { opacity: 0; }
-  .pc-img.loaded { opacity: 1; }
 
   .pc-badge {
     position:absolute; top:8px; left:8px;
@@ -373,6 +384,22 @@
   .switch.on { background: var(--blue); }
   .switch.on::after { transform: translateX(24px); background:#fff; }
 
+  .lang-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .lang-btn {
+    display:flex; align-items:center; gap:10px;
+    padding: 12px 14px; border-radius:12px;
+    border:1px solid var(--border); background: var(--card);
+    color: var(--text); font-size:.85rem; font-weight:650;
+    cursor:pointer; text-align:left; transition: all .18s ease;
+  }
+  .lang-btn:active { transform: scale(0.96); }
+  .lang-btn.active {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+    color: var(--brand2); font-weight:800;
+  }
+  .lang-btn .flag { font-size:1.12rem; line-height:1; }
+
   ::-webkit-scrollbar { width:6px; height:6px; }
   ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius:10px; }
 </style>
@@ -387,13 +414,13 @@
     <div class="brand-title">Hot <b>Products</b></div>
   </div>
   <div class="header-actions">
-    <button class="icon-btn" id="settingsBtn">⚙️</button>
+    <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙️</button>
   </div>
 </header>
 
 <section class="hero">
-  <h1><span>Hot</span> <span class="accent">Products</span></h1>
-  <p>Kategori seçerek ürünleri inceleyin veya arama yaparak tüm dosyalarda arama yapın.</p>
+  <h1><span data-i18n="heroTitle1">Hot</span> <span class="accent" data-i18n="heroTitle2">Products</span></h1>
+  <p data-i18n="heroSub">Kategori seçerek ürünleri inceleyin veya arama yaparak tüm dosyalarda arama yapın.</p>
 </section>
 
 <div class="container">
@@ -407,49 +434,56 @@
   <div class="toolbar">
     <div class="search-box">
       <span class="s-ico">🔍</span>
-      <input type="text" id="searchInput" placeholder="Tüm ürünlerde ara... (Örn: phone, dress)" autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Tüm ürünlerde ara..." data-i18n-placeholder="searchPlaceholder" autocomplete="off">
     </div>
   </div>
 
   <div class="search-status" id="searchStatus">
     <span id="searchStatusText">"..." için arama sonuçları</span>
-    <button id="clearSearchBtn">İptal Et / Temizle</button>
+    <button id="clearSearchBtn" data-i18n="clearBtn">İptal Et</button>
   </div>
 
   <!-- Ürün Alanı -->
   <div id="productArea">
     <div class="loading-state">
       <div class="spinner"></div>
-      <h3>Yükleniyor…</h3>
-      <p>Lütfen bekleyin.</p>
+      <h3 data-i18n="loading">Yükleniyor…</h3>
+      <p data-i18n="loadingSub">Lütfen bekleyin.</p>
     </div>
   </div>
 
   <!-- Sonsuz Kaydırma Yükleyici -->
   <div class="loading-more" id="loadingMore">
     <div class="spinner" style="width:24px; height:24px; border-width:3px; margin:0 auto 8px;"></div>
-    Daha fazla ürün yükleniyor...
+    <span data-i18n="loadingMore">Daha fazla ürün yükleniyor...</span>
   </div>
 </div>
 
 <nav class="bottom-nav">
-  <a class="nav-btn" href="index.html"><span class="ni">🏠</span><span>Ana Sayfa</span></a>
-  <a class="nav-btn" href="index.html#promo"><span class="ni">🎟️</span><span>Promosyon</span></a>
-  <a class="nav-btn active" href="hot-products.html"><span class="ni">🔥</span><span>Sıcak Ürünler</span></a>
-  <a class="nav-btn" href="index.html#info"><span class="ni">ℹ️</span><span>Bilgi</span></a>
+  <a class="nav-btn" href="index.html"><span class="ni">🏠</span><span data-i18n="navHome">Ana Sayfa</span></a>
+  <a class="nav-btn" href="index.html#promo"><span class="ni">🎟️</span><span data-i18n="navPromo">Promosyon</span></a>
+  <a class="nav-btn active" href="hot-products.html"><span class="ni">🔥</span><span data-i18n="navHot">Sıcak Ürünler</span></a>
+  <a class="nav-btn" href="index.html#info"><span class="ni">ℹ️</span><span data-i18n="navInfo">Bilgi</span></a>
 </nav>
 
+<!-- SETTINGS MODAL -->
 <div class="modal-ov" id="settingsModal">
   <div class="modal">
     <div class="modal-head">
-      <h2>Ayarlar</h2>
+      <h2 data-i18n="settingsTitle">Ayarlar</h2>
       <button class="modal-close" data-close="settings">✕</button>
     </div>
     <div class="modal-body">
-      <div class="settings-lbl">Görünüm</div>
-      <div class="theme-row">
-        <span>Karanlık Mod</span>
-        <div class="switch" id="themeSwitch"></div>
+      <div class="settings-block">
+        <div class="settings-lbl" data-i18n="appearance">Görünüm</div>
+        <div class="theme-row">
+          <span data-i18n="darkMode">Karanlık Mod</span>
+          <div class="switch" id="themeSwitch"></div>
+        </div>
+      </div>
+      <div class="settings-block">
+        <div class="settings-lbl" data-i18n="language">Dil</div>
+        <div class="lang-grid" id="langGrid"></div>
       </div>
     </div>
   </div>
@@ -471,14 +505,284 @@
   var BATCH_SIZE = 24; 
 
   /* ============================================================
-     YARDIMCILAR
+     DİL DESTEĞİ (i18n)
      ============================================================ */
+  var LANGS = [
+    { code: "en", label: "English", flag: "🇬🇧" },
+    { code: "tr", label: "Türkçe", flag: "🇹🇷" },
+    { code: "es", label: "Español", flag: "🇪🇸" },
+    { code: "de", label: "Deutsch", flag: "🇩🇪" },
+    { code: "fr", label: "Français", flag: "🇫🇷" },
+    { code: "it", label: "Italiano", flag: "🇮🇹" },
+    { code: "pt", label: "Português", flag: "🇵🇹" },
+    { code: "ja", label: "日本語", flag: "🇯🇵" },
+    { code: "ko", label: "한국어", flag: "🇰🇷" },
+    { code: "zh", label: "中文", flag: "🇨🇳" }
+  ];
+
+  var I18N = {
+    en: {
+      heroTitle1: "Hot",
+      heroTitle2: "Products",
+      heroSub: "Browse products by category or search across all files.",
+      searchPlaceholder: "Search all products...",
+      clearBtn: "Clear",
+      loading: "Loading…",
+      loadingSub: "Please wait.",
+      loadingMore: "Loading more products...",
+      navHome: "Home",
+      navPromo: "Promo",
+      navHot: "Hot Products",
+      navInfo: "Info",
+      settingsTitle: "Settings",
+      appearance: "Appearance",
+      darkMode: "Dark Mode",
+      language: "Language",
+      emptyTitle: "No Products Found",
+      emptyText: "No valid products found in this category or images could not be loaded."
+    },
+    tr: {
+      heroTitle1: "Sıcak",
+      heroTitle2: "Ürünler",
+      heroSub: "Kategori seçerek ürünleri inceleyin veya arama yaparak tüm dosyalarda arama yapın.",
+      searchPlaceholder: "Tüm ürünlerde ara...",
+      clearBtn: "İptal Et",
+      loading: "Yükleniyor…",
+      loadingSub: "Lütfen bekleyin.",
+      loadingMore: "Daha fazla ürün yükleniyor...",
+      navHome: "Ana Sayfa",
+      navPromo: "Promosyon",
+      navHot: "Sıcak Ürünler",
+      navInfo: "Bilgi",
+      settingsTitle: "Ayarlar",
+      appearance: "Görünüm",
+      darkMode: "Karanlık Mod",
+      language: "Dil",
+      emptyTitle: "Ürün Bulunamadı",
+      emptyText: "Bu kategoride geçerli ürün bulunmuyor veya resimler yüklenemedi."
+    },
+    es: {
+      heroTitle1: "Productos",
+      heroTitle2: "Calientes",
+      heroSub: "Explora productos por categoría o busca en todos los archivos.",
+      searchPlaceholder: "Buscar todos los productos...",
+      clearBtn: "Limpiar",
+      loading: "Cargando…",
+      loadingSub: "Por favor espera.",
+      loadingMore: "Cargando más productos...",
+      navHome: "Inicio",
+      navPromo: "Promo",
+      navHot: "Productos Calientes",
+      navInfo: "Info",
+      settingsTitle: "Ajustes",
+      appearance: "Apariencia",
+      darkMode: "Modo Oscuro",
+      language: "Idioma",
+      emptyTitle: "No se encontraron productos",
+      emptyText: "No se encontraron productos válidos o las imágenes no se pudieron cargar."
+    },
+    de: {
+      heroTitle1: "Heiße",
+      heroTitle2: "Produkte",
+      heroSub: "Durchsuchen Sie Produkte nach Kategorie oder suchen Sie in allen Dateien.",
+      searchPlaceholder: "Alle Produkte durchsuchen...",
+      clearBtn: "Löschen",
+      loading: "Wird geladen…",
+      loadingSub: "Bitte warten.",
+      loadingMore: "Weitere Produkte werden geladen...",
+      navHome: "Startseite",
+      navPromo: "Promo",
+      navHot: "Heiße Produkte",
+      navInfo: "Info",
+      settingsTitle: "Einstellungen",
+      appearance: "Aussehen",
+      darkMode: "Dunkelmodus",
+      language: "Sprache",
+      emptyTitle: "Keine Produkte gefunden",
+      emptyText: "Keine gültigen Produkte gefunden oder Bilder konnten nicht geladen werden."
+    },
+    fr: {
+      heroTitle1: "Produits",
+      heroTitle2: "Populaires",
+      heroSub: "Parcourez les produits par catégorie ou recherchez dans tous les fichiers.",
+      searchPlaceholder: "Rechercher tous les produits...",
+      clearBtn: "Effacer",
+      loading: "Chargement…",
+      loadingSub: "Veuillez patienter.",
+      loadingMore: "Chargement de plus de produits...",
+      navHome: "Accueil",
+      navPromo: "Promo",
+      navHot: "Produits Populaires",
+      navInfo: "Info",
+      settingsTitle: "Paramètres",
+      appearance: "Apparence",
+      darkMode: "Mode Sombre",
+      language: "Langue",
+      emptyTitle: "Aucun produit trouvé",
+      emptyText: "Aucun produit valide trouvé ou les images n'ont pas pu être chargées."
+    },
+    it: {
+      heroTitle1: "Prodotti",
+      heroTitle2: "Calda",
+      heroSub: "Sfoglia i prodotti per categoria o cerca in tutti i file.",
+      searchPlaceholder: "Cerca tutti i prodotti...",
+      clearBtn: "Cancella",
+      loading: "Caricamento…",
+      loadingSub: "Attendere prego.",
+      loadingMore: "Caricamento di altri prodotti...",
+      navHome: "Home",
+      navPromo: "Promo",
+      navHot: "Prodotti Caldi",
+      navInfo: "Info",
+      settingsTitle: "Impostazioni",
+      appearance: "Aspetto",
+      darkMode: "Modalità Scura",
+      language: "Lingua",
+      emptyTitle: "Nessun prodotto trovato",
+      emptyText: "Nessun prodotto valido trovato o le immagini non possono essere caricate."
+    },
+    pt: {
+      heroTitle1: "Produtos",
+      heroTitle2: "Quentes",
+      heroSub: "Navegue pelos produtos por categoria ou pesquise em todos os arquivos.",
+      searchPlaceholder: "Pesquisar todos os produtos...",
+      clearBtn: "Limpar",
+      loading: "Carregando…",
+      loadingSub: "Por favor, aguarde.",
+      loadingMore: "Carregando mais produtos...",
+      navHome: "Início",
+      navPromo: "Promo",
+      navHot: "Produtos Quentes",
+      navInfo: "Info",
+      settingsTitle: "Configurações",
+      appearance: "Aparência",
+      darkMode: "Modo Escuro",
+      language: "Idioma",
+      emptyTitle: "Nenhum produto encontrado",
+      emptyText: "Nenhum produto válido encontrado ou as imagens não puderam ser carregadas."
+    },
+    ja: {
+      heroTitle1: "人気",
+      heroTitle2: "商品",
+      heroSub: "カテゴリ別に商品を閲覧するか、すべてのファイルを検索します。",
+      searchPlaceholder: "すべての商品を検索...",
+      clearBtn: "クリア",
+      loading: "読み込み中…",
+      loadingSub: "お待ちください。",
+      loadingMore: "さらに商品を読み込んでいます...",
+      navHome: "ホーム",
+      navPromo: "プロモ",
+      navHot: "人気商品",
+      navInfo: "情報",
+      settingsTitle: "設定",
+      appearance: "外観",
+      darkMode: "ダークモード",
+      language: "言語",
+      emptyTitle: "商品が見つかりません",
+      emptyText: "有効な商品が見つからないか、画像を読み込めませんでした。"
+    },
+    ko: {
+      heroTitle1: "인기",
+      heroTitle2: "상품",
+      heroSub: "카테고리별로 상품을 탐색하거나 모든 파일을 검색하세요.",
+      searchPlaceholder: "모든 상품 검색...",
+      clearBtn: "지우기",
+      loading: "로딩 중…",
+      loadingSub: "잠시만 기다려 주세요.",
+      loadingMore: "더 많은 상품 로딩 중...",
+      navHome: "홈",
+      navPromo: "프로모",
+      navHot: "인기 상품",
+      navInfo: "정보",
+      settingsTitle: "설정",
+      appearance: "화면",
+      darkMode: "다크 모드",
+      language: "언어",
+      emptyTitle: "상품을 찾을 수 없습니다",
+      emptyText: "유효한 상품이 없거나 이미지를 로드할 수 없습니다."
+    },
+    zh: {
+      heroTitle1: "热门",
+      heroTitle2: "产品",
+      heroSub: "按类别浏览产品或在所有文件中搜索。",
+      searchPlaceholder: "搜索所有产品...",
+      clearBtn: "清除",
+      loading: "加载中…",
+      loadingSub: "请稍候。",
+      loadingMore: "正在加载更多产品...",
+      navHome: "首页",
+      navPromo: "促销",
+      navHot: "热门产品",
+      navInfo: "信息",
+      settingsTitle: "设置",
+      appearance: "外观",
+      darkMode: "深色模式",
+      language: "语言",
+      emptyTitle: "未找到产品",
+      emptyText: "未找到有效的产品或无法加载图片。"
+    }
+  };
+
   function $(id) { return document.getElementById(id); }
   function esc(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
+  /* ============================================================
+     DİL VE TEMA YÖNETİMİ
+     ============================================================ */
+  var currentLang = "tr";
+  try { currentLang = localStorage.getItem("lang") || "tr"; } catch(e){}
+  if (!I18N[currentLang]) currentLang = "tr";
+
+  function t(key) {
+    var dict = I18N[currentLang] || I18N.tr;
+    return dict[key] !== undefined ? dict[key] : (I18N.en[key] || key);
+  }
+
+  function applyLang(lang) {
+    if (!I18N[lang]) lang = "tr";
+    currentLang = lang;
+    try { localStorage.setItem("lang", lang); } catch(e){}
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      var k = el.getAttribute("data-i18n");
+      if (I18N[lang][k] !== undefined) el.textContent = I18N[lang][k];
+    });
+    
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(function(el){
+      var k = el.getAttribute("data-i18n-placeholder");
+      if (I18N[lang][k] !== undefined) el.setAttribute("placeholder", I18N[lang][k]);
+    });
+
+    document.querySelectorAll(".lang-btn").forEach(function(b){
+      b.classList.toggle("active", b.getAttribute("data-lang") === lang);
+    });
+
+    // Yeniden çiz (Dil değişince butonlar vs güncellensin)
+    renderMainCategories();
+    if (state.isSearching) {
+      performSearch(state.searchQuery);
+    } else if (state.currentList.length > 0) {
+      renderList(state.currentList, "");
+    }
+  }
+
+  var langGrid = $("langGrid");
+  LANGS.forEach(function(L){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "lang-btn";
+    b.setAttribute("data-lang", L.code);
+    b.innerHTML = '<span class="flag">' + L.flag + '</span><span>' + L.label + '</span>';
+    b.addEventListener("click", function(){ applyLang(L.code); });
+    langGrid.appendChild(b);
+  });
+
+  /* ============================================================
+     CSV OKUMA VE PARSER (GÖRSEL GİZLEME EKLENDİ)
+     ============================================================ */
   function cleanString(str) {
     if (!str) return "";
     var s = String(str).trim();
@@ -525,7 +829,6 @@
 
   function normKey(k) { return String(k || "").toLowerCase().replace(/[\s_\-\.]+/g, "").replace(/[^\w]/g, ""); }
 
-  // Verdiğin CSV yapısına göre eşleştirildi
   var FIELD_ALIASES = {
     title: ["title", "productname", "name", "producttitle", "urunadi", "product"],
     image: ["image_url", "productimage", "image", "imageurl", "img", "picture", "photo"],
@@ -550,11 +853,9 @@
   function normalizeImg(url) {
     var u = cleanString(url);
     if (!u) return "";
-    
     if (u.indexOf("//") === 0) u = "https:" + u;
     else if (u.indexOf("http://") === 0) u = u.replace("http://", "https://");
     else if (u.indexOf("https://") !== 0 && u.indexOf(".") !== -1) u = "https://" + u;
-    
     return u;
   }
 
@@ -563,18 +864,16 @@
       if (colMap[field] == null) return "";
       return cleanString(cells[colMap[field]]);
     }
-    
     var title = get("title");
     var url = get("url");
     var img = normalizeImg(get("image"));
     var category = get("category");
     
-    // Resmi veya linki olmayanları direkt reddet
     if (!title || !url || !img) return null;
 
     return {
       title: title, image: img, url: url,
-      price: get("price"), category: category || "Genel"
+      price: get("price"), category: category || "General"
     };
   }
 
@@ -650,14 +949,13 @@
      RENDER
      ============================================================ */
   
-  // 3 Ana Kategori Butonlarını Çiz
   function renderMainCategories() {
     var strip = $("categoryStrip");
     strip.innerHTML = "";
     CATEGORIES.forEach(function(cat) {
       var btn = document.createElement("button");
       btn.className = "cat-btn" + (state.activeCategory === cat.id ? " active" : "");
-      btn.innerHTML = '<span class="ci">' + cat.icon + '</span><span>' + cat.name + '</span>';
+      btn.innerHTML = '<span class="ci">' + cat.icon + '</span><span>' + esc(cat.name) + '</span>';
       btn.addEventListener("click", function() {
         if (state.isSearching) {
           $("searchInput").value = "";
@@ -666,7 +964,7 @@
           $("searchStatus").classList.remove("show");
         }
         state.activeCategory = cat.id;
-        state.activeSubCategory = "all"; // Alt kategoriyi sıfırla
+        state.activeSubCategory = "all";
         renderMainCategories();
         loadAndRenderActiveCategory();
       });
@@ -674,12 +972,10 @@
     });
   }
 
-  // Dosya içindeki kategorileri (alt kategorileri) çiz
   function renderSubCategories() {
     var strip = $("subcategoryStrip");
     strip.innerHTML = "";
     
-    // Eğer arama yapılıyorsa veya alt kategori yoksa gizle
     if (state.isSearching || state.availableSubCats.length <= 1) {
       strip.classList.remove("show");
       return;
@@ -687,10 +983,9 @@
 
     strip.classList.add("show");
 
-    // "Tümü" Butonu
     var allBtn = document.createElement("button");
     allBtn.className = "subcat-btn" + (state.activeSubCategory === "all" ? " active" : "");
-    allBtn.textContent = "Tümü";
+    allBtn.textContent = "Tümü / All";
     allBtn.addEventListener("click", function() {
       state.activeSubCategory = "all";
       renderSubCategories();
@@ -698,7 +993,6 @@
     });
     strip.appendChild(allBtn);
 
-    // Diğer kategoriler
     state.availableSubCats.forEach(function(sc) {
       var btn = document.createElement("button");
       btn.className = "subcat-btn" + (state.activeSubCategory === sc ? " active" : "");
@@ -713,12 +1007,12 @@
   }
 
   function renderProductCard(p) {
-    // Resim yüklenmezse kartı gizle
-    var imgHtml = '<img class="pc-img" src="' + esc(p.image) + '" loading="lazy" referrerpolicy="no-referrer" onload="this.classList.add(\'loaded\')" onerror="this.closest(\'.product-card\').classList.add(\'broken\')">';
+    // Görsel yüklenene kadar görünmez kalacak, yüklendiğinde .loaded class'ı eklenecek
+    var imgHtml = '<img class="pc-img" src="' + esc(p.image) + '" loading="lazy" referrerpolicy="no-referrer" onload="this.closest(\'.product-card\').classList.add(\'loaded\')" onerror="this.closest(\'.product-card\').style.display=\'none\'">';
     
     var badgeHtml = p.category ? '<span class="pc-badge">' + esc(p.category) + '</span>' : '';
     
-    var priceHtml = p.price ? '<span class="pc-price">' + esc(p.price) + '</span>' : '<span class="pc-price" style="color:var(--text-dim);font-size:.78rem;">Fiyat yok</span>';
+    var priceHtml = p.price ? '<span class="pc-price">' + esc(p.price) + '</span>' : '<span class="pc-price" style="color:var(--text-dim);font-size:.78rem;">-</span>';
 
     return (
       '<a class="product-card" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer sponsored">' +
@@ -763,8 +1057,8 @@
       $("productArea").innerHTML = 
         '<div class="empty-state">' +
           '<div class="ei">📂</div>' +
-          '<h3>Ürün Bulunamadı</h3>' +
-          '<p>' + emptyMessage + '</p>' +
+          '<h3>' + t("emptyTitle") + '</h3>' +
+          '<p>' + (emptyMessage || t("emptyText")) + '</p>' +
         '</div>';
       $("loadingMore").classList.remove("show");
       return;
@@ -773,46 +1067,40 @@
     appendProducts();
   }
 
-  // Kategori yüklendikten sonra filtreleme yapan fonksiyon
   function renderFilteredList() {
     var products = state.cache[state.activeCategory] || [];
     
-    // Eğer alt kategori "all" değilse filtrele
     if (state.activeSubCategory !== "all") {
       products = products.filter(function(p) {
         return p.category === state.activeSubCategory;
       });
     }
 
-    renderList(products, "Bu kategoride geçerli ürün bulunmuyor veya resimler yüklenemedi.");
+    renderList(products, "");
   }
 
   function loadAndRenderActiveCategory() {
     $("productArea").innerHTML = 
       '<div class="loading-state">' +
         '<div class="spinner"></div>' +
-        '<h3>Kategori Yükleniyor…</h3>' +
-        '<p>Lütfen bekleyin.</p>' +
+        '<h3>' + t("loading") + '</h3>' +
+        '<p>' + t("loadingSub") + '</p>' +
       '</div>';
     
     loadCategoryData(state.activeCategory).then(function(products) {
-      // Alt kategorileri bul (Benzersiz olanları al)
       var catSet = {};
       products.forEach(function(p) {
         if (p.category) catSet[p.category] = 1;
       });
       state.availableSubCats = Object.keys(catSet).sort();
 
-      // Alt kategori menüsünü çiz
       renderSubCategories();
-      
-      // Ürünleri çiz (aktif alt kategoriye göre)
       renderFilteredList();
     });
   }
 
   /* ============================================================
-     ARAMA MANTIĞI
+     ARAMA
      ============================================================ */
   function performSearch(query) {
     if (!query) {
@@ -825,31 +1113,30 @@
 
     state.isSearching = true;
     $("searchStatus").classList.add("show");
-    $("searchStatusText").textContent = '"' + query + '" için aranıyor...';
-    renderSubCategories(); // Arama sırasında alt kategori çubuğunu gizle
+    $("searchStatusText").textContent = '"' + query + '"...';
+    renderSubCategories();
 
     $("productArea").innerHTML = 
       '<div class="loading-state">' +
         '<div class="spinner"></div>' +
-        '<h3>Aranıyor…</h3>' +
-        '<p>Lütfen bekleyin.</p>' +
+        '<h3>' + t("loading") + '</h3>' +
+        '<p>' + t("loadingSub") + '</p>' +
       '</div>';
 
     var q = query.toLowerCase();
     var products = state.cache[state.activeCategory] || [];
     
-    // Arama seçili dosya içinde yapılır
     var filtered = products.filter(function(p) {
       var hay = (p.title || "").toLowerCase();
       return hay.indexOf(q) !== -1;
     });
 
-    $("searchStatusText").textContent = '"' + query + '" için ' + filtered.length + ' sonuç bulundu.';
-    renderList(filtered, '"' + query + '" için eşleşen ürün bulunamadı.');
+    $("searchStatusText").textContent = '"' + query + '" (' + filtered.length + ')';
+    renderList(filtered, "");
   }
 
   /* ============================================================
-     ETKİLEŞİMLER & BAŞLAT
+     ETKİLEŞİMLER
      ============================================================ */
   var searchTimer;
   $("searchInput").addEventListener("input", function(e) {
@@ -881,18 +1168,21 @@
     }
   });
 
+  /* ============ TEMA ============ */
   var currentTheme = "dark";
   try { currentTheme = localStorage.getItem("theme") || "dark"; } catch(e){}
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
+    currentTheme = theme;
     $("themeSwitch").classList.toggle("on", theme === "dark");
     try { localStorage.setItem("theme", theme); } catch(e){}
   }
   $("themeSwitch").addEventListener("click", function() {
-    applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+    applyTheme(currentTheme === "dark" ? "light" : "dark");
   });
   applyTheme(currentTheme);
 
+  /* ============ MODAL ============ */
   $("settingsBtn").addEventListener("click", function() { $("settingsModal").classList.add("open"); });
   document.querySelectorAll("[data-close]").forEach(function(btn) {
     btn.addEventListener("click", function() { $("settingsModal").classList.remove("open"); });
@@ -902,6 +1192,7 @@
   });
 
   // Başlat
+  applyLang(currentLang);
   renderMainCategories();
   loadAndRenderActiveCategory();
 
