@@ -431,19 +431,27 @@
 (function () {
   "use strict";
 
+  /* ============================================================
+     KONFİGÜRASYON — VERDİĞİNİZ DOSYA İSİMLERİNE GÖRE AYARLANDI
+     ============================================================ */
+  var BASE_URL = "https://github.com/DaaStudio/alibabaaff/releases/download/v1.0/";
+  
   var CATEGORIES = [
-    { id: "eu_stock",    name: "EU Local Stock",        icon: "🇪🇺", file: "hot_products/eu_local_stock.csv" },
-    { id: "special_30k", name: "Special Offer 30K",     icon: "🌟", file: "hot_products/eu_special_30k.do" },
-    { id: "up50",        name: "Up to 50% Off",         icon: "💸", file: "hot_products/up_to_50_off.csv" },
-    { id: "hot_selling", name: "Hot Selling",           icon: "🔥", file: "hot_products/alibaba_hot-selling.csv" },
-    { id: "special_2m",  name: "Special Offer (2M)",    icon: "💎", file: "hot_products/eu_special_offer_2m.csv" },
-    { id: "new_perks",   name: "New Products Perks",    icon: "🆕", file: "hot_products/new_products_perks.csv" },
-    { id: "moq1",        name: "Ready to Ship MOQ=1",   icon: "📦", file: "hot_products/ready_to_ship_moq1.csv" },
-    { id: "trending",    name: "Trending Quick Ship",   icon: "🚀", file: "hot_products/trending_products_quick_shipping.csv" }
+    { id: "eu_stock",    name: "EU Local Stock",        icon: "🇪🇺", file: BASE_URL + "eu_local_stock.csv" },
+    { id: "special_30k", name: "Special Offer 30K",     icon: "🌟", file: BASE_URL + "eu_special_30k.do" },
+    { id: "up50",        name: "Up to 50% Off",         icon: "💸", file: BASE_URL + "up_to_50_off.csv" },
+    { id: "hot_selling", name: "Hot Selling",           icon: "🔥", file: BASE_URL + "alibaba_hot_selling.csv" },
+    { id: "special_2m",  name: "Special Offer (2M)",    icon: "💎", file: BASE_URL + "eu_special_2m.do" },
+    { id: "new_products",name: "New Products Perks",    icon: "🆕", file: BASE_URL + "1m_new_products.csv" },
+    { id: "moq1",        name: "Ready to Ship MOQ=1",   icon: "📦", file: BASE_URL + "ready_to_ship_moq1.csv" },
+    { id: "trending",    name: "Trending Quick Ship",   icon: "🚀", file: BASE_URL + "trending_products.csv" }
   ];
 
   var BATCH_SIZE = 24; 
 
+  /* ============================================================
+     YARDIMCILAR
+     ============================================================ */
   function $(id) { return document.getElementById(id); }
   function esc(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
@@ -525,9 +533,7 @@
     var u = cleanString(url);
     if (!u) return "";
     
-    // Resim linki // ile başlıyorsa başına https: ekle
     if (u.indexOf("//") === 0) u = "https:" + u;
-    // Resim linki direkt alan adıyla (sc01.alicdn.com vb) başlıyorsa https:// ekle
     else if (u.indexOf("http://") === 0) u = u.replace("http://", "https://");
     else if (u.indexOf("https://") !== 0 && u.indexOf(".") !== -1) u = "https://" + u;
     
@@ -544,13 +550,7 @@
     var url = get("url");
     var img = normalizeImg(get("image"));
     
-    // Fallback: Eğer sütun isimleri tanınamazsa (colMap boşsa) ilk 3 sütunu baz al
-    if (!colMap.title && cells.length >= 3) {
-      title = cleanString(cells[1] || cells[0]);
-      img = normalizeImg(cells[2]);
-      url = cleanString(cells[3] || cells[cells.length-1]);
-    }
-
+    // Resmi, başlığı veya linki olmayanları direkt reddet
     if (!title || !url || !img) return null;
 
     return {
@@ -588,57 +588,38 @@
       var cat = CATEGORIES.find(function(c) { return c.id === catId; });
       if (!cat) return resolve([]);
 
-      var allProducts = [];
-      var partIndex = 1;
-
-      function fetchNextPart() {
-        var currentFile = cat.file;
-        
-        if (partIndex > 1) {
-          var lastDot = currentFile.lastIndexOf(".");
-          if (lastDot !== -1) {
-            currentFile = currentFile.substring(0, lastDot) + partIndex + currentFile.substring(lastDot);
-          } else {
-            currentFile = currentFile + partIndex;
+      fetchText(cat.file)
+        .then(function(text) {
+          var rows = parseCSV(text);
+          if (rows.length < 2) throw new Error("Boş dosya");
+          
+          var headers = rows[0];
+          var colMap = detectColumns(headers);
+          var products = [];
+          
+          for (var r = 1; r < rows.length; r++) {
+            var p = rowToProduct(rows[r], colMap);
+            if (p) products.push(p);
           }
-        }
 
-        fetchText(currentFile)
-          .then(function(text) {
-            var rows = parseCSV(text);
-            if (rows.length < 2) throw new Error("Boş dosya");
-            
-            var headers = rows[0];
-            var colMap = detectColumns(headers);
-            
-            // Konsola başlıkları yazdır (Hata ayıklama için)
-            if (partIndex === 1) console.log("CSV Başlıkları (" + cat.file + "):", headers);
-
-            for (var r = 1; r < rows.length; r++) {
-              var p = rowToProduct(rows[r], colMap);
-              if (p) allProducts.push(p);
+          // Tekilleştirme
+          var uniqueProducts = [];
+          var seen = {};
+          products.forEach(function(p) {
+            var key = p.url; 
+            if (!seen[key]) {
+              seen[key] = true;
+              uniqueProducts.push(p);
             }
-
-            partIndex++;
-            fetchNextPart();
-          })
-          .catch(function(err) {
-            var uniqueProducts = [];
-            var seen = {};
-            allProducts.forEach(function(p) {
-              var key = p.url; 
-              if (!seen[key]) {
-                seen[key] = true;
-                uniqueProducts.push(p);
-              }
-            });
-
-            state.cache[catId] = uniqueProducts;
-            resolve(uniqueProducts);
           });
-      }
 
-      fetchNextPart();
+          state.cache[catId] = uniqueProducts;
+          resolve(uniqueProducts);
+        })
+        .catch(function(err) {
+          state.cache[catId] = [];
+          resolve([]);
+        });
     });
   }
 
@@ -741,7 +722,7 @@
       '</div>';
     
     loadCategoryData(state.activeCategory).then(function(products) {
-      renderList(products, "Bu kategoride geçerli ürün bulunmuyor veya dosya adları hatalı.");
+      renderList(products, "Bu kategoride geçerli ürün bulunmuyor veya dosya bulunamadı.");
     });
   }
 
