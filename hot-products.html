@@ -432,7 +432,7 @@
   "use strict";
 
   /* ============================================================
-     KONFİGÜRASYON
+     KONFİGÜRASYON — GITHUB RELEASES + ALLORIGINS PROXY
      ============================================================ */
   var BASE_URL = "https://github.com/DaaStudio/alibabaaff/releases/download/v1.0/";
   
@@ -565,27 +565,14 @@
     currentList: []
   };
 
-  // CORS çift yöntemli okuma (Fetch başarısız olursa CORS Proxy kullanır)
+  // allorigins Proxy kullanan fonksiyon
   function fetchFile(url) {
-    return new Promise(function(resolve, reject) {
-      fetch(url, { cache: "no-store" })
-        .then(function(res) {
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          return res.text();
-        })
-        .then(function(text) { resolve(text); })
-        .catch(function(err) {
-          // Hata alındıysa Proxy üzerinden dene
-          var proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
-          fetch(proxyUrl, { cache: "no-store" })
-            .then(function(res) {
-              if (!res.ok) throw new Error("Proxy HTTP " + res.status);
-              return res.text();
-            })
-            .then(function(text) { resolve(text); })
-            .catch(function(proxyErr) { reject(err); }); // Yine hata verirse asıl hatayı fırlat
-        });
-    });
+    var proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+    return fetch(proxyUrl, { cache: "no-store" })
+      .then(function(res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.text();
+      });
   }
 
   function loadCategoryData(catId) {
