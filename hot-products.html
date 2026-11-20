@@ -124,7 +124,6 @@
 
   .container { max-width: 1100px; margin: 0 auto; padding: 0 14px 40px; }
 
-  /* Yatay Kaydırılabilir Kategori Çubuğu */
   .category-strip {
     display:flex; gap:8px; overflow-x:auto;
     padding: 10px 4px;
@@ -188,7 +187,6 @@
     padding: 4px 10px; border-radius: 6px; font-size: .75rem; font-weight: 700; cursor: pointer;
   }
 
-  /* Ürün Grid */
   .product-grid {
     display:grid;
     grid-template-columns: repeat(2, 1fr);
@@ -197,6 +195,7 @@
   @media(min-width:520px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
   @media(min-width:860px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
 
+  /* Kırık resimlerde yumuşak geçiş için animasyon */
   .product-card {
     display:flex; flex-direction:column;
     background: linear-gradient(145deg, var(--card), var(--card2));
@@ -205,10 +204,16 @@
     overflow:hidden;
     text-decoration:none; color: var(--text);
     position:relative;
-    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, opacity .3s ease;
   }
   .product-card:hover { transform: translateY(-3px); border-color: rgba(255,106,0,0.55); box-shadow: 0 12px 30px var(--shadow); }
   .product-card:active { transform: scale(0.98); }
+  
+  /* Kırık resim tespit edilince eklenecek sınıf */
+  .product-card.broken { 
+    display: none !important; 
+    animation: none;
+  }
 
   .pc-img-wrap {
     position:relative; width:100%; aspect-ratio: 1/1;
@@ -216,9 +221,14 @@
   }
   .pc-img {
     width:100%; height:100%; object-fit:cover; display:block;
-    transition: transform .3s ease;
+    transition: transform .3s ease, opacity .3s ease;
   }
   .product-card:hover .pc-img { transform: scale(1.05); }
+  
+  /* Resim yüklenene kadar gri arkaplan */
+  .pc-img.loading { opacity: 0; }
+  .pc-img.loaded { opacity: 1; }
+
   .pc-badge {
     position:absolute; top:8px; left:8px;
     padding: 4px 9px; border-radius:999px;
@@ -255,7 +265,6 @@
   }
   .pc-meta span { display:flex; align-items:center; gap:3px; }
 
-  /* Yükleme ve Boş Durumlar */
   .loading-more {
     text-align: center; padding: 20px;
     font-size: .85rem; color: var(--brand2); font-weight: 700;
@@ -278,7 +287,6 @@
   .empty-state h3 { font-size:1.12rem; margin-bottom:8px; }
   .empty-state p { color: var(--text-dim); font-size:.88rem; line-height:1.6; max-width: 400px; margin: 0 auto; }
 
-  /* Alt Navigasyon */
   .bottom-nav {
     position: fixed; bottom:0; left:0; right:0; z-index: 55;
     backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -303,7 +311,6 @@
   }
   .nav-btn:active { transform: scale(0.92); }
 
-  /* Modal */
   .modal-ov {
     position: fixed; inset:0; z-index: 100;
     background: rgba(0,0,0,0.7);
@@ -377,12 +384,8 @@
 </section>
 
 <div class="container">
-  <!-- Kategori Butonları -->
-  <div class="category-strip" id="categoryStrip">
-    <!-- JS ile doldurulacak -->
-  </div>
+  <div class="category-strip" id="categoryStrip"></div>
 
-  <!-- Arama Çubuğu -->
   <div class="toolbar">
     <div class="search-box">
       <span class="s-ico">🔍</span>
@@ -390,13 +393,11 @@
     </div>
   </div>
 
-  <!-- Arama Durum Çubuğu -->
   <div class="search-status" id="searchStatus">
     <span id="searchStatusText">"..." için arama sonuçları</span>
     <button id="clearSearchBtn">İptal Et / Temizle</button>
   </div>
 
-  <!-- Ürün Alanı -->
   <div id="productArea">
     <div class="loading-state">
       <div class="spinner"></div>
@@ -405,7 +406,6 @@
     </div>
   </div>
 
-  <!-- Sonsuz Kaydırma Yükleyici -->
   <div class="loading-more" id="loadingMore">
     <div class="spinner" style="width:24px; height:24px; border-width:3px; margin:0 auto 8px;"></div>
     Daha fazla ürün yükleniyor...
@@ -419,7 +419,6 @@
   <a class="nav-btn" href="index.html#info"><span class="ni">ℹ️</span><span>Bilgi</span></a>
 </nav>
 
-<!-- SETTINGS MODAL -->
 <div class="modal-ov" id="settingsModal">
   <div class="modal">
     <div class="modal-head">
@@ -441,16 +440,12 @@
   "use strict";
 
   /* ============================================================
-     KONFİGÜRASYON — RESİMDEN VE GERÇEK DOSYA İSİMLERİNDEN
+     KONFİGÜRASYON
      ============================================================ */
-  // DİKKAT: GitHub büyük/küçük harfe duyarlıdır!
-  // Eğer dosya adları farklıysa aşağıdaki "file" kısımlarını kendi klasöründeki isimlerle birebir değiştir.
   var CATEGORIES = [
     { id: "eu_stock",    name: "EU Local Stock",        icon: "🇪🇺", file: "hot_products/eu_local_stock.csv" },
     { id: "special_30k", name: "Special Offer 30K",     icon: "🌟", file: "hot_products/eu_special_30k.do" },
     { id: "up50",        name: "Up to 50% Off",         icon: "💸", file: "hot_products/up_to_50_off.csv" },
-    
-    // Aşağıdakiler resimde yoktu, tahmini isimler yazdım. Kendi dosyalarına göre güncelle:
     { id: "hot_selling", name: "Hot Selling",           icon: "🔥", file: "hot_products/alibaba_hot-selling.csv" },
     { id: "special_2m",  name: "Special Offer (2M)",    icon: "💎", file: "hot_products/eu_special_offer_2m.csv" },
     { id: "new_perks",   name: "New Products Perks",    icon: "🆕", file: "hot_products/new_products_perks.csv" },
@@ -458,7 +453,7 @@
     { id: "trending",    name: "Trending Quick Ship",   icon: "🚀", file: "hot_products/trending_products_quick_shipping.csv" }
   ];
 
-  var BATCH_SIZE = 24; // Sonsuz kaydırma için her seferde yüklenecek ürün sayısı
+  var BATCH_SIZE = 24; 
 
   /* ============================================================
      YARDIMCILAR
@@ -469,7 +464,6 @@
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
-  /* --- CSV Parser --- */
   function parseCSV(text) {
     if (text.charCodeAt(0) === 0xFFFE || text.charCodeAt(1) === 0xFEFF) {
       var newText = "";
@@ -547,17 +541,18 @@
     }
     var title = get("title");
     var url = get("url");
-    if (!title && !url) return null;
+    var img = normalizeImg(get("image"));
+    
+    // RESMİ VEYA LİNKİ OLMAYAN ÜRÜNLERİ LİSTEYE HİÇ ALMIYORUZ
+    if (!title || !url || !img) return null;
+
     return {
-      title: title, image: normalizeImg(get("image")), url: url,
+      title: title, image: img, url: url,
       price: get("price"), oldPrice: get("oldPrice"), commission: get("commission"),
       sales: get("sales"), rating: get("rating"), supplier: get("supplier")
     };
   }
 
-  /* ============================================================
-     STATE & MANTIK
-     ============================================================ */
   var state = {
     activeCategory: CATEGORIES[0].id,
     cache: {}, 
@@ -580,33 +575,65 @@
   }
 
   function loadCategoryData(catId) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       if (state.cache[catId]) return resolve(state.cache[catId]); 
       
       var cat = CATEGORIES.find(function(c) { return c.id === catId; });
-      if (!cat) return reject("Kategori bulunamadı");
+      if (!cat) return resolve([]);
 
-      fetchText(cat.file)
-        .then(function(text) {
-          var rows = parseCSV(text);
-          if (rows.length < 1) throw new Error("Boş dosya");
-          
-          var headers = rows[0];
-          var colMap = detectColumns(headers);
-          var products = [];
-          
-          for (var r = 1; r < rows.length; r++) {
-            var p = rowToProduct(rows[r], colMap);
-            if (p) products.push(p);
+      var allProducts = [];
+      var partIndex = 1;
+
+      function fetchNextPart() {
+        var currentFile = cat.file;
+        
+        if (partIndex > 1) {
+          var lastDot = currentFile.lastIndexOf(".");
+          if (lastDot !== -1) {
+            currentFile = currentFile.substring(0, lastDot) + partIndex + currentFile.substring(lastDot);
+          } else {
+            currentFile = currentFile + partIndex;
           }
-          state.cache[catId] = products;
-          resolve(products);
-        })
-        .catch(function(err) {
-          console.error("Dosya yüklenemedi: " + cat.file, err);
-          state.cache[catId] = [];
-          resolve([]);
-        });
+        }
+
+        fetchText(currentFile)
+          .then(function(text) {
+            var rows = parseCSV(text);
+            if (rows.length < 2) throw new Error("Boş dosya");
+            
+            var headers = rows[0];
+            var colMap = detectColumns(headers);
+            
+            for (var r = 1; r < rows.length; r++) {
+              var p = rowToProduct(rows[r], colMap);
+              if (p) allProducts.push(p);
+            }
+
+            partIndex++;
+            fetchNextPart();
+          })
+          .catch(function(err) {
+            if (partIndex === 1) {
+              console.warn("Ana dosya bulunamadı veya okunamadı: " + cat.file, err);
+            }
+            
+            // Aynı ürünü (aynı link) birden fazla kez eklememek için tekilleştir
+            var uniqueProducts = [];
+            var seen = {};
+            allProducts.forEach(function(p) {
+              var key = p.url; 
+              if (!seen[key]) {
+                seen[key] = true;
+                uniqueProducts.push(p);
+              }
+            });
+
+            state.cache[catId] = uniqueProducts;
+            resolve(uniqueProducts);
+          });
+      }
+
+      fetchNextPart();
     });
   }
 
@@ -636,10 +663,7 @@
   }
 
   function renderProductCard(p) {
-    var imgHtml = p.image 
-      ? '<img class="pc-img" src="' + esc(p.image) + '" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.parentNode.querySelector(\'.pc-img-fallback\')&&(this.parentNode.querySelector(\'.pc-img-fallback\').style.display=\'grid\')">' 
-      : '';
-    var fallback = '<div class="pc-img-fallback" style="display:' + (p.image ? 'none' : 'grid') + ';place-items:center;width:100%;height:100%;font-size:2.4rem;color:var(--text-dim);background:var(--card2);">📦</div>';
+    var imgHtml = '<img class="pc-img" src="' + esc(p.image) + '" loading="lazy" referrerpolicy="no-referrer" onload="this.classList.add(\'loaded\')" onerror="this.closest(\'.product-card\').classList.add(\'broken\')">';
     
     var badgeHtml = p.commission ? '<span class="pc-badge">' + esc(p.commission) + (/%/.test(p.commission)?'':'%') + ' Komisyon</span>' : '';
     
@@ -653,10 +677,10 @@
     if (metaParts.length) metaHtml = '<div class="pc-meta">' + metaParts.join('') + '</div>';
 
     return (
-      '<a class="product-card" href="' + (p.url ? esc(p.url) : 'javascript:void(0)') + '" ' + (p.url ? 'target="_blank" rel="noopener noreferrer sponsored"' : '') + '>' +
-        '<div class="pc-img-wrap">' + imgHtml + fallback + badgeHtml + '</div>' +
+      '<a class="product-card" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer sponsored">' +
+        '<div class="pc-img-wrap">' + imgHtml + badgeHtml + '</div>' +
         '<div class="pc-body">' +
-          '<div class="pc-title">' + esc(p.title || 'İsimsiz Ürün') + '</div>' +
+          '<div class="pc-title">' + esc(p.title) + '</div>' +
           '<div class="pc-price-row">' + priceHtml + '</div>' +
           metaHtml +
         '</div>' +
@@ -706,10 +730,6 @@
     appendProducts();
   }
 
-  /* ============================================================
-     KATEGORİ / ARAMA YÖNETİMİ
-     ============================================================ */
-
   function loadAndRenderActiveCategory() {
     $("productArea").innerHTML = 
       '<div class="loading-state">' +
@@ -719,7 +739,7 @@
       '</div>';
     
     loadCategoryData(state.activeCategory).then(function(products) {
-      renderList(products, "Bu kategoride şu an ürün bulunmuyor veya dosya bulunamadı. Lütfen konsolu kontrol edin.");
+      renderList(products, "Bu kategoride resimli ve geçerli ürün bulunmuyor.");
     });
   }
 
@@ -739,7 +759,7 @@
       '<div class="loading-state">' +
         '<div class="spinner"></div>' +
         '<h3>Aranıyor…</h3>' +
-        '<p>Lütfen bekleyin.</p>' +
+        '<p>Tüm dosyalar taranıyor, lütfen bekleyin.</p>' +
       '</div>';
 
     var q = query.toLowerCase();
@@ -758,13 +778,10 @@
       });
 
       $("searchStatusText").textContent = '"' + query + '" için ' + filtered.length + ' sonuç bulundu.';
-      renderList(filtered, '"' + query + '" için eşleşen ürün bulunamadı.');
+      renderList(filtered, '"' + query + '" için eşleşen geçerli ürün bulunamadı.');
     });
   }
 
-  /* ============================================================
-     ETKİLEŞİMLER & BAŞLAT
-     ============================================================ */
   var searchTimer;
   $("searchInput").addEventListener("input", function(e) {
     clearTimeout(searchTimer);
