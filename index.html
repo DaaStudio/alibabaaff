@@ -153,7 +153,7 @@
   }
   .cta-btn:active { transform: scale(0.95); }
 
-  .loading-sentinel { height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 0.9rem; }
+  .loading-sentinel { height: 60px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 0.9rem; }
   .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--brand); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -273,7 +273,7 @@
   </div>
 </div>
 
-<!-- ============ HOT PRODUCTS (YENİ) ============ -->
+<!-- ============ HOT PRODUCTS ============ -->
 <div class="page" id="page-hot">
   <section class="hero">
     <div class="hero-badge"><span class="dot"></span><span>🔥 Hot Deals</span></div>
@@ -281,7 +281,6 @@
     <p data-i18n="hotSub">En çok satan, yerel depolu ve özel indirimli ürünleri keşfedin.</p>
   </section>
   <div class="container">
-    <!-- Ana Kategori Seçimi -->
     <div id="hot-main-view">
       <div class="hot-categories">
         <div class="hot-cat-card" onclick="openHotCategory('eu_local')">
@@ -302,7 +301,6 @@
       </div>
     </div>
 
-    <!-- Ürün Listesi Görünümü -->
     <div id="hot-list-view" style="display: none;">
       <div class="hot-list-header">
         <button class="back-btn" onclick="closeHotCategory()">←</button>
@@ -370,8 +368,7 @@
 (function () {
   "use strict";
 
-  /* ============ YENİ: HOT PRODUCTS AYARLARI ============ */
-  const PLAY_STORE_HOT_APP_LINK = "https://play.google.com/store/apps/details?id=com.example.hotproducts"; // BURAYI KENDİ LİNKİNİZLE DEĞİŞTİRİN
+  const PLAY_STORE_HOT_APP_LINK = "https://play.google.com/store/apps/details?id=com.example.hotproducts"; 
   const HOT_FILES = {
     eu_local: 'hot_products/eu_local_stock.csv',
     special_30k: 'hot_products/eu_special_30k.do',
@@ -385,7 +382,6 @@
   const HOT_MAX_LIMIT = 100;
   let hotObserver = null;
 
-  /* ============ KATEGORİLER & LINKLER ============ */
   var CATEGORIES = [
     { key: "mainPart", name: "Main Part", icon: "🌐", url: "https://offer.alibaba.com/cps/578enqbs?bm=cps&src=saf", featured: true },
     { key: "newArrivals", name: "New Arrivals", icon: "🆕", url: "https://offer.alibaba.com/cps/qj75l1o9?bm=cps&src=saf", featured: true },
@@ -426,40 +422,33 @@
     return dict[key] !== undefined ? dict[key] : (I18N.tr[key] !== undefined ? I18N.tr[key] : key);
   }
 
-  /* ============ HOT PRODUCTS MANTIĞI ============ */
-  
-  // CSV/DO Dosya Ayrıştırıcı (Esnek yapı)
+  /* ============ GELİŞMİŞ CSV AYRIŞTIRICI ============ */
   function parseHotData(text) {
-    const lines = text.split('\n');
+    const lines = text.split(/\r?\n/); // Hem \n hem \r\n uyumlu
     const products = [];
+    
     for (let line of lines) {
       line = line.trim();
-      if (!line || line.startsWith('?productId') === false && line.startsWith('!') === false) continue;
+      if (!line || (!line.startsWith('?productId') && !line.startsWith('!'))) continue;
       
-      // Virgülle ayır, ancak çok karmaşık olabilir, bu yüzden anahtar kelimeleri arayalım
       const parts = line.split(',');
       if (parts.length < 4) continue;
 
-      // Resim URL'sini bul (genellikle https://sc ile başlar)
       let img = parts.find(p => p.trim().startsWith('https://sc') && (p.includes('.jpg') || p.includes('.png') || p.includes('.webp')));
-      // Affiliate linkini bul
       let link = parts.find(p => p.trim().startsWith('https://offer.alibaba.com'));
-      // Fiyatı bul (örn: "6 USD")
       let price = parts.find(p => p.trim().match(/^\d+(\.\d+)?\s*(USD|EUR|TRY|€|\$)$/i));
       
       if (!img || !link) continue;
 
-      // Başlık: Genellikle 2. veya 3. eleman, uzun ve http içermeyen
       let title = "Ürün";
-      for (let i = 1; i < Math.min(parts.length, 6); i++) {
+      for (let i = 1; i < Math.min(parts.length, 8); i++) {
         if (!parts[i].includes('http') && !parts[i].match(/^\d+$/) && parts[i].length > 10) {
           title = parts[i]; break;
         }
       }
 
-      // Kategori: Metin içindeki anahtar kelimelerden tahmin et (karışık görünüm için)
       let category = "Fırsat";
-      const cats = ["jewelry", "beauty", "home", "electronics", "apparel", "toy", "sport", "tool", "garden"];
+      const cats = ["jewelry", "beauty", "home", "electronics", "apparel", "toy", "sport", "tool", "garden", "machinery", "luggage", "packaging"];
       for (let p of parts) {
         let lower = p.toLowerCase();
         for (let c of cats) { if (lower.includes(c)) { category = c; break; } }
@@ -479,17 +468,34 @@
     const titles = { eu_local: "🇪🇺 EU Local Stock", special_30k: "💎 Special Offer 30K", up_to_50: "🏷️ Up to 50% Off" };
     $('hot-list-title').textContent = titles[catKey];
     $('hot-product-grid').innerHTML = '';
+    $('hot-sentinel').style.display = 'flex';
+    $('hot-sentinel').innerHTML = '<div class="spinner"></div> <span>Yükleniyor...</span>';
     
-    // Eğer daha önce yüklenmediyse yükle
     if (!hotProductsCache[catKey]) {
-      $('hot-sentinel').style.display = 'flex';
       try {
         const response = await fetch(HOT_FILES[catKey]);
+        if (!response.ok) throw new Error(`HTTP Hata: ${response.status} ${response.statusText}`);
         const text = await response.text();
+        if (!text || text.trim().length < 50) throw new Error("Dosya boş veya çok kısa.");
+        
         hotProductsCache[catKey] = parseHotData(text);
+        console.log(`${catKey} için ${hotProductsCache[catKey].length} ürün başarıyla yüklendi.`);
       } catch (e) {
         console.error("Dosya okunamadı:", e);
-        $('hot-sentinel').innerHTML = '<span style="color:var(--brand)">Dosya yüklenemedi. Lütfen dosya yolunu kontrol edin.</span>';
+        $('hot-sentinel').innerHTML = `
+          <div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand);">
+            <div style="font-size:2rem; margin-bottom:10px;">⚠️</div>
+            <p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Okunamadı</p>
+            <p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6; margin-bottom:16px;">
+              <strong>Hata:</strong> ${e.message}<br><br>
+              <strong>Hızlı Çözüm Adımları:</strong><br>
+              1. <code>hot_products</code> klasörünün bu HTML dosyasıyla <strong>aynı klasörde</strong> olduğundan emin olun.<br>
+              2. Bu dosyayı doğrudan çift tıklayarak (file://) açmayın. Tarayıcılar güvenlik nedeniyle yerel dosya okumayı engeller.<br>
+              3. <strong>VS Code</strong> kullanıyorsanız "Live Server" eklentisiyle açın.<br>
+              4. Veya klasörde terminal açıp <code>python -m http.server</code> yazıp <code>http://localhost:8000</code> adresine gidin.
+            </p>
+          </div>
+        `;
         return;
       }
     }
@@ -520,7 +526,6 @@
       card.href = p.link;
       card.target = '_blank';
       card.rel = 'noopener noreferrer';
-      // Resim yüklenmezse kartı gizle (kullanıcı fark etmesin)
       card.innerHTML = `
         <div class="product-img-wrap">
           <img class="product-img" src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.closest('.product-card').style.display='none'">
@@ -537,12 +542,10 @@
     
     hotDisplayIndex = end;
 
-    // Limit kontrolü
     if (hotDisplayIndex >= HOT_MAX_LIMIT || hotDisplayIndex >= products.length) {
       sentinel.style.display = 'none';
       if (hotObserver) hotObserver.disconnect();
       
-      // "Daha Fazla Ürün İçin Uygulamayı İndir" Kartı
       const cta = document.createElement('div');
       cta.className = 'cta-download-card';
       cta.innerHTML = `
@@ -604,7 +607,6 @@
     langGrid.appendChild(b);
   });
 
-  // Kategorileri Çiz
   var featGrid = $("featuredGrid");
   var catList = $("catList");
   $("catCount").textContent = CATEGORIES.length + " ürün";
@@ -621,7 +623,6 @@
     catList.appendChild(a);
   });
 
-  /* ============ SAYFA GEÇİŞLERİ ============ */
   function showPage(name) {
     document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
     var target = $("page-" + name);
@@ -631,8 +632,6 @@
       n.classList.toggle("active", n.getAttribute("data-page") === name);
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
-    
-    // Hot sayfasından çıkılırsa observer'ı temizle
     if (name !== 'hot') closeHotCategory();
   }
 
@@ -643,7 +642,6 @@
     });
   });
 
-  /* ============ MODAL ============ */
   function openModal(name) { $(name + "Modal").classList.add("open"); document.body.style.overflow = "hidden"; }
   function closeModal(name) { $(name + "Modal").classList.remove("open"); document.body.style.overflow = ""; }
   $("settingsBtn").addEventListener("click", function(){ openModal("settings"); });
@@ -652,7 +650,6 @@
     ov.addEventListener("click", function(e){ if (e.target === ov) closeModal(ov.id.replace("Modal","")); });
   });
 
-  // Başlangıç
   applyLang(currentLang);
 })();
 </script>
