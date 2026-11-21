@@ -74,6 +74,25 @@
   .hero h1 .accent { background: linear-gradient(120deg, var(--brand), var(--brand2) 60%, #ffb26b); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
   .hero p { color: var(--text-dim); font-size:.92rem; max-width: 560px; margin: 0 auto; line-height:1.6; }
 
+  .quick-strip {
+    max-width: 1100px; margin: 6px auto 0; padding: 0 14px;
+    display:flex; gap:10px; overflow-x:auto;
+    scrollbar-width:none; -ms-overflow-style:none; padding-bottom: 4px;
+  }
+  .quick-strip::-webkit-scrollbar { display:none; }
+  .quick-chip {
+    flex-shrink:0; display:flex; align-items:center; gap:8px;
+    padding: 11px 16px; border-radius:999px;
+    background: var(--card); border:1px solid var(--border);
+    color: var(--text); text-decoration:none;
+    font-size:.82rem; font-weight:700; cursor:pointer;
+    transition: all .2s ease;
+  }
+  .quick-chip .qi { font-size:1rem; }
+  .quick-chip:hover, .quick-chip:active {
+    border-color: var(--brand); background: var(--brand-soft); color: var(--brand2); transform: translateY(-2px);
+  }
+
   .container { max-width: 1100px; margin: 0 auto; padding: 0 14px 40px; }
   .sec-head { display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin: 28px 4px 16px; }
   .sec-title { display:flex; align-items:center; gap:10px; }
@@ -81,6 +100,144 @@
   .sec-title h2 { font-size:1.12rem; font-weight:850; letter-spacing:-0.02em; }
   .sec-count { font-size:.75rem; color: var(--text-dim); background: var(--card); border:1px solid var(--border); padding: 4px 10px; border-radius:999px; font-weight:700; }
 
+  .featured { display:grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 6px; }
+  @media(min-width:640px) { .featured { grid-template-columns: repeat(4, 1fr); } }
+  .feat-card {
+    display:flex; flex-direction:column; gap:9px; padding: 16px 14px; border-radius: 14px;
+    background: linear-gradient(145deg, var(--card), var(--card2)); border:1px solid var(--border);
+    text-decoration:none; color: var(--text); position:relative; overflow:hidden;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .feat-card::after {
+    content:""; position:absolute; inset:0;
+    background: radial-gradient(120px 80px at 90% 0%, rgba(255,106,0,0.22), transparent 70%);
+    opacity:0; transition: opacity .25s ease; pointer-events:none;
+  }
+  .feat-card:hover { transform: translateY(-3px); border-color: rgba(255,106,0,0.55); box-shadow: 0 10px 26px var(--shadow); }
+  .feat-card:hover::after { opacity:1; }
+  .feat-card:active { transform: scale(0.98); }
+  .feat-icon {
+    width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font-size:1.35rem;
+    background: var(--brand-soft); border:1px solid rgba(255,106,0,0.22);
+  }
+  .feat-name { font-size:.86rem; font-weight:800; line-height:1.25; }
+  .feat-go { font-size:.7rem; font-weight:800; color: var(--brand2); display:flex; align-items:center; gap:4px; text-transform:uppercase; letter-spacing:.05em; }
+
+  .cat-list { display:flex; flex-direction:column; gap: 9px; }
+  .cat-card {
+    display:flex; align-items:center; gap:12px; padding: 13px 14px; border-radius: 14px;
+    background: var(--card); border:1px solid var(--border); text-decoration:none; color: var(--text);
+    position:relative; min-width:0; transition: transform .16s ease, border-color .16s ease, background .2s ease, box-shadow .18s ease;
+  }
+  .cat-card:hover, .cat-card:active { transform: translateX(3px); border-color: var(--brand); background: var(--card2); box-shadow: 0 8px 20px var(--shadow); }
+  .cat-ico {
+    width:40px; height:40px; border-radius:11px; flex-shrink:0;
+    display:grid; place-items:center; font-size:1.2rem;
+    background: linear-gradient(135deg, rgba(255,106,0,0.18), rgba(43,127,255,0.14));
+    border:1px solid var(--border);
+  }
+  .cat-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .cat-name { font-size:.86rem; font-weight:750; line-height:1.3; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cat-go { font-size:.7rem; font-weight:800; color: var(--brand2); text-transform:uppercase; letter-spacing:.05em; }
+  .cat-share {
+    width:34px; height:34px; border-radius:9px; flex-shrink:0;
+    border:1px solid var(--border); background: transparent; color: var(--text-dim); font-size:.95rem;
+    display:grid; place-items:center; cursor:pointer; transition: all .18s ease;
+  }
+  .cat-share:hover { color: var(--brand2); border-color: var(--brand); background: var(--brand-soft); }
+  .cat-share:active { transform: scale(0.85); }
+
+  .promo-wrap { margin-top: 6px; display:flex; flex-direction:column; gap: 14px; }
+  .promo-img-card {
+    display:block; border-radius: 16px; overflow:hidden; border:1px solid var(--border);
+    background: var(--card); transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; text-decoration:none;
+  }
+  .promo-img-card:hover { transform: translateY(-3px); border-color: var(--brand); box-shadow: 0 12px 30px var(--shadow); }
+  .promo-img-card:active { transform: scale(0.98); }
+  .promo-img-card img { display:block; width:100%; height:auto; }
+
+  .promo-empty {
+    text-align:center; padding: 56px 22px; background: var(--card); border:1px dashed var(--border-strong); border-radius: 20px;
+  }
+  .promo-empty .pe-icon { font-size: 3.4rem; margin-bottom: 14px; display:inline-block; animation: bob 2.6s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+  .promo-empty h3 { font-size:1.12rem; margin-bottom:8px; }
+  .promo-empty p { color: var(--text-dim); font-size:.88rem; line-height:1.6; max-width: 400px; margin: 0 auto; }
+  .promo-card {
+    background: var(--card); border:1px solid var(--border); border-radius: 16px; padding: 16px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .promo-card h4 { font-size:.95rem; }
+  .promo-card p { color: var(--text-dim); font-size:.84rem; line-height:1.5; }
+  .promo-code-row {
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background: var(--brand-soft); border:1px dashed var(--brand); border-radius:12px; padding: 11px 14px;
+  }
+  .promo-code-val {
+    font-family:"SF Mono", Menlo, Consolas, monospace; font-size:1rem; font-weight:800; color: var(--brand2);
+    letter-spacing:.06em; word-break:break-all;
+  }
+
+  .info-block { margin-bottom: 22px; }
+  .info-block:last-child { margin-bottom:0; }
+  .info-block-head {
+    display:flex; align-items:center; gap:9px; font-size:1.02rem; font-weight:800; margin-bottom: 12px;
+    padding-bottom: 9px; border-bottom: 1px solid var(--border);
+  }
+  .info-card { background: var(--card); border:1px solid var(--border); border-radius: 16px; padding: 18px; }
+  .info-card p { color: var(--text-dim); font-size:.9rem; line-height:1.7; margin-bottom: 10px; }
+  .info-card p:last-child { margin-bottom:0; }
+
+  .rate-card { text-align:center; }
+  .rate-card .sub { color: var(--text-dim); font-size:.87rem; margin-bottom: 16px; }
+  .stars { display:flex; justify-content:center; gap:10px; font-size:2.1rem; line-height:1; margin: 4px 0 18px; }
+  .stars .star {
+    cursor:pointer; color: var(--text-dim); opacity:.4;
+    transition: transform .15s ease, color .2s ease, opacity .2s ease; user-select:none;
+  }
+  .stars .star.hovered, .stars .star.lit { color: var(--brand); opacity:1; text-shadow: 0 0 18px rgba(255,106,0,0.6); }
+  .stars .star.hovered { transform: scale(1.18); }
+  .rate-btn {
+    display:inline-flex; align-items:center; gap:8px; padding: 12px 24px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--brand), var(--brand2)); color:#fff; font-weight:800; font-size:.88rem;
+    border:none; cursor:pointer; box-shadow: 0 8px 24px rgba(255,106,0,0.35); transition: transform .15s ease;
+  }
+  .rate-btn:active { transform: scale(0.95); }
+
+  .contact-row { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .contact-left { display:flex; align-items:center; gap:11px; min-width:0; flex:1 1 160px; }
+  .contact-ico {
+    width:40px; height:40px; border-radius:11px; flex-shrink:0;
+    background: linear-gradient(135deg, var(--blue), #6366f1); display:grid; place-items:center; font-size:1.05rem;
+  }
+  .contact-mail { font-size:.86rem; font-weight:700; color: var(--text); text-decoration:none; word-break:break-all; }
+  .contact-mail:hover { color: var(--brand2); }
+  .copy-btn {
+    display:flex; align-items:center; gap:6px; padding: 9px 14px; border-radius:10px;
+    border:1px solid var(--border); background: var(--card2); color: var(--text); font-size:.77rem; font-weight:750;
+    cursor:pointer; transition: transform .15s ease, background .2s ease;
+  }
+  .copy-btn:active { transform: scale(0.93); }
+  .copy-btn.copied { background: var(--success); color:#fff; border-color: var(--success); }
+
+  .warn-card {
+    display:flex; gap:12px; align-items:flex-start; border:1px solid rgba(255,106,0,0.4);
+    background: var(--brand-soft); border-radius: 14px; padding: 16px;
+  }
+  .warn-ico { font-size:1.3rem; flex-shrink:0; animation: bob 2.6s ease-in-out infinite; }
+  .warn-card p { font-size:.87rem; line-height:1.6; }
+  .warn-card p b { color: var(--brand2); }
+
+  .legal-row { display:flex; gap:10px; flex-wrap:wrap; }
+  .legal-btn {
+    flex:1; min-width:130px; padding: 14px; border-radius:12px; border:1px solid var(--border);
+    background: var(--card); color: var(--text); font-weight:750; font-size:.84rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:6px; transition: all .18s ease;
+  }
+  .legal-btn:hover { background: var(--card2); border-color: var(--brand); color: var(--brand2); }
+  .legal-btn:active { transform: scale(0.97); }
+
+  /* HOT PRODUCTS */
   .hot-categories { display:grid; grid-template-columns: 1fr; gap: 14px; margin-top: 10px; }
   @media(min-width:640px) { .hot-categories { grid-template-columns: repeat(3, 1fr); } }
   .hot-cat-card {
@@ -113,10 +270,7 @@
   }
   .product-card:hover { transform: translateY(-3px); border-color: var(--brand); }
   .product-img-wrap { position: relative; width: 100%; padding-top: 100%; background: var(--bg2); overflow: hidden; }
-  .product-img {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
-    transition: transform 0.3s ease;
-  }
+  .product-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
   .product-card:hover .product-img { transform: scale(1.05); }
   .product-badge {
     position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
@@ -194,9 +348,14 @@
   .modal-close:active { transform: scale(0.9); }
   .modal-body { padding: 18px; overflow-y:auto; font-size:.9rem; line-height:1.7; color: var(--text-dim); }
   .modal-body h4 { color: var(--text); margin: 14px 0 6px; font-size:.92rem; }
+  .modal-body h4:first-child { margin-top:0; }
   .modal-body p { margin-bottom: 10px; }
+  .modal-body ul { margin: 8px 0 12px 20px; }
+  .modal-body li { margin-bottom: 5px; }
+  .modal-body strong { color: var(--text); }
 
   .settings-block { margin-bottom: 22px; }
+  .settings-block:last-child { margin-bottom:0; }
   .settings-lbl { font-size:.76rem; font-weight:800; color: var(--text-dim); text-transform:uppercase; letter-spacing:.07em; margin-bottom: 10px; }
   .theme-row { display:flex; align-items:center; justify-content:space-between; background: var(--card); border:1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
   .theme-row span { font-size:.9rem; font-weight:750; }
@@ -252,11 +411,17 @@
     <h1><span data-i18n="heroTitle1">Source Smarter,</span> <span class="accent" data-i18n="heroTitle2">Trade Global</span></h1>
     <p data-i18n="heroSub">Discover verified suppliers and unbeatable wholesale deals across 40+ categories — powered by Alibaba affiliate links.</p>
   </section>
+  <div class="quick-strip" id="quickStrip"></div>
   <div class="container">
-    <div class="sec-head"><div class="sec-title"><span class="bar"></span><h2 data-i18n="featured">Featured</h2></div></div>
-    <div class="featured" id="featuredGrid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 6px;"></div>
-    <div class="sec-head"><div class="sec-title"><span class="bar"></span><h2 data-i18n="allCategories">All Categories</h2></div><span class="sec-count" id="catCount"></span></div>
-    <div class="cat-list" id="catList" style="display:flex; flex-direction:column; gap: 9px;"></div>
+    <div class="sec-head">
+      <div class="sec-title"><span class="bar"></span><h2 data-i18n="featured">Featured</h2></div>
+    </div>
+    <div class="featured" id="featuredGrid"></div>
+    <div class="sec-head">
+      <div class="sec-title"><span class="bar"></span><h2 data-i18n="allCategories">All Categories</h2></div>
+      <span class="sec-count" id="catCount"></span>
+    </div>
+    <div class="cat-list" id="catList"></div>
   </div>
 </div>
 
@@ -268,17 +433,19 @@
     <p data-i18n="promoSub">Exclusive promo codes for Alibaba Affiliate Marketing. Check back soon!</p>
   </section>
   <div class="container">
-    <div class="sec-head"><div class="sec-title"><span class="bar"></span><h2 data-i18n="promoActive">Active Promo Codes</h2></div></div>
-    <div class="promo-wrap" id="promoList" style="margin-top: 6px; display:flex; flex-direction:column; gap: 14px;"></div>
+    <div class="sec-head">
+      <div class="sec-title"><span class="bar"></span><h2 data-i18n="promoActive">Active Promo Codes</h2></div>
+    </div>
+    <div class="promo-wrap" id="promoList"></div>
   </div>
 </div>
 
 <!-- ============ HOT PRODUCTS ============ -->
 <div class="page" id="page-hot">
   <section class="hero">
-    <div class="hero-badge"><span class="dot"></span><span>🔥 Hot Deals</span></div>
-    <h1><span data-i18n="hotTitle">Sıcak Fırsatlar</span></h1>
-    <p data-i18n="hotSub">En çok satan, yerel depolu ve özel indirimli ürünleri keşfedin.</p>
+    <div class="hero-badge"><span class="dot"></span><span data-i18n="heroBadge">Global B2B Marketplace</span></div>
+    <h1 data-i18n="hotTitle">Hot Products</h1>
+    <p data-i18n="hotSub">Discover top-selling, local stock, and specially discounted products.</p>
   </section>
   <div class="container">
     <div id="hot-main-view">
@@ -286,29 +453,28 @@
         <div class="hot-cat-card" onclick="openHotCategory('eu_local')">
           <div class="hot-cat-icon">🇪🇺</div>
           <div class="hot-cat-name">EU Local Stock</div>
-          <div class="hot-cat-desc">Avrupa depolarından hızlı kargolu ürünler</div>
+          <div class="hot-cat-desc" data-i18n="hotDesc1">Fast shipping from European warehouses</div>
         </div>
         <div class="hot-cat-card" onclick="openHotCategory('special_30k')">
           <div class="hot-cat-icon">💎</div>
           <div class="hot-cat-name">Special Offer 30K</div>
-          <div class="hot-cat-desc">30.000+ özel indirimli seçkin ürün</div>
+          <div class="hot-cat-desc" data-i18n="hotDesc2">30,000+ specially discounted products</div>
         </div>
         <div class="hot-cat-card" onclick="openHotCategory('up_to_50')">
           <div class="hot-cat-icon">🏷️</div>
           <div class="hot-cat-name">Up to 50% Off</div>
-          <div class="hot-cat-desc">%50'ye varan indirimlerle kaçırılmayacak fırsatlar</div>
+          <div class="hot-cat-desc" data-i18n="hotDesc3">Unmissable deals with up to 50% discount</div>
         </div>
       </div>
     </div>
-
     <div id="hot-list-view" style="display: none;">
       <div class="hot-list-header">
-        <button class="back-btn" onclick="closeHotCategory()">←</button>
-        <h2 id="hot-list-title" style="font-size: 1.2rem; font-weight: 800;">Kategori</h2>
+        <button class="back-btn" onclick="closeHotCategory()" aria-label="Back">←</button>
+        <h2 id="hot-list-title" style="font-size: 1.2rem; font-weight: 800;">Category</h2>
       </div>
       <div class="product-grid" id="hot-product-grid"></div>
       <div class="loading-sentinel" id="hot-sentinel">
-        <div class="spinner"></div> <span>Yükleniyor...</span>
+        <div class="spinner"></div> <span data-i18n="loading">Loading...</span>
       </div>
     </div>
   </div>
@@ -322,10 +488,53 @@
     <p data-i18n="infoPageSub">Learn more about the app and get in touch.</p>
   </section>
   <div class="container">
-    <div class="info-block" style="margin-bottom: 22px;">
-      <div class="info-block-head" style="display:flex; align-items:center; gap:9px; font-size:1.02rem; font-weight:800; margin-bottom: 12px; padding-bottom: 9px; border-bottom: 1px solid var(--border);">📦 <span data-i18n="infoSectionTitle">App Purpose</span></div>
-      <div class="info-card" style="background: var(--card); border:1px solid var(--border); border-radius: 16px; padding: 18px;">
-        <p data-i18n="infoText" style="color: var(--text-dim); font-size:.9rem; line-height:1.7; margin-bottom: 10px;">This app gives you fast access to Alibaba wholesale products and the latest B2B deals through affiliate links.</p>
+    <div class="info-block">
+      <div class="info-block-head">📦 <span data-i18n="infoSectionTitle">App Purpose</span></div>
+      <div class="info-card">
+        <p data-i18n="infoText">This app gives you fast access to Alibaba wholesale products and the latest B2B deals through affiliate links. Our goal is to simplify sourcing and bring the best supplier offers together in one place.</p>
+        <p data-i18n="infoShareText">Share campaigns with your partners and unlock savings together! The more people you share with, the more deals everyone can benefit from.</p>
+      </div>
+    </div>
+    <div class="info-block">
+      <div class="info-block-head">⭐ <span data-i18n="rateTitle">Rate the App</span></div>
+      <div class="info-card rate-card">
+        <p class="sub" data-i18n="rateSub">If you like our app, give us 5 stars on Google Play!</p>
+        <div class="stars" id="stars">
+          <span class="star" data-v="1">★</span>
+          <span class="star" data-v="2">★</span>
+          <span class="star" data-v="3">★</span>
+          <span class="star" data-v="4">★</span>
+          <span class="star" data-v="5">★</span>
+        </div>
+        <button class="rate-btn" id="rateBtn" type="button">
+          <span>▶</span> <span data-i18n="rateBtn">Rate on Google Play</span>
+        </button>
+      </div>
+    </div>
+    <div class="info-block">
+      <div class="info-block-head">✉️ <span data-i18n="contactTitle">Contact</span></div>
+      <div class="info-card">
+        <div class="contact-row">
+          <div class="contact-left">
+            <div class="contact-ico">✉️</div>
+            <a class="contact-mail" href="mailto:daastudio42@gmail.com">daastudio42@gmail.com</a>
+          </div>
+          <button class="copy-btn" id="copyBtn" type="button">📋 <span data-i18n="copy">Copy</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="info-block">
+      <div class="info-block-head">⚠️ <span data-i18n="importantTitle">Important</span></div>
+      <div class="warn-card">
+        <div class="warn-ico">⚠️</div>
+        <p><b data-i18n="importantBold">Keep the app always up to date.</b> <span data-i18n="importantText">Deals and links are regularly updated. Make sure you are using the latest version.</span></p>
+      </div>
+    </div>
+    <div class="info-block">
+      <div class="info-block-head">📄 <span data-i18n="legalTitle">Legal</span></div>
+      <div class="legal-row">
+        <button class="legal-btn" type="button" data-modal="privacy">🔒 <span data-i18n="privacy">Privacy Policy</span></button>
+        <button class="legal-btn" type="button" data-modal="terms">📄 <span data-i18n="terms">Terms & Conditions</span></button>
       </div>
     </div>
   </div>
@@ -362,26 +571,49 @@
   </div>
 </div>
 
+<!-- PRIVACY MODAL -->
+<div class="modal-ov" id="privacyModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 data-i18n="privacy">Privacy Policy</h2>
+      <button class="modal-close" type="button" data-close="privacy">✕</button>
+    </div>
+    <div class="modal-body" id="privacyBody"></div>
+  </div>
+</div>
+
+<!-- TERMS MODAL -->
+<div class="modal-ov" id="termsModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 data-i18n="terms">Terms & Conditions</h2>
+      <button class="modal-close" type="button" data-close="terms">✕</button>
+    </div>
+    <div class="modal-body" id="termsBody"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast">Copied!</div>
 
 <script>
 (function () {
   "use strict";
 
-  const PLAY_STORE_HOT_APP_LINK = "https://play.google.com/store/apps/details?id=com.example.hotproducts"; 
-  const HOT_FILES = {
+  /* ============ HOT PRODUCTS AYARLARI ============ */
+  var PLAY_STORE_HOT_APP_LINK = "https://play.google.com/store/apps/details?id=com.DaaStudio.AlibabaAffiliate";
+  var HOT_FILES = {
     eu_local: 'hot_products/eu_local_stock.csv',
     special_30k: 'hot_products/eu_special_30k.do',
     up_to_50: 'hot_products/up_to_50_off.csv'
   };
-  
-  let hotProductsCache = {};
-  let currentHotCategory = null;
-  let hotDisplayIndex = 0;
-  const HOT_BATCH_SIZE = 20;
-  const HOT_MAX_LIMIT = 100;
-  let hotObserver = null;
+  var hotProductsCache = {};
+  var currentHotCategory = null;
+  var hotDisplayIndex = 0;
+  var HOT_BATCH_SIZE = 20;
+  var HOT_MAX_LIMIT = 100;
+  var hotObserver = null;
 
+  /* ============ KATEGORİLER ============ */
   var CATEGORIES = [
     { key: "mainPart", name: "Main Part", icon: "🌐", url: "https://offer.alibaba.com/cps/578enqbs?bm=cps&src=saf", featured: true },
     { key: "newArrivals", name: "New Arrivals", icon: "🆕", url: "https://offer.alibaba.com/cps/qj75l1o9?bm=cps&src=saf", featured: true },
@@ -389,230 +621,568 @@
     { key: "topDeals", name: "Top Deals", icon: "🔥", url: "https://offer.alibaba.com/cps/fsgc0nmo?bm=cps&src=saf", featured: true },
     { key: "apparel", name: "Apparel & Accessories", icon: "👕", url: "https://offer.alibaba.com/cps/lkoarf7r?bm=cps&src=saf" },
     { key: "beauty", name: "Beauty", icon: "💄", url: "https://offer.alibaba.com/cps/n4gsfrov?bm=cps&src=saf" },
+    { key: "commercialEquip", name: "Commercial Equipment & Machinery", icon: "🏭", url: "https://offer.alibaba.com/cps/nt034imv?bm=cps&src=saf" },
+    { key: "constructionMachinery", name: "Construction & Building Machinery", icon: "🏗️", url: "https://offer.alibaba.com/cps/14sb1hk1?bm=cps&src=saf" },
+    { key: "constructionRealEstate", name: "Construction & Real Estate", icon: "🏢", url: "https://offer.alibaba.com/cps/3lghju0m?bm=cps&src=saf" },
+    { key: "consumerElectronics", name: "Consumer Electronics", icon: "📱", url: "https://offer.alibaba.com/cps/stii9idt?bm=cps&src=saf" },
+    { key: "electricalEquip", name: "Electrical Equipment & Supplies", icon: "🔌", url: "https://offer.alibaba.com/cps/oi2cb36c?bm=cps&src=saf" },
+    { key: "electronicComponents", name: "Electronic Components, Accessories & Telecommunications", icon: "🔧", url: "https://offer.alibaba.com/cps/njnirnek?bm=cps&src=saf" },
+    { key: "fabrication", name: "Fabrication Services", icon: "⚙️", url: "https://offer.alibaba.com/cps/1aupd8c5?bm=cps&src=saf" },
+    { key: "foodBeverage", name: "Food & Beverage", icon: "🍎", url: "https://offer.alibaba.com/cps/ficgbi9g?bm=cps&src=saf" },
+    { key: "furniture", name: "Furniture", icon: "🛋️", url: "https://offer.alibaba.com/cps/717rgh4f?bm=cps&src=saf" },
+    { key: "giftsCrafts", name: "Gifts & Crafts", icon: "🎁", url: "https://offer.alibaba.com/cps/a0i581o6?bm=cps&src=saf" },
+    { key: "healthCare", name: "Health Care", icon: "🏥", url: "https://offer.alibaba.com/cps/5f82dunk?bm=cps&src=saf" },
     { key: "homeGarden", name: "Home & Garden", icon: "🏡", url: "https://offer.alibaba.com/cps/49kfqhbj?bm=cps&src=saf" },
-    { key: "jewelry", name: "Jewelry & Watches", icon: "⌚", url: "https://offer.alibaba.com/cps/b7qh1250?bm=cps&src=saf" },
-    { key: "consumerElectronics", name: "Consumer Electronics", icon: "📱", url: "https://offer.alibaba.com/cps/stii9idt?bm=cps&src=saf" }
+    { key: "homeAppliances", name: "Home Appliances", icon: "🔌", url: "https://offer.alibaba.com/cps/l6abahhb?bm=cps&src=saf" },
+    { key: "industrialMachinery", name: "Industrial Machinery", icon: "🏭", url: "https://offer.alibaba.com/cps/j3aqsn2a?bm=cps&src=saf" },
+    { key: "jewelry", name: "Jewelry, Eyewear, Watches & Accessories", icon: "⌚", url: "https://offer.alibaba.com/cps/b7qh1250?bm=cps&src=saf" },
+    { key: "lightsLighting", name: "Lights & Lighting", icon: "💡", url: "https://offer.alibaba.com/cps/brjp6oc1?bm=cps&src=saf" },
+    { key: "luggage", name: "Luggage, Bags & Cases", icon: "👜", url: "https://offer.alibaba.com/cps/mkktc1h1?bm=cps&src=saf" },
+    { key: "materialHandling", name: "Material Handling", icon: "🏋️", url: "https://offer.alibaba.com/cps/lur1pvrb?bm=cps&src=saf" },
+    { key: "metalsAlloys", name: "Metals & Alloys", icon: "🔩", url: "https://offer.alibaba.com/cps/q9qss4jc?bm=cps&src=saf" },
+    { key: "motherKidsToys", name: "Mother, Kids & Toys", icon: "🧸", url: "https://offer.alibaba.com/cps/lh0c9cj0?bm=cps&src=saf" },
+    { key: "packagingPrinting", name: "Packaging & Printing", icon: "📦", url: "https://offer.alibaba.com/cps/c47cgebp?bm=cps&src=saf" },
+    { key: "personalCare", name: "Personal Care & Household Cleaning", icon: "🧴", url: "https://offer.alibaba.com/cps/acmjrnii?bm=cps&src=saf" },
+    { key: "petSupplies", name: "Pet Supplies", icon: "🐾", url: "https://offer.alibaba.com/cps/44gvs2ib?bm=cps&src=saf" },
+    { key: "powerTransmission", name: "Power Transmission", icon: "🔋", url: "https://offer.alibaba.com/cps/2trbinaj?bm=cps&src=saf" },
+    { key: "programmingTech", name: "Programming Technology Services", icon: "💻", url: "https://offer.alibaba.com/cps/o7tj1p6f?bm=cps&src=saf" },
+    { key: "renewableEnergy", name: "Renewable Energy", icon: "🌞", url: "https://offer.alibaba.com/cps/o8mlmti9?bm=cps&src=saf" },
+    { key: "schoolOffice", name: "School & Office Supplies", icon: "📚", url: "https://offer.alibaba.com/cps/rtcbjdrh?bm=cps&src=saf" },
+    { key: "security", name: "Security", icon: "🔒", url: "https://offer.alibaba.com/cps/6hj2520i?bm=cps&src=saf" },
+    { key: "shoes", name: "Shoes & Accessories", icon: "👟", url: "https://offer.alibaba.com/cps/uk7ccrdb?bm=cps&src=saf" },
+    { key: "sportsEnt", name: "Sports & Entertainment", icon: "⚽", url: "https://offer.alibaba.com/cps/0p1c8f2s?bm=cps&src=saf" },
+    { key: "sportswear", name: "Sportswear & Outdoor Apparel", icon: "🎽", url: "https://offer.alibaba.com/cps/2jologh4?bm=cps&src=saf" },
+    { key: "testingInstrument", name: "Testing Instrument & Equipment", icon: "🔬", url: "https://offer.alibaba.com/cps/rcu5k3an?bm=cps&src=saf" },
+    { key: "toolsHardware", name: "Tools & Hardware", icon: "🛠️", url: "https://offer.alibaba.com/cps/5jul33pn?bm=cps&src=saf" },
+    { key: "vehicleAccessories", name: "Vehicle Accessories, Electronics & Tools", icon: "🚗", url: "https://offer.alibaba.com/cps/4b5i3008?bm=cps&src=saf" },
+    { key: "vehicleParts", name: "Vehicle Parts & Accessories", icon: "🔧", url: "https://offer.alibaba.com/cps/1dk3f30r?bm=cps&src=saf" },
+    { key: "vehiclesTransport", name: "Vehicles & Transportation", icon: "🚚", url: "https://offer.alibaba.com/cps/jo85d551?bm=cps&src=saf" }
   ];
 
+  var PROMO_IMAGES = [
+    { url: "https://offer.alibaba.com/cps/velnrsab?bm=cps&src=saf", img: "https://sc01.alicdn.com/kf/Sc57c8331a5b54c738fea5a4edfae3f00o.png" },
+    { url: "https://offer.alibaba.com/cps/lsc2gqt8?bm=cps&src=saf", img: "https://sc01.alicdn.com/kf/Sfb1046c4869841baaadeb1032f7e6a220.png" }
+  ];
+  var PROMO_CODES = [];
+  var PLAY_URL = "https://play.google.com/store/apps/details?id=com.DaaStudio.AlibabaAffiliate";
+
+  var LANGS = [
+    { code: "en", label: "English", flag: "🇬🇧" },
+    { code: "tr", label: "Türkçe", flag: "🇹🇷" },
+    { code: "es", label: "Español", flag: "🇪🇸" },
+    { code: "de", label: "Deutsch", flag: "🇩🇪" },
+    { code: "fr", label: "Français", flag: "🇫🇷" },
+    { code: "it", label: "Italiano", flag: "🇮🇹" },
+    { code: "pt", label: "Português", flag: "🇵🇹" },
+    { code: "ja", label: "日本語", flag: "🇯🇵" },
+    { code: "ko", label: "한국어", flag: "🇰🇷" },
+    { code: "zh", label: "中文", flag: "🇨🇳" }
+  ];
+
+  /* ============ I18N (TÜM DİLLER + HOT) ============ */
   var I18N = {
-    tr: {
-      heroBadge: "Küresel B2B Pazar Yeri", heroTitle1: "Daha Akıllı Tedarik,", heroTitle2: "Küresel Ticaret",
-      navHome: "Ana Sayfa", navPromo: "Promosyon", navHot: "Sıcak Ürünler", navInfo: "Bilgi",
-      hotTitle: "Sıcak Fırsatlar", hotSub: "En çok satan, yerel depolu ve özel indirimli ürünleri keşfedin.",
-      hotDownloadTitle: "Daha Fazla Ürün İçin Uygulamamızı İndirin!",
-      hotDownloadDesc: "Bu kategorideki 100+ özel fırsatı gördünüz. Binlerce ek ürün, anlık bildirimler ve daha fazla indirim için resmi mobil uygulamamızı Google Play'den indirin.",
-      hotDownloadBtn: "Google Play'den İndir",
-      explore: "İncele", settingsTitle: "Ayarlar", appearance: "Görünüm", darkMode: "Karanlık Mod", language: "Dil"
-    },
     en: {
       heroBadge: "Global B2B Marketplace", heroTitle1: "Source Smarter,", heroTitle2: "Trade Global",
+      heroSub: "Discover verified suppliers and unbeatable wholesale deals across 40+ categories — powered by Alibaba affiliate links.",
+      featured: "Featured", allCategories: "All Categories",
       navHome: "Home", navPromo: "Promo", navHot: "Hot Products", navInfo: "Info",
-      hotTitle: "Hot Deals", hotSub: "Discover top-selling, local stock, and specially discounted products.",
+      promoTitle: "Promo Codes", promoSub: "Exclusive promo codes for Alibaba Affiliate Marketing. Check back soon!",
+      promoActive: "Active Promo Codes",
+      promoEmptyTitle: "No Promo Codes Yet", promoEmptyText: "We don't have any promo codes right now. Stay tuned — new codes are coming soon!",
+      infoPageTitle: "About & Info", infoPageSub: "Learn more about the app and get in touch.",
+      infoSectionTitle: "App Purpose",
+      infoText: "This app gives you fast access to Alibaba wholesale products and the latest B2B deals through affiliate links. Our goal is to simplify sourcing and bring the best supplier offers together in one place.",
+      infoShareText: "Share campaigns with your partners and unlock savings together! The more people you share with, the more deals everyone can benefit from.",
+      rateTitle: "Rate the App", rateSub: "If you like our app, give us 5 stars on Google Play!", rateBtn: "Rate on Google Play",
+      contactTitle: "Contact", copy: "Copy",
+      importantTitle: "Important", importantBold: "Keep the app always up to date.",
+      importantText: "Deals and links are regularly updated. Make sure you are using the latest version.",
+      legalTitle: "Legal", privacy: "Privacy Policy", terms: "Terms & Conditions",
+      settingsTitle: "Settings", appearance: "Appearance", darkMode: "Dark Mode", language: "Language",
+      copied: "Copied!", shareCopied: "Link copied! You can share it with your friends.",
+      promoCopy: "Copy Code", explore: "Explore", items: "items", loading: "Loading...",
+      hotTitle: "Hot Products", hotSub: "Discover top-selling, local stock, and specially discounted products.",
+      hotDesc1: "Fast shipping from European warehouses",
+      hotDesc2: "30,000+ specially discounted products",
+      hotDesc3: "Unmissable deals with up to 50% discount",
       hotDownloadTitle: "Download Our App for More Products!",
       hotDownloadDesc: "You've seen 100+ special deals in this category. Download our official mobile app from Google Play for thousands of extra products, instant notifications, and more discounts.",
       hotDownloadBtn: "Download on Google Play",
-      explore: "Explore", settingsTitle: "Settings", appearance: "Appearance", darkMode: "Dark Mode", language: "Language"
+      cat_mainPart: "Main Part", cat_newArrivals: "New Arrivals", cat_topRanking: "Top Ranking", cat_topDeals: "Top Deals",
+      cat_apparel: "Apparel & Accessories", cat_beauty: "Beauty", cat_commercialEquip: "Commercial Equipment & Machinery",
+      cat_constructionMachinery: "Construction & Building Machinery", cat_constructionRealEstate: "Construction & Real Estate",
+      cat_consumerElectronics: "Consumer Electronics", cat_electricalEquip: "Electrical Equipment & Supplies",
+      cat_electronicComponents: "Electronic Components, Accessories & Telecommunications",
+      cat_fabrication: "Fabrication Services", cat_foodBeverage: "Food & Beverage", cat_furniture: "Furniture",
+      cat_giftsCrafts: "Gifts & Crafts", cat_healthCare: "Health Care", cat_homeGarden: "Home & Garden",
+      cat_homeAppliances: "Home Appliances", cat_industrialMachinery: "Industrial Machinery",
+      cat_jewelry: "Jewelry, Eyewear, Watches & Accessories", cat_lightsLighting: "Lights & Lighting",
+      cat_luggage: "Luggage, Bags & Cases", cat_materialHandling: "Material Handling", cat_metalsAlloys: "Metals & Alloys",
+      cat_motherKidsToys: "Mother, Kids & Toys", cat_packagingPrinting: "Packaging & Printing",
+      cat_personalCare: "Personal Care & Household Cleaning", cat_petSupplies: "Pet Supplies",
+      cat_powerTransmission: "Power Transmission", cat_programmingTech: "Programming Technology Services",
+      cat_renewableEnergy: "Renewable Energy", cat_schoolOffice: "School & Office Supplies", cat_security: "Security",
+      cat_shoes: "Shoes & Accessories", cat_sportsEnt: "Sports & Entertainment",
+      cat_sportswear: "Sportswear & Outdoor Apparel", cat_testingInstrument: "Testing Instrument & Equipment",
+      cat_toolsHardware: "Tools & Hardware", cat_vehicleAccessories: "Vehicle Accessories, Electronics & Tools",
+      cat_vehicleParts: "Vehicle Parts & Accessories", cat_vehiclesTransport: "Vehicles & Transportation"
+    },
+    tr: {
+      heroBadge: "Küresel B2B Pazar Yeri", heroTitle1: "Daha Akıllı Tedarik,", heroTitle2: "Küresel Ticaret",
+      heroSub: "40'tan fazla kategoride onaylı tedarikçileri ve kaçırılmayacak toptan fırsatları keşfedin — Alibaba affiliate linkleriyle.",
+      featured: "Öne Çıkanlar", allCategories: "Tüm Kategoriler",
+      navHome: "Ana Sayfa", navPromo: "Promosyon", navHot: "Sıcak Ürünler", navInfo: "Bilgi",
+      promoTitle: "Promosyon Kodları", promoSub: "Alibaba Affiliate Marketing için özel promosyon kodları. Yakında tekrar kontrol edin!",
+      promoActive: "Aktif Promosyon Kodları",
+      promoEmptyTitle: "Henüz Promosyon Kodu Yok", promoEmptyText: "Şu anda promosyon kodumuz bulunmuyor. Takipte kalın — yakında yenileri gelecek!",
+      infoPageTitle: "Hakkında & Bilgi", infoPageSub: "Uygulama hakkında daha fazla bilgi edinin ve bizimle iletişime geçin.",
+      infoSectionTitle: "Uygulama Amacı",
+      infoText: "Bu uygulama, Alibaba toptan ürünlerine hızlı erişim sağlamak ve en güncel B2B fırsatlarını affiliate linkler aracılığıyla sunmak için geliştirilmiştir. Amacımız tedarik sürecini kolaylaştırmak ve en iyi tedarikçi tekliflerini tek bir yerde toplamaktır.",
+      infoShareText: "Kampanyaları iş ortaklarınızla paylaşın ve birlikte tasarruf edin! Ne kadar çok kişiyle paylaşırsanız, o kadar çok kişi fırsatlardan yararlanır.",
+      rateTitle: "Uygulamaya Oy Ver", rateSub: "Uygulamamızı beğendiyseniz Google Play'de 5 yıldız verin!", rateBtn: "Google Play'de Oyla",
+      contactTitle: "İletişim", copy: "Kopyala",
+      importantTitle: "Önemli", importantBold: "Uygulamayı sürekli güncel tutunuz.",
+      importantText: "Fırsatlar ve linkler düzenli olarak güncellenmektedir. En son sürümü kullandığınızdan emin olun.",
+      legalTitle: "Yasal", privacy: "Gizlilik Politikası", terms: "Kullanım Şartları",
+      settingsTitle: "Ayarlar", appearance: "Görünüm", darkMode: "Karanlık Mod", language: "Dil",
+      copied: "Kopyalandı!", shareCopied: "Link kopyalandı! İş ortaklarınızla paylaşabilirsiniz.",
+      promoCopy: "Kodu Kopyala", explore: "Keşfet", items: "ürün", loading: "Yükleniyor...",
+      hotTitle: "Sıcak Fırsatlar", hotSub: "En çok satan, yerel depolu ve özel indirimli ürünleri keşfedin.",
+      hotDesc1: "Avrupa depolarından hızlı kargolu ürünler",
+      hotDesc2: "30.000+ özel indirimli seçkin ürün",
+      hotDesc3: "%50'ye varan indirimlerle kaçırılmayacak fırsatlar",
+      hotDownloadTitle: "Daha Fazla Ürün İçin Uygulamamızı İndirin!",
+      hotDownloadDesc: "Bu kategorideki 100+ özel fırsatı gördünüz. Binlerce ek ürün, anlık bildirimler ve daha fazla indirim için resmi mobil uygulamamızı Google Play'den indirin.",
+      hotDownloadBtn: "Google Play'den İndir",
+      cat_mainPart: "Ana Bölüm", cat_newArrivals: "Yeni Gelenler", cat_topRanking: "En İyiler", cat_topDeals: "En İyi Fırsatlar",
+      cat_apparel: "Giyim & Aksesuar", cat_beauty: "Güzellik", cat_commercialEquip: "Ticari Ekipman & Makine",
+      cat_constructionMachinery: "İnşaat & Yapı Makineleri", cat_constructionRealEstate: "İnşaat & Gayrimenkul",
+      cat_consumerElectronics: "Tüketici Elektroniği", cat_electricalEquip: "Elektrik Ekipmanları & Malzemeleri",
+      cat_electronicComponents: "Elektronik Bileşenler, Aksesuarlar & Telekomünikasyon",
+      cat_fabrication: "Üretim Hizmetleri", cat_foodBeverage: "Gıda & İçecek", cat_furniture: "Mobilya",
+      cat_giftsCrafts: "Hediyeler & El Sanatları", cat_healthCare: "Sağlık Hizmetleri", cat_homeGarden: "Ev & Bahçe",
+      cat_homeAppliances: "Ev Aletleri", cat_industrialMachinery: "Endüstriyel Makineler",
+      cat_jewelry: "Mücevher, Gözlük, Saat & Aksesuar", cat_lightsLighting: "Işıklar & Aydınlatma",
+      cat_luggage: "Bavul, Çanta & Valizler", cat_materialHandling: "Malzeme Taşıma", cat_metalsAlloys: "Metaller & Alaşımlar",
+      cat_motherKidsToys: "Anne, Çocuk & Oyuncak", cat_packagingPrinting: "Ambalaj & Baskı",
+      cat_personalCare: "Kişisel Bakım & Ev Temizliği", cat_petSupplies: "Evcil Hayvan Malzemeleri",
+      cat_powerTransmission: "Güç İletimi", cat_programmingTech: "Programlama Teknolojisi Hizmetleri",
+      cat_renewableEnergy: "Yenilenebilir Enerji", cat_schoolOffice: "Okul & Ofis Malzemeleri", cat_security: "Güvenlik",
+      cat_shoes: "Ayakkabı & Aksesuar", cat_sportsEnt: "Spor & Eğlence",
+      cat_sportswear: "Spor Giyim & Dış Giyim", cat_testingInstrument: "Test Cihazları & Ekipmanları",
+      cat_toolsHardware: "Aletler & Donanım", cat_vehicleAccessories: "Araç Aksesuarları, Elektronik & Aletler",
+      cat_vehicleParts: "Araç Parçaları & Aksesuarları", cat_vehiclesTransport: "Araçlar & Ulaşım"
+    },
+    es: {
+      heroBadge: "Mercado Global B2B", heroTitle1: "Abastece Mejor,", heroTitle2: "Comercia Global",
+      heroSub: "Descubre proveedores verificados y ofertas mayoristas en más de 40 categorías — con enlaces de afiliado de Alibaba.",
+      featured: "Destacados", allCategories: "Todas las Categorías",
+      navHome: "Inicio", navPromo: "Promo", navHot: "Productos Calientes", navInfo: "Info",
+      promoTitle: "Códigos Promocionales", promoSub: "Códigos promo exclusivos para Alibaba Affiliate Marketing. ¡Vuelve pronto!",
+      promoActive: "Códigos Promo Activos",
+      promoEmptyTitle: "Aún No Hay Códigos Promo", promoEmptyText: "No tenemos códigos promocionales ahora. ¡Mantente atento — nuevos códigos llegarán pronto!",
+      infoPageTitle: "Acerca & Info", infoPageSub: "Conoce más sobre la app y ponte en contacto.",
+      infoSectionTitle: "Propósito de la App",
+      infoText: "Esta app te da acceso rápido a productos mayoristas de Alibaba y a las mejores ofertas B2B mediante enlaces de afiliado. Nuestro objetivo es simplificar el abastecimiento y reunir las mejores ofertas de proveedores en un solo lugar.",
+      infoShareText: "¡Comparte las campañas con tus socios y ahorren juntos! Cuantas más personas compartas, más gente podrá beneficiarse.",
+      rateTitle: "Valora la App", rateSub: "Si te gusta nuestra app, ¡danos 5 estrellas en Google Play!", rateBtn: "Valorar en Google Play",
+      contactTitle: "Contacto", copy: "Copiar",
+      importantTitle: "Importante", importantBold: "Mantén la app siempre actualizada.",
+      importantText: "Las ofertas y enlaces se actualizan regularmente. Asegúrate de usar la última versión.",
+      legalTitle: "Legal", privacy: "Política de Privacidad", terms: "Términos y Condiciones",
+      settingsTitle: "Ajustes", appearance: "Apariencia", darkMode: "Modo Oscuro", language: "Idioma",
+      copied: "¡Copiado!", shareCopied: "¡Enlace copiado! Puedes compartirlo con tus amigos.",
+      promoCopy: "Copiar Código", explore: "Explorar", items: "artículos", loading: "Cargando...",
+      hotTitle: "Productos Destacados", hotSub: "Descubre productos más vendidos, de stock local y con descuentos especiales.",
+      hotDesc1: "Envío rápido desde almacenes europeos",
+      hotDesc2: "Más de 30.000 productos con descuento especial",
+      hotDesc3: "Ofertas irresistibles con hasta un 50% de descuento",
+      hotDownloadTitle: "¡Descarga Nuestra App para Más Productos!",
+      hotDownloadDesc: "Has visto más de 100 ofertas especiales en esta categoría. Descarga nuestra app oficial desde Google Play para miles de productos adicionales, notificaciones instantáneas y más descuentos.",
+      hotDownloadBtn: "Descargar en Google Play",
+      cat_mainPart: "Parte Principal", cat_newArrivals: "Novedades", cat_topRanking: "Mejor Valorados", cat_topDeals: "Mejores Ofertas",
+      cat_apparel: "Ropa y Accesorios", cat_beauty: "Belleza", cat_commercialEquip: "Equipos y Maquinaria Comercial",
+      cat_constructionMachinery: "Maquinaria de Construcción", cat_constructionRealEstate: "Construcción e Inmobiliaria",
+      cat_consumerElectronics: "Electrónica de Consumo", cat_electricalEquip: "Equipos y Suministros Eléctricos",
+      cat_electronicComponents: "Componentes Electrónicos, Accesorios y Telecomunicaciones",
+      cat_fabrication: "Servicios de Fabricación", cat_foodBeverage: "Alimentos y Bebidas", cat_furniture: "Muebles",
+      cat_giftsCrafts: "Regalos y Artesanías", cat_healthCare: "Cuidado de la Salud", cat_homeGarden: "Hogar y Jardín",
+      cat_homeAppliances: "Electrodomésticos", cat_industrialMachinery: "Maquinaria Industrial",
+      cat_jewelry: "Joyería, Gafas, Relojes y Accesorios", cat_lightsLighting: "Luces e Iluminación",
+      cat_luggage: "Equipaje, Bolsos y Maletas", cat_materialHandling: "Manejo de Materiales", cat_metalsAlloys: "Metales y Aleaciones",
+      cat_motherKidsToys: "Madre, Niños y Juguetes", cat_packagingPrinting: "Embalaje e Impresión",
+      cat_personalCare: "Cuidado Personal y Limpieza del Hogar", cat_petSupplies: "Suministros para Mascotas",
+      cat_powerTransmission: "Transmisión de Potencia", cat_programmingTech: "Servicios de Tecnología de Programación",
+      cat_renewableEnergy: "Energía Renovable", cat_schoolOffice: "Material Escolar y de Oficina", cat_security: "Seguridad",
+      cat_shoes: "Zapatos y Accesorios", cat_sportsEnt: "Deportes y Entretenimiento",
+      cat_sportswear: "Ropa Deportiva y de Exterior", cat_testingInstrument: "Instrumentos y Equipos de Prueba",
+      cat_toolsHardware: "Herramientas y Ferretería", cat_vehicleAccessories: "Accesorios, Electrónica y Herramientas para Vehículos",
+      cat_vehicleParts: "Piezas y Accesorios de Vehículos", cat_vehiclesTransport: "Vehículos y Transporte"
+    },
+    de: {
+      heroBadge: "Globaler B2B-Marktplatz", heroTitle1: "Smarter Beschaffen,", heroTitle2: "Global Handeln",
+      heroSub: "Entdecke verifizierte Lieferanten und unschlagbare Großhandelsangebote in über 40 Kategorien — mit Alibaba-Affiliate-Links.",
+      featured: "Empfohlen", allCategories: "Alle Kategorien",
+      navHome: "Start", navPromo: "Promo", navHot: "Top-Produkte", navInfo: "Info",
+      promoTitle: "Promo-Codes", promoSub: "Exklusive Promo-Codes für Alibaba Affiliate Marketing. Schau bald wieder vorbei!",
+      promoActive: "Aktive Promo-Codes",
+      promoEmptyTitle: "Noch Keine Promo-Codes", promoEmptyText: "Wir haben derzeit keine Promo-Codes. Bleib dran — neue Codes kommen bald!",
+      infoPageTitle: "Über & Info", infoPageSub: "Erfahre mehr über die App und kontaktiere uns.",
+      infoSectionTitle: "Zweck der App",
+      infoText: "Diese App bietet schnellen Zugriff auf Alibaba-Großhandelsprodukte und die neuesten B2B-Angebote über Affiliate-Links. Unser Ziel ist es, die Beschaffung zu vereinfachen und die besten Lieferantenangebote an einem Ort zu bündeln.",
+      infoShareText: "Teile Kampagnen mit deinen Partnern und spart gemeinsam! Je mehr Menschen du teilst, desto mehr können profitieren.",
+      rateTitle: "App Bewerten", rateSub: "Wenn dir unsere App gefällt, gib uns 5 Sterne auf Google Play!", rateBtn: "Auf Google Play Bewerten",
+      contactTitle: "Kontakt", copy: "Kopieren",
+      importantTitle: "Wichtig", importantBold: "Halte die App immer aktuell.",
+      importantText: "Angebote und Links werden regelmäßig aktualisiert. Stelle sicher, dass du die neueste Version verwendest.",
+      legalTitle: "Rechtliches", privacy: "Datenschutzrichtlinie", terms: "AGB",
+      settingsTitle: "Einstellungen", appearance: "Erscheinungsbild", darkMode: "Dunkelmodus", language: "Sprache",
+      copied: "Kopiert!", shareCopied: "Link kopiert! Du kannst ihn mit deinen Freunden teilen.",
+      promoCopy: "Code Kopieren", explore: "Entdecken", items: "Artikel", loading: "Laden...",
+      hotTitle: "Top-Produkte", hotSub: "Entdecke Bestseller, lokale Lagerware und speziell reduzierte Produkte.",
+      hotDesc1: "Schneller Versand aus europäischen Lagern",
+      hotDesc2: "Über 30.000 speziell reduzierte Produkte",
+      hotDesc3: "Unschlagbare Angebote mit bis zu 50% Rabatt",
+      hotDownloadTitle: "Lade Unsere App für Mehr Produkte!",
+      hotDownloadDesc: "Du hast über 100 Sonderangebote in dieser Kategorie gesehen. Lade unsere offizielle mobile App von Google Play für tausende weitere Produkte, sofortige Benachrichtigungen und mehr Rabatte.",
+      hotDownloadBtn: "Bei Google Play herunterladen",
+      cat_mainPart: "Hauptbereich", cat_newArrivals: "Neuankömmlinge", cat_topRanking: "Top-Bewertet", cat_topDeals: "Top-Angebote",
+      cat_apparel: "Bekleidung & Accessoires", cat_beauty: "Schönheit", cat_commercialEquip: "Gewerbliche Ausrüstung & Maschinen",
+      cat_constructionMachinery: "Bau- & Baumaschinen", cat_constructionRealEstate: "Bau & Immobilien",
+      cat_consumerElectronics: "Unterhaltungselektronik", cat_electricalEquip: "Elektrische Ausrüstung & Zubehör",
+      cat_electronicComponents: "Elektronische Komponenten, Zubehör & Telekommunikation",
+      cat_fabrication: "Fertigungsdienstleistungen", cat_foodBeverage: "Lebensmittel & Getränke", cat_furniture: "Möbel",
+      cat_giftsCrafts: "Geschenke & Handwerk", cat_healthCare: "Gesundheitswesen", cat_homeGarden: "Haus & Garten",
+      cat_homeAppliances: "Haushaltsgeräte", cat_industrialMachinery: "Industriemaschinen",
+      cat_jewelry: "Schmuck, Brillen, Uhren & Accessoires", cat_lightsLighting: "Lichter & Beleuchtung",
+      cat_luggage: "Gepäck, Taschen & Koffer", cat_materialHandling: "Materialhandling", cat_metalsAlloys: "Metalle & Legierungen",
+      cat_motherKidsToys: "Mutter, Kinder & Spielzeug", cat_packagingPrinting: "Verpackung & Druck",
+      cat_personalCare: "Körperpflege & Haushaltsreinigung", cat_petSupplies: "Tierbedarf",
+      cat_powerTransmission: "Kraftübertragung", cat_programmingTech: "Programmiertechnik-Dienstleistungen",
+      cat_renewableEnergy: "Erneuerbare Energien", cat_schoolOffice: "Schul- & Bürobedarf", cat_security: "Sicherheit",
+      cat_shoes: "Schuhe & Accessoires", cat_sportsEnt: "Sport & Unterhaltung",
+      cat_sportswear: "Sportbekleidung & Outdoor-Bekleidung", cat_testingInstrument: "Testinstrumente & Ausrüstung",
+      cat_toolsHardware: "Werkzeuge & Hardware", cat_vehicleAccessories: "Fahrzeugzubehör, Elektronik & Werkzeuge",
+      cat_vehicleParts: "Fahrzeugteile & Zubehör", cat_vehiclesTransport: "Fahrzeuge & Transport"
+    },
+    fr: {
+      heroBadge: "Marché Mondial B2B", heroTitle1: "Sourcez Mieux,", heroTitle2: "Commercez Global",
+      heroSub: "Découvrez des fournisseurs vérifiés et des offres de gros imbattables dans plus de 40 catégories — avec des liens d'affiliation Alibaba.",
+      featured: "En Vedette", allCategories: "Toutes les Catégories",
+      navHome: "Accueil", navPromo: "Promo", navHot: "Produits Phares", navInfo: "Info",
+      promoTitle: "Codes Promotionnels", promoSub: "Codes promo exclusifs pour Alibaba Affiliate Marketing. Revenez bientôt !",
+      promoActive: "Codes Promo Actifs",
+      promoEmptyTitle: "Pas Encore de Codes Promo", promoEmptyText: "Nous n'avons pas de codes promo pour le moment. Restez à l'écoute — de nouveaux codes arrivent bientôt !",
+      infoPageTitle: "À Propos & Info", infoPageSub: "En savoir plus sur l'app et nous contacter.",
+      infoSectionTitle: "Objectif de l'App",
+      infoText: "Cette application vous donne un accès rapide aux produits de gros Alibaba et aux meilleures offres B2B via des liens d'affiliation. Notre objectif est de simplifier l'approvisionnement et de regrouper les meilleures offres de fournisseurs en un seul endroit.",
+      infoShareText: "Partagez les campagnes avec vos partenaires et économisez ensemble ! Plus vous partagez avec de personnes, plus de gens peuvent en bénéficier.",
+      rateTitle: "Noter l'App", rateSub: "Si vous aimez notre app, donnez-nous 5 étoiles sur Google Play !", rateBtn: "Noter sur Google Play",
+      contactTitle: "Contact", copy: "Copier",
+      importantTitle: "Important", importantBold: "Gardez l'app toujours à jour.",
+      importantText: "Les offres et les liens sont régulièrement mis à jour. Assurez-vous d'utiliser la dernière version.",
+      legalTitle: "Mentions Légales", privacy: "Politique de Confidentialité", terms: "Conditions d'Utilisation",
+      settingsTitle: "Paramètres", appearance: "Apparence", darkMode: "Mode Sombre", language: "Langue",
+      copied: "Copié !", shareCopied: "Lien copié ! Vous pouvez le partager avec vos amis.",
+      promoCopy: "Copier le Code", explore: "Explorer", items: "articles", loading: "Chargement...",
+      hotTitle: "Produits Phares", hotSub: "Découvrez les meilleures ventes, le stock local et les produits en promotion spéciale.",
+      hotDesc1: "Expédition rapide depuis les entrepôts européens",
+      hotDesc2: "Plus de 30 000 produits en promotion spéciale",
+      hotDesc3: "Des offres irrésistibles avec jusqu'à 50% de réduction",
+      hotDownloadTitle: "Téléchargez Notre App pour Plus de Produits !",
+      hotDownloadDesc: "Vous avez vu plus de 100 offres spéciales dans cette catégorie. Téléchargez notre application officielle sur Google Play pour des milliers de produits supplémentaires, des notifications instantanées et plus de réductions.",
+      hotDownloadBtn: "Télécharger sur Google Play",
+      cat_mainPart: "Partie Principale", cat_newArrivals: "Nouveautés", cat_topRanking: "Mieux Classés", cat_topDeals: "Meilleures Offres",
+      cat_apparel: "Vêtements & Accessoires", cat_beauty: "Beauté", cat_commercialEquip: "Équipement & Machines Commerciales",
+      cat_constructionMachinery: "Machines de Construction", cat_constructionRealEstate: "Construction & Immobilier",
+      cat_consumerElectronics: "Électronique Grand Public", cat_electricalEquip: "Équipements & Fournitures Électriques",
+      cat_electronicComponents: "Composants Électroniques, Accessoires & Télécommunications",
+      cat_fabrication: "Services de Fabrication", cat_foodBeverage: "Alimentation & Boissons", cat_furniture: "Meubles",
+      cat_giftsCrafts: "Cadeaux & Artisanat", cat_healthCare: "Soins de Santé", cat_homeGarden: "Maison & Jardin",
+      cat_homeAppliances: "Électroménager", cat_industrialMachinery: "Machines Industrielles",
+      cat_jewelry: "Bijoux, Lunettes, Montres & Accessoires", cat_lightsLighting: "Lumières & Éclairage",
+      cat_luggage: "Bagages, Sacs & Valises", cat_materialHandling: "Manutention", cat_metalsAlloys: "Métaux & Alliages",
+      cat_motherKidsToys: "Mère, Enfants & Jouets", cat_packagingPrinting: "Emballage & Impression",
+      cat_personalCare: "Soins Personnels & Nettoyage Domestique", cat_petSupplies: "Fournitures pour Animaux",
+      cat_powerTransmission: "Transmission de Puissance", cat_programmingTech: "Services de Technologie de Programmation",
+      cat_renewableEnergy: "Énergie Renouvelable", cat_schoolOffice: "Fournitures Scolaires & de Bureau", cat_security: "Sécurité",
+      cat_shoes: "Chaussures & Accessoires", cat_sportsEnt: "Sports & Divertissement",
+      cat_sportswear: "Vêtements de Sport & d'Extérieur", cat_testingInstrument: "Instruments & Équipements de Test",
+      cat_toolsHardware: "Outils & Quincaillerie", cat_vehicleAccessories: "Accessoires, Électronique & Outils pour Véhicules",
+      cat_vehicleParts: "Pièces & Accessoires de Véhicules", cat_vehiclesTransport: "Véhicules & Transport"
+    },
+    it: {
+      heroBadge: "Marketplace Globale B2B", heroTitle1: "Approvvigiona Meglio,", heroTitle2: "Commercia Globale",
+      heroSub: "Scopri fornitori verificati e offerte all'ingrosso imbattibili in oltre 40 categorie — con link di affiliazione Alibaba.",
+      featured: "In Evidenza", allCategories: "Tutte le Categorie",
+      navHome: "Home", navPromo: "Promo", navHot: "Prodotti Caldi", navInfo: "Info",
+      promoTitle: "Codici Promozionali", promoSub: "Codici promo esclusivi per Alibaba Affiliate Marketing. Torna presto!",
+      promoActive: "Codici Promo Attivi",
+      promoEmptyTitle: "Ancora Nessun Codice Promo", promoEmptyText: "Al momento non abbiamo codici promo. Resta sintonizzato — nuovi codici in arrivo!",
+      infoPageTitle: "Informazioni & Info", infoPageSub: "Scopri di più sull'app e contattaci.",
+      infoSectionTitle: "Scopo dell'App",
+      infoText: "Questa app offre un accesso rapido ai prodotti all'ingrosso Alibaba e alle migliori offerte B2B tramite link di affiliazione. Il nostro obiettivo è semplificare l'approvvigionamento e riunire le migliori offerte dei fornitori in un unico posto.",
+      infoShareText: "Condividi le campagne con i tuoi partner e risparmiate insieme! Più persone condividi, più persone possono beneficiare.",
+      rateTitle: "Valuta l'App", rateSub: "Se ti piace la nostra app, dacci 5 stelle su Google Play!", rateBtn: "Valuta su Google Play",
+      contactTitle: "Contatti", copy: "Copia",
+      importantTitle: "Importante", importantBold: "Mantieni l'app sempre aggiornata.",
+      importantText: "Le offerte e i link vengono aggiornati regolarmente. Assicurati di utilizzare la versione più recente.",
+      legalTitle: "Legale", privacy: "Informativa sulla Privacy", terms: "Termini e Condizioni",
+      settingsTitle: "Impostazioni", appearance: "Aspetto", darkMode: "Modalità Scura", language: "Lingua",
+      copied: "Copiato!", shareCopied: "Link copiato! Puoi condividerlo con i tuoi amici.",
+      promoCopy: "Copia Codice", explore: "Esplora", items: "articoli", loading: "Caricamento...",
+      hotTitle: "Prodotti in Evidenza", hotSub: "Scopri i più venduti, stock locale e prodotti con sconti speciali.",
+      hotDesc1: "Spedizione rapida dai magazzini europei",
+      hotDesc2: "Oltre 30.000 prodotti con sconti speciali",
+      hotDesc3: "Offerte imperdibili con sconti fino al 50%",
+      hotDownloadTitle: "Scarica la Nostra App per Più Prodotti!",
+      hotDownloadDesc: "Hai visto oltre 100 offerte speciali in questa categoria. Scarica la nostra app ufficiale da Google Play per migliaia di prodotti aggiuntivi, notifiche istantanee e più sconti.",
+      hotDownloadBtn: "Scarica su Google Play",
+      cat_mainPart: "Parte Principale", cat_newArrivals: "Novità", cat_topRanking: "Più Votati", cat_topDeals: "Migliori Offerte",
+      cat_apparel: "Abbigliamento & Accessori", cat_beauty: "Bellezza", cat_commercialEquip: "Attrezzature & Macchinari Commerciali",
+      cat_constructionMachinery: "Macchinari per Costruzioni", cat_constructionRealEstate: "Costruzioni & Immobiliare",
+      cat_consumerElectronics: "Elettronica di Consumo", cat_electricalEquip: "Apparecchiature & Forniture Elettriche",
+      cat_electronicComponents: "Componenti Elettronici, Accessori & Telecomunicazioni",
+      cat_fabrication: "Servizi di Fabbricazione", cat_foodBeverage: "Alimentari & Bevande", cat_furniture: "Arredamento",
+      cat_giftsCrafts: "Regali & Artigianato", cat_healthCare: "Assistenza Sanitaria", cat_homeGarden: "Casa & Giardino",
+      cat_homeAppliances: "Elettrodomestici", cat_industrialMachinery: "Macchinari Industriali",
+      cat_jewelry: "Gioielli, Occhiali, Orologi & Accessori", cat_lightsLighting: "Luci & Illuminazione",
+      cat_luggage: "Bagagli, Borse & Valigie", cat_materialHandling: "Movimentazione Materiali", cat_metalsAlloys: "Metalli & Leghe",
+      cat_motherKidsToys: "Mamma, Bambini & Giocattoli", cat_packagingPrinting: "Imballaggio & Stampa",
+      cat_personalCare: "Cura Personale & Pulizia Domestica", cat_petSupplies: "Forniture per Animali",
+      cat_powerTransmission: "Trasmissione di Potenza", cat_programmingTech: "Servizi di Tecnologia di Programmazione",
+      cat_renewableEnergy: "Energia Rinnovabile", cat_schoolOffice: "Forniture Scolastiche & per Ufficio", cat_security: "Sicurezza",
+      cat_shoes: "Scarpe & Accessori", cat_sportsEnt: "Sport & Intrattenimento",
+      cat_sportswear: "Abbigliamento Sportivo & da Esterno", cat_testingInstrument: "Strumenti & Attrezzature di Test",
+      cat_toolsHardware: "Utensili & Ferramenta", cat_vehicleAccessories: "Accessori, Elettronica & Strumenti per Veicoli",
+      cat_vehicleParts: "Ricambi & Accessori per Veicoli", cat_vehiclesTransport: "Veicoli & Trasporti"
+    },
+    pt: {
+      heroBadge: "Marketplace Global B2B", heroTitle1: "Abasteça Melhor,", heroTitle2: "Comercie Global",
+      heroSub: "Descubra fornecedores verificados e ofertas por atacado imbatíveis em mais de 40 categorias — com links de afiliado Alibaba.",
+      featured: "Destaques", allCategories: "Todas as Categorias",
+      navHome: "Início", navPromo: "Promo", navHot: "Produtos Quentes", navInfo: "Info",
+      promoTitle: "Códigos Promocionais", promoSub: "Códigos promocionais exclusivos para Alibaba Affiliate Marketing. Volte em breve!",
+      promoActive: "Códigos Promo Ativos",
+      promoEmptyTitle: "Ainda Sem Códigos Promo", promoEmptyText: "Não temos códigos promocionais no momento. Fique ligado — novos códigos em breve!",
+      infoPageTitle: "Sobre & Info", infoPageSub: "Saiba mais sobre o app e entre em contato.",
+      infoSectionTitle: "Objetivo do App",
+      infoText: "Este app dá acesso rápido aos produtos por atacado da Alibaba e às melhores ofertas B2B por meio de links de afiliado. Nosso objetivo é simplificar o abastecimento e reunir as melhores ofertas de fornecedores em um só lugar.",
+      infoShareText: "Compartilhe as campanhas com seus parceiros e economizem juntos! Quanto mais pessoas você compartilhar, mais gente pode se beneficiar.",
+      rateTitle: "Avalie o App", rateSub: "Se você gosta do nosso app, nos dê 5 estrelas no Google Play!", rateBtn: "Avaliar no Google Play",
+      contactTitle: "Contato", copy: "Copiar",
+      importantTitle: "Importante", importantBold: "Mantenha o app sempre atualizado.",
+      importantText: "Ofertas e links são atualizados regularmente. Certifique-se de usar a versão mais recente.",
+      legalTitle: "Legal", privacy: "Política de Privacidade", terms: "Termos e Condições",
+      settingsTitle: "Configurações", appearance: "Aparência", darkMode: "Modo Escuro", language: "Idioma",
+      copied: "Copiado!", shareCopied: "Link copiado! Você pode compartilhá-lo com seus amigos.",
+      promoCopy: "Copiar Código", explore: "Explorar", items: "itens", loading: "Carregando...",
+      hotTitle: "Produtos em Destaque", hotSub: "Descubra os mais vendidos, estoque local e produtos com descontos especiais.",
+      hotDesc1: "Envio rápido dos armazéns europeus",
+      hotDesc2: "Mais de 30.000 produtos com desconto especial",
+      hotDesc3: "Ofertas imperdíveis com até 50% de desconto",
+      hotDownloadTitle: "Baixe Nosso App para Mais Produtos!",
+      hotDownloadDesc: "Você viu mais de 100 ofertas especiais nesta categoria. Baixe nosso app oficial no Google Play para milhares de produtos adicionais, notificações instantâneas e mais descontos.",
+      hotDownloadBtn: "Baixar no Google Play",
+      cat_mainPart: "Parte Principal", cat_newArrivals: "Novidades", cat_topRanking: "Mais Bem Avaliados", cat_topDeals: "Melhores Ofertas",
+      cat_apparel: "Roupas & Acessórios", cat_beauty: "Beleza", cat_commercialEquip: "Equipamentos & Máquinas Comerciais",
+      cat_constructionMachinery: "Máquinas de Construção", cat_constructionRealEstate: "Construção & Imobiliário",
+      cat_consumerElectronics: "Eletrônicos de Consumo", cat_electricalEquip: "Equipamentos & Suprimentos Elétricos",
+      cat_electronicComponents: "Componentes Eletrônicos, Acessórios & Telecomunicações",
+      cat_fabrication: "Serviços de Fabricação", cat_foodBeverage: "Alimentos & Bebidas", cat_furniture: "Móveis",
+      cat_giftsCrafts: "Presentes & Artesanato", cat_healthCare: "Cuidados com a Saúde", cat_homeGarden: "Casa & Jardim",
+      cat_homeAppliances: "Eletrodomésticos", cat_industrialMachinery: "Máquinas Industriais",
+      cat_jewelry: "Joias, Óculos, Relógios & Acessórios", cat_lightsLighting: "Luzes & Iluminação",
+      cat_luggage: "Bagagem, Bolsas & Malas", cat_materialHandling: "Movimentação de Materiais", cat_metalsAlloys: "Metais & Ligas",
+      cat_motherKidsToys: "Mãe, Crianças & Brinquedos", cat_packagingPrinting: "Embalagens & Impressão",
+      cat_personalCare: "Cuidados Pessoais & Limpeza Doméstica", cat_petSupplies: "Suprimentos para Animais",
+      cat_powerTransmission: "Transmissão de Potência", cat_programmingTech: "Serviços de Tecnologia de Programação",
+      cat_renewableEnergy: "Energia Renovável", cat_schoolOffice: "Material Escolar & de Escritório", cat_security: "Segurança",
+      cat_shoes: "Calçados & Acessórios", cat_sportsEnt: "Esportes & Entretenimento",
+      cat_sportswear: "Roupas Esportivas & para Atividades ao Ar Livre", cat_testingInstrument: "Instrumentos & Equipamentos de Teste",
+      cat_toolsHardware: "Ferramentas & Ferragens", cat_vehicleAccessories: "Acessórios, Eletrônicos & Ferramentas para Veículos",
+      cat_vehicleParts: "Peças & Acessórios de Veículos", cat_vehiclesTransport: "Veículos & Transporte"
+    },
+    ja: {
+      heroBadge: "グローバルB2Bマーケットプレイス", heroTitle1: "よりスマートに調達、", heroTitle2: "グローバルに取引",
+      heroSub: "40以上のカテゴリで認証済みサプライヤーと卸売ディールを発見 — Alibabaアフィリエイトリンク搭載。",
+      featured: "注目", allCategories: "すべてのカテゴリ",
+      navHome: "ホーム", navPromo: "プロモ", navHot: "人気商品", navInfo: "情報",
+      promoTitle: "プロモコード", promoSub: "Alibabaアフィリエイトマーケティング限定プロモコード。近日公開！",
+      promoActive: "有効なプロモコード",
+      promoEmptyTitle: "プロモコードはまだありません", promoEmptyText: "現在プロモコードはありません。お楽しみに — 新しいコードが近日登場！",
+      infoPageTitle: "アプリについて", infoPageSub: "アプリについて詳しく知り、お問い合わせください。",
+      infoSectionTitle: "アプリの目的",
+      infoText: "このアプリは、Alibabaの卸売製品と最新のB2Bディールにアフィリエイトリンクを通じて素早くアクセスできるようにします。私たちの目標は調達を簡素化し、最高のサプライヤーオファーを一か所に集めることです。",
+      infoShareText: "キャンペーンをパートナーと共有して、一緒に節約しましょう！より多くの人と共有するほど、より多くの人が恩恵を受けられます。",
+      rateTitle: "アプリを評価", rateSub: "アプリが気に入ったら、Google Playで5つ星をお願いします！", rateBtn: "Google Playで評価",
+      contactTitle: "お問い合わせ", copy: "コピー",
+      importantTitle: "重要", importantBold: "アプリを常に最新の状態に保ってください。",
+      importantText: "お得情報とリンクは定期的に更新されます。最新バージョンを使用していることを確認してください。",
+      legalTitle: "法的情報", privacy: "プライバシーポリシー", terms: "利用規約",
+      settingsTitle: "設定", appearance: "外観", darkMode: "ダークモード", language: "言語",
+      copied: "コピーしました！", shareCopied: "リンクをコピーしました！友達と共有できます。",
+      promoCopy: "コードをコピー", explore: "探索", items: "アイテム", loading: "読み込み中...",
+      hotTitle: "人気商品", hotSub: "ベストセラー、ローカル在庫、特別割引製品を発見。",
+      hotDesc1: "ヨーロッパの倉庫から迅速な配送",
+      hotDesc2: "30,000以上の特別割引製品",
+      hotDesc3: "最大50%オフの見逃せないお得情報",
+      hotDownloadTitle: "もっと多くの製品のためにアプリをダウンロード！",
+      hotDownloadDesc: "このカテゴリで100以上の特別なお得情報を見ました。数千の追加製品、即時通知、さらなる割引のためにGoogle Playから公式モバイルアプリをダウンロードしてください。",
+      hotDownloadBtn: "Google Playでダウンロード",
+      cat_mainPart: "メインパート", cat_newArrivals: "新着", cat_topRanking: "トップランキング", cat_topDeals: "トップディール",
+      cat_apparel: "アパレル＆アクセサリー", cat_beauty: "ビューティー", cat_commercialEquip: "商業機器＆機械",
+      cat_constructionMachinery: "建設・建築機械", cat_constructionRealEstate: "建設＆不動産",
+      cat_consumerElectronics: "家電", cat_electricalEquip: "電気機器＆用品",
+      cat_electronicComponents: "電子部品、アクセサリー＆通信",
+      cat_fabrication: "製造サービス", cat_foodBeverage: "食品＆飲料", cat_furniture: "家具",
+      cat_giftsCrafts: "ギフト＆工芸品", cat_healthCare: "ヘルスケア", cat_homeGarden: "ホーム＆ガーデン",
+      cat_homeAppliances: "家電製品", cat_industrialMachinery: "産業機械",
+      cat_jewelry: "ジュエリー、メガネ、時計＆アクセサリー", cat_lightsLighting: "照明",
+      cat_luggage: "ラゲッジ、バッグ＆ケース", cat_materialHandling: "マテリアルハンドリング", cat_metalsAlloys: "金属＆合金",
+      cat_motherKidsToys: "マザー、キッズ＆トイ", cat_packagingPrinting: "包装＆印刷",
+      cat_personalCare: "パーソナルケア＆家庭用クリーニング", cat_petSupplies: "ペット用品",
+      cat_powerTransmission: "動力伝達", cat_programmingTech: "プログラミング技術サービス",
+      cat_renewableEnergy: "再生可能エネルギー", cat_schoolOffice: "学校＆オフィス用品", cat_security: "セキュリティ",
+      cat_shoes: "靴＆アクセサリー", cat_sportsEnt: "スポーツ＆エンターテイメント",
+      cat_sportswear: "スポーツウェア＆アウトドアウェア", cat_testingInstrument: "試験計器＆機器",
+      cat_toolsHardware: "ツール＆ハードウェア", cat_vehicleAccessories: "車両アクセサリー、電子機器＆ツール",
+      cat_vehicleParts: "車両部品＆アクセサリー", cat_vehiclesTransport: "車両＆輸送"
+    },
+    ko: {
+      heroBadge: "글로벌 B2B 마켓플레이스", heroTitle1: "더 스마트한 소싱,", heroTitle2: "글로벌 거래",
+      heroSub: "40개 이상의 카테고리에서 검증된 공급업체와 최고의 도매 거래를 만나보세요 — Alibaba 제휴 링크 제공.",
+      featured: "추천", allCategories: "모든 카테고리",
+      navHome: "홈", navPromo: "프로모", navHot: "인기 상품", navInfo: "정보",
+      promoTitle: "프로모 코드", promoSub: "Alibaba 제휴 마케팅 독점 프로모 코드. 곧 다시 확인하세요!",
+      promoActive: "활성 프로모 코드",
+      promoEmptyTitle: "아직 프로모 코드가 없습니다", promoEmptyText: "현재 프로모 코드가 없습니다. 기대해 주세요 — 곧 새로운 코드가 나옵니다!",
+      infoPageTitle: "정보 & 안내", infoPageSub: "앱에 대해 자세히 알아보고 문의하세요.",
+      infoSectionTitle: "앱 목적",
+      infoText: "이 앱은 Alibaba 도매 제품과 최신 B2B 거래를 제휴 링크를 통해 빠르게 제공합니다. 우리의 목표는 소싱을 단순화하고 최고의 공급업체 혜택을 한 곳에 모으는 것입니다.",
+      infoShareText: "파트너와 캠페인을 공유하고 함께 절약하세요! 더 많은 사람과 공유할수록 더 많은 사람이 혜택을 받을 수 있습니다.",
+      rateTitle: "앱 평가하기", rateSub: "앱이 마음에 드시면 Google Play에서 별 5개를 주세요!", rateBtn: "Google Play에서 평가",
+      contactTitle: "연락처", copy: "복사",
+      importantTitle: "중요", importantBold: "앱을 항상 최신 상태로 유지하세요.",
+      importantText: "할인 및 링크는 정기적으로 업데이트됩니다. 최신 버전을 사용하고 있는지 확인하세요.",
+      legalTitle: "법적 고지", privacy: "개인정보 처리방침", terms: "이용약관",
+      settingsTitle: "설정", appearance: "화면", darkMode: "다크 모드", language: "언어",
+      copied: "복사됨!", shareCopied: "링크가 복사되었습니다! 친구들과 공유할 수 있습니다.",
+      promoCopy: "코드 복사", explore: "탐색", items: "개 항목", loading: "로딩 중...",
+      hotTitle: "인기 상품", hotSub: "베스트셀러, 현지 재고 및 특별 할인 제품을 발견하세요.",
+      hotDesc1: "유럽 창고에서 빠른 배송",
+      hotDesc2: "30,000개 이상의 특별 할인 제품",
+      hotDesc3: "최대 50% 할인되는 놓칠 수 없는 거래",
+      hotDownloadTitle: "더 많은 제품을 위해 앱을 다운로드하세요!",
+      hotDownloadDesc: "이 카테고리에서 100개 이상의 특별 거래를 확인했습니다. 수천 개의 추가 제품, 즉시 알림 및 추가 할인을 위해 Google Play에서 공식 모바일 앱을 다운로드하세요.",
+      hotDownloadBtn: "Google Play에서 다운로드",
+      cat_mainPart: "메인 파트", cat_newArrivals: "신상품", cat_topRanking: "톱 랭킹", cat_topDeals: "톱 딜",
+      cat_apparel: "의류 & 액세서리", cat_beauty: "뷰티", cat_commercialEquip: "상업용 장비 & 기계",
+      cat_constructionMachinery: "건설 & 건축 기계", cat_constructionRealEstate: "건설 & 부동산",
+      cat_consumerElectronics: "가전제품", cat_electricalEquip: "전기 장비 & 용품",
+      cat_electronicComponents: "전자 부품, 액세서리 & 통신",
+      cat_fabrication: "제조 서비스", cat_foodBeverage: "식품 & 음료", cat_furniture: "가구",
+      cat_giftsCrafts: "선물 & 공예품", cat_healthCare: "헬스케어", cat_homeGarden: "홈 & 가든",
+      cat_homeAppliances: "가정용 기기", cat_industrialMachinery: "산업 기계",
+      cat_jewelry: "주얼리, 안경, 시계 & 액세서리", cat_lightsLighting: "조명 & 라이팅",
+      cat_luggage: "수하물, 가방 & 케이스", cat_materialHandling: "자재 취급", cat_metalsAlloys: "금속 & 합금",
+      cat_motherKidsToys: "맘, 키즈 & 토이", cat_packagingPrinting: "포장 & 인쇄",
+      cat_personalCare: "퍼스널 케어 & 가정용 세제", cat_petSupplies: "반려동물 용품",
+      cat_powerTransmission: "동력 전달", cat_programmingTech: "프로그래밍 기술 서비스",
+      cat_renewableEnergy: "재생 에너지", cat_schoolOffice: "학교 & 사무용품", cat_security: "보안",
+      cat_shoes: "신발 & 액세서리", cat_sportsEnt: "스포츠 & 엔터테인먼트",
+      cat_sportswear: "스포츠웨어 & 아웃도어 의류", cat_testingInstrument: "시험 기기 & 장비",
+      cat_toolsHardware: "공구 & 하드웨어", cat_vehicleAccessories: "차량 액세서리, 전자 & 공구",
+      cat_vehicleParts: "차량 부품 & 액세서리", cat_vehiclesTransport: "차량 & 운송"
+    },
+    zh: {
+      heroBadge: "全球B2B市场", heroTitle1: "更智能的采购，", heroTitle2: "全球贸易",
+      heroSub: "在40多个类别中发现经过验证的供应商和无与伦比的批发优惠 — 由阿里巴巴联盟链接提供支持。",
+      featured: "精选", allCategories: "所有类别",
+      navHome: "首页", navPromo: "优惠", navHot: "热门产品", navInfo: "信息",
+      promoTitle: "优惠码", promoSub: "阿里巴巴联盟营销专属优惠码。敬请期待！",
+      promoActive: "有效优惠码",
+      promoEmptyTitle: "暂无优惠码", promoEmptyText: "我们目前没有优惠码。敬请关注 — 新优惠码即将推出！",
+      infoPageTitle: "关于 & 信息", infoPageSub: "了解更多关于应用的信息并联系我们。",
+      infoSectionTitle: "应用目的",
+      infoText: "此应用让您快速访问阿里巴巴批发产品和最新B2B优惠，通过联盟链接实现。我们的目标是简化采购，并将最佳供应商优惠集中在一个地方。",
+      infoShareText: "与合作伙伴分享活动，一起节省！您分享的人越多，受益的人就越多。",
+      rateTitle: "为应用评分", rateSub: "如果您喜欢我们的应用，请在 Google Play 上给我们 5 星！", rateBtn: "在 Google Play 上评分",
+      contactTitle: "联系", copy: "复制",
+      importantTitle: "重要", importantBold: "请始终保持应用为最新版本。",
+      importantText: "优惠和链接会定期更新。请确保您使用的是最新版本。",
+      legalTitle: "法律", privacy: "隐私政策", terms: "条款和条件",
+      settingsTitle: "设置", appearance: "外观", darkMode: "深色模式", language: "语言",
+      copied: "已复制！", shareCopied: "链接已复制！您可以与朋友分享。",
+      promoCopy: "复制代码", explore: "探索", items: "项", loading: "加载中...",
+      hotTitle: "热门产品", hotSub: "发现畅销品、本地库存和特别折扣产品。",
+      hotDesc1: "欧洲仓库快速发货",
+      hotDesc2: "30,000+特别折扣产品",
+      hotDesc3: "最高50%折扣的不可错过的优惠",
+      hotDownloadTitle: "下载我们的应用获取更多产品！",
+      hotDownloadDesc: "您已在此类别中看到了100+特别优惠。从Google Play下载我们的官方移动应用，获取数千种额外产品、即时通知和更多折扣。",
+      hotDownloadBtn: "在 Google Play 下载",
+      cat_mainPart: "主要部分", cat_newArrivals: "新品上市", cat_topRanking: "热门排行", cat_topDeals: "热门优惠",
+      cat_apparel: "服装与配饰", cat_beauty: "美妆", cat_commercialEquip: "商用设备与机械",
+      cat_constructionMachinery: "建筑与施工机械", cat_constructionRealEstate: "建筑与房地产",
+      cat_consumerElectronics: "消费电子", cat_electricalEquip: "电气设备与用品",
+      cat_electronicComponents: "电子元器件、配件与电信",
+      cat_fabrication: "加工服务", cat_foodBeverage: "食品与饮料", cat_furniture: "家具",
+      cat_giftsCrafts: "礼品与工艺品", cat_healthCare: "医疗保健", cat_homeGarden: "家居与园艺",
+      cat_homeAppliances: "家用电器", cat_industrialMachinery: "工业机械",
+      cat_jewelry: "珠宝、眼镜、手表与配饰", cat_lightsLighting: "灯具与照明",
+      cat_luggage: "行李箱、包袋与箱包", cat_materialHandling: "物料搬运", cat_metalsAlloys: "金属与合金",
+      cat_motherKidsToys: "母婴与玩具", cat_packagingPrinting: "包装与印刷",
+      cat_personalCare: "个人护理与家庭清洁", cat_petSupplies: "宠物用品",
+      cat_powerTransmission: "动力传动", cat_programmingTech: "编程技术服务",
+      cat_renewableEnergy: "可再生能源", cat_schoolOffice: "学校与办公用品", cat_security: "安全防护",
+      cat_shoes: "鞋类与配饰", cat_sportsEnt: "体育与娱乐",
+      cat_sportswear: "运动服与户外服装", cat_testingInstrument: "测试仪器与设备",
+      cat_toolsHardware: "工具与五金", cat_vehicleAccessories: "车辆配件、电子与工具",
+      cat_vehicleParts: "车辆零件与配件", cat_vehiclesTransport: "车辆与运输"
     }
+  };
+
+  /* ============ PRIVACY & TERMS ============ */
+  var PRIVACY = {
+    en: "<p><strong>Privacy Policy</strong></p><p>Daa Studio built the Alibaba Affiliate Marketing app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p><p>This page informs visitors regarding our policies with the collection, use, and disclosure of Personal Information.</p><p>If you choose to use our Service, you agree to the collection and use of information in relation to this policy. We will not use or share your information with anyone except as described in this Privacy Policy.</p><h4>Information Collection and Use</h4><p>For a better experience, we may require you to provide certain personally identifiable information. The information we request is retained on your device and is not collected by us in any way.</p><p>The app uses third-party services that may collect information used to identify you: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p><h4>Log Data</h4><p>Whenever you use our Service, in case of an error we collect data and information (through third-party products) called Log Data. This may include your IP address, device name, OS version, app configuration, time and date of use, and other statistics.</p><h4>Cookies</h4><p>The app may use third-party code and libraries that use cookies to collect information and improve services. You can accept or refuse these cookies.</p><h4>Service Providers</h4><p>We may employ third-party companies to facilitate our Service, provide it on our behalf, perform related services, or assist in analyzing usage. They have access to Personal Information to perform tasks on our behalf and are obligated not to disclose or use it for other purposes.</p><h4>Security</h4><p>Alibaba Affiliate Marketing app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. We value your trust and strive to use commercially acceptable means to protect your Personal Information, but no method of transmission or storage is 100% secure.</p><h4>Links to Other Sites</h4><p>This Service may contain links to other sites. If you click a third-party link, you will be directed to that site. We strongly advise you to review their Privacy Policy.</p><h4>Children's Privacy</h4><p>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p><h4>Changes to This Privacy Policy</h4><p>We may update our Privacy Policy from time to time. You are advised to review this page periodically. This policy is effective as of 2021-11-01.</p><h4>Contact Us</h4><p>If you have questions or suggestions, contact us at daastudio42@gmail.com.</p>",
+    tr: "<p><strong>Gizlilik Politikası</strong></p><p>Daa Studio, Alibaba Affiliate Marketing uygulamasını ücretsiz bir uygulama olarak geliştirmiştir. Bu HİZMET, Daa Studio tarafından ücretsiz olarak sunulmaktadır ve olduğu gibi kullanılması amaçlanmıştır.</p><p>Bu sayfa, ziyaretçileri Kişisel Bilgilerin toplanması, kullanılması ve ifşa edilmesiyle ilgili politikalarımız hakkında bilgilendirir.</p><p>Hizmetimizi kullanmayı seçerseniz, bu politikayla ilgili bilgilerin toplanmasına ve kullanılmasına onay vermiş olursunuz. Bilgilerinizi bu Gizlilik Politikasında açıklananlar dışında kimseyle paylaşmayız.</p><h4>Bilgi Toplama ve Kullanımı</h4><p>Daha iyi bir deneyim için sizden belirli kişisel bilgiler sağlamanızı isteyebiliriz. Talep ettiğimiz bilgiler cihazınızda saklanır ve tarafımızca toplanmaz.</p><p>Uygulama, sizi tanımlamak için bilgi toplayabilecek üçüncü taraf hizmetleri kullanır: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p><h4>Günlük Verileri</h4><p>Hizmetimizi kullandığınızda, bir hata durumunda telefonunuzda Günlük Verileri toplanır. Bu veriler IP adresinizi, cihaz adınızı, işletim sistemi sürümünü, kullanım tarih ve saatinizi ve diğer istatistikleri içerebilir.</p><h4>Çerezler</h4><p>Uygulama, bilgi toplamak ve hizmetleri geliştirmek için çerez kullanan üçüncü taraf kod ve kitaplıkları kullanabilir. Bu çerezleri kabul edebilir veya reddedebilirsiniz.</p><h4>Hizmet Sağlayıcılar</h4><p>Hizmetimizi kolaylaştırmak, sağlamak, ilgili hizmetleri gerçekleştirmek veya kullanımı analiz etmemize yardımcı olmak için üçüncü taraf şirketler kullanabiliriz. Bu taraflar, kendilerine verilen görevleri yerine getirmek için Kişisel Bilgilerinize erişebilir ve başka amaçla kullanmamakla yükümlüdür.</p><h4>Güvenlik</h4><p>Alibaba Affiliate Marketing uygulaması yapımcısı ve yapımcıları hiçbir sorumluluk ve zarardan sorumlu değildir. Tüm sorumluluk kullanıcıya aittir. Kişisel Bilgilerinizi korumak için ticari olarak kabul edilebilir yöntemler kullanmaya çalışıyoruz, ancak hiçbir iletim veya depolama yöntemi %100 güvenli değildir.</p><h4>Diğer Sitelere Bağlantılar</h4><p>Bu Hizmet diğer sitelere bağlantılar içerebilir. Üçüncü taraf bir bağlantıya tıklarsanız o siteye yönlendirilirsiniz. Gizlilik Politikalarını incelemenizi öneririz.</p><h4>Çocukların Gizliliği</h4><p>Bu Hizmetler 13 yaşın altındaki hiç kimseye hitap etmez. 13 yaşın altındaki çocuklardan bilerek kişisel bilgi toplamıyoruz.</p><h4>Değişiklikler</h4><p>Gizlilik Politikamızı zaman zaman güncelleyebiliriz. Bu sayfayı periyodik olarak incelemeniz önerilir. Bu politika 2021-11-01 tarihinden itibaren geçerlidir.</p><h4>Bize Ulaşın</h4><p>Sorularınız için daastudio42@gmail.com adresinden bizimle iletişime geçin.</p>"
+  };
+  var TERMS = {
+    en: "<p><strong>Terms & Conditions</strong></p><p>By downloading or using the app, these terms automatically apply to you. Alibaba Affiliate Marketing app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. You may not copy, modify, or extract the source code of the app, or translate it into other languages, or make derivative versions. All trademarks, copyright, database rights and other intellectual property rights related to the app belong to Daa Studio.</p><p>Daa Studio is committed to ensuring the app is useful and efficient. We reserve the right to make changes or charge for services at any time. We will never charge you without clearly explaining what you are paying for.</p><p>The app stores and processes personal data you have provided in order to provide our Service. It's your responsibility to keep your phone and app access secure. We recommend not jailbreaking or rooting your phone.</p><p>The app uses third-party services that declare their own Terms and Conditions: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p><p>Certain functions require an active internet connection. Daa Studio cannot take responsibility if the app does not work at full functionality due to lack of Wi-Fi or data allowance.</p><p>Daa Studio accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.</p><p>We may update the app. You promise to always accept updates when offered. We may also stop providing the app and terminate use at any time.</p><h4>Changes to These Terms</h4><p>We may update our Terms from time to time. You are advised to review this page periodically. These terms are effective as of 2021-11-01.</p><h4>Contact Us</h4><p>If you have questions, contact us at daastudio42@gmail.com.</p>",
+    tr: "<p><strong>Kullanım Şartları</strong></p><p>Uygulamayı indirerek veya kullanarak, bu şartlar otomatik olarak sizin için geçerli olur. Alibaba Affiliate Marketing uygulaması yapımcısı ve yapımcıları hiçbir sorumluluk ve zarardan sorumlu değildir. Tüm sorumluluk kullanıcıya aittir. Uygulamayı kopyalama, değiştirme, kaynak kodunu çıkarma, başka dillere çevirme veya türev sürümler oluşturma izniniz yoktur. Uygulamayla ilgili tüm ticari markalar, telif hakkı, veritabanı hakları ve diğer fikri mülkiyet hakları Daa Studio'ya aittir.</p><p>Daa Studio, uygulamanın kullanışlı ve verimli olmasını sağlamayı taahhüt eder. Herhangi bir zamanda değişiklik yapma veya hizmetleri için ücret alma hakkımızı saklı tutarız. Ne için ödeme yaptığınızı açıkça belirtmeden asla ücret almayız.</p><p>Uygulama, Hizmetimizi sağlamak için bize sağladığınız kişisel verileri saklar ve işler. Telefonunuzu ve uygulamaya erişimi güvende tutmak sizin sorumluluğunuzdadır. Telefonunuzu jailbreak veya root yapmamanızı öneririz.</p><p>Uygulama, kendi Kullanım Şartlarını beyan eden üçüncü taraf hizmetleri kullanır: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p><p>Belirli işlevler aktif bir internet bağlantısı gerektirir. Wi-Fi veya veri ödeneği eksikliği nedeniyle uygulamanın tam işlevsellikte çalışmamasından Daa Studio sorumlu tutulamaz.</p><p>Daa Studio, uygulamanın bu işlevselliğine tamamen güvenmeniz sonucunda yaşadığınız doğrudan veya dolaylı herhangi bir kayıp için sorumluluk kabul etmez.</p><p>Uygulamayı güncelleyebiliriz. Size sunulduğunda güncellemeleri kabul etmeyi taahhüt edersiniz. Uygulamayı sağlamayı durdurabilir ve kullanımı sonlandırabiliriz.</p><h4>Değişiklikler</h4><p>Kullanım Şartlarımızı zaman zaman güncelleyebiliriz. Bu sayfayı periyodik olarak incelemeniz önerilir. Bu şartlar 2021-11-01 tarihinden itibaren geçerlidir.</p><h4>Bize Ulaşın</h4><p>Sorularınız için daastudio42@gmail.com adresinden bizimle iletişime geçin.</p>"
   };
 
   function $(id) { return document.getElementById(id); }
-  function t(key) {
-    var lang = localStorage.getItem("lang") || "tr";
-    var dict = I18N[lang] || I18N.tr;
-    return dict[key] !== undefined ? dict[key] : (I18N.tr[key] !== undefined ? I18N.tr[key] : key);
-  }
+  function openPlayStore() { window.location.href = PLAY_URL; }
 
-  /* ============ GELİŞMİŞ CSV AYRIŞTIRICI (BOM UYUMLU) ============ */
-  function parseHotData(text) {
-    // UTF-8 BOM karakterini temizle
-    text = text.replace(/^\uFEFF/, '');
-    const lines = text.split(/\r?\n/);
-    const products = [];
-    
-    for (let line of lines) {
-      line = line.trim();
-      if (!line) continue;
-      
-      // Daha esnek kontrol: productId içermeli veya ! ile başlamalı
-      if (!line.includes('productId') && !line.startsWith('!')) continue;
-      
-      const parts = line.split(',');
-      if (parts.length < 4) continue;
-
-      // Resim ve link bulma (daha esnek)
-      let img = parts.find(p => p.trim().startsWith('https://sc') && (p.includes('.jpg') || p.includes('.png') || p.includes('.webp') || p.includes('.jpeg')));
-      let link = parts.find(p => p.trim().startsWith('https://offer.alibaba.com')) || parts.find(p => p.trim().includes('offer.alibaba.com'));
-      
-      if (!img || !link) continue;
-
-      let price = parts.find(p => p.trim().match(/^\d+(\.\d+)?\s*(USD|EUR|TRY|€|\$)/i));
-      
-      let title = "Ürün";
-      for (let i = 1; i < Math.min(parts.length, 8); i++) {
-        if (!parts[i].includes('http') && !parts[i].match(/^\d+$/) && parts[i].length > 10) {
-          title = parts[i]; break;
-        }
-      }
-
-      let category = "Fırsat";
-      const cats = ["jewelry", "beauty", "home", "electronics", "apparel", "toy", "sport", "tool", "garden", "machinery", "luggage", "packaging", "safety", "fabric", "furniture", "shoes", "commercial", "health"];
-      for (let p of parts) {
-        let lower = p.toLowerCase();
-        for (let c of cats) { if (lower.includes(c)) { category = c; break; } }
-      }
-
-      products.push({ title: title.trim(), image: img.trim(), price: price ? price.trim() : "Fiyat Sor", category: category, link: link.trim() });
-    }
-    return products;
-  }
-
-  window.openHotCategory = async function(catKey) {
-    currentHotCategory = catKey;
-    hotDisplayIndex = 0;
-    $('hot-main-view').style.display = 'none';
-    $('hot-list-view').style.display = 'block';
-    
-    const titles = { eu_local: "🇪🇺 EU Local Stock", special_30k: "💎 Special Offer 30K", up_to_50: "🏷️ Up to 50% Off" };
-    $('hot-list-title').textContent = titles[catKey];
-    $('hot-product-grid').innerHTML = '';
-    $('hot-sentinel').style.display = 'flex';
-    $('hot-sentinel').innerHTML = '<div class="spinner"></div> <span>Yükleniyor...</span>';
-    
-    if (!hotProductsCache[catKey]) {
-      try {
-        const response = await fetch(HOT_FILES[catKey]);
-        if (!response.ok) throw new Error(`HTTP Hata: ${response.status} ${response.statusText}`);
-        const text = await response.text();
-        
-        // BOM temizlenmiş metin
-        const cleanText = text.replace(/^\uFEFF/, '');
-        hotProductsCache[catKey] = parseHotData(cleanText);
-        console.log(`${catKey} için ${hotProductsCache[catKey].length} ürün başarıyla yüklendi.`);
-        
-        // Eğer 0 ürün geldiyse, ekrana debug bilgisi göster
-        if (hotProductsCache[catKey].length === 0) {
-            console.warn("Dosya içeriği (ilk 300 karakter):", cleanText.substring(0, 300));
-            $('hot-sentinel').innerHTML = `
-              <div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand);">
-                <div style="font-size:2rem; margin-bottom:10px;">⚠️</div>
-                <p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Okundu Ama Ürün Bulunamadı</p>
-                <p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6; margin-bottom:16px;">
-                  Dosya başarıyla indirildi ancak ayrıştırıcı (parser) içinde geçerli ürün satırı bulamadı.<br><br>
-                  <strong>Olası Sebepler:</strong><br>
-                  1. <code>${HOT_FILES[catKey]}</code> dosyası tamamen boş.<br>
-                  2. Dosya formatı, paylaştığınız örnekteki gibi <code>?productId</code> veya <code>!</code> ile başlamıyor.<br>
-                  3. Satırlarda <code>https://sc...</code> (resim) veya <code>offer.alibaba.com</code> (link) bulunamadı.<br><br>
-                  <strong>Debug Bilgisi (Dosyanın ilk 250 karakteri):</strong><br>
-                  <code style="background:var(--bg2); padding:10px; display:block; border-radius:8px; word-break:break-all; margin-top:8px; font-size:0.75rem; color:var(--text); text-align:left;">${cleanText.substring(0, 250).replace(/</g, '&lt;')}</code>
-                </p>
-              </div>
-            `;
-            return;
-        }
-      } catch (e) {
-        console.error("Dosya okunamadı:", e);
-        $('hot-sentinel').innerHTML = `
-          <div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand);">
-            <div style="font-size:2rem; margin-bottom:10px;">⚠️</div>
-            <p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Okunamadı</p>
-            <p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6;">
-              <strong>Hata:</strong> ${e.message}<br><br>
-              <strong>Çözüm:</strong> Bu dosyayı doğrudan çift tıklayarak (file://) açmayın. Tarayıcılar güvenlik nedeniyle yerel dosya okumayı engeller.<br>
-              VS Code "Live Server" eklentisiyle veya <code>python -m http.server</code> komutuyla çalıştırın.
-            </p>
-          </div>
-        `;
-        return;
-      }
-    }
-
-    loadMoreHotProducts();
-    setupHotObserver();
-  };
-
-  window.closeHotCategory = function() {
-    currentHotCategory = null;
-    $('hot-main-view').style.display = 'block';
-    $('hot-list-view').style.display = 'none';
-    if (hotObserver) hotObserver.disconnect();
-  };
-
-  function loadMoreHotProducts() {
-    if (!currentHotCategory) return;
-    const products = hotProductsCache[currentHotCategory];
-    const grid = $('hot-product-grid');
-    const sentinel = $('hot-sentinel');
-    
-    const end = Math.min(hotDisplayIndex + HOT_BATCH_SIZE, HOT_MAX_LIMIT, products.length);
-    const batch = products.slice(hotDisplayIndex, end);
-    
-    batch.forEach(p => {
-      const card = document.createElement('a');
-      card.className = 'product-card';
-      card.href = p.link;
-      card.target = '_blank';
-      card.rel = 'noopener noreferrer';
-      card.innerHTML = `
-        <div class="product-img-wrap">
-          <img class="product-img" src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.closest('.product-card').style.display='none'">
-          <div class="product-badge">${p.category}</div>
-        </div>
-        <div class="product-info">
-          <div class="product-title">${p.title}</div>
-          <div class="product-price">${p.price}</div>
-          <button class="product-cta">${t('explore')} ↗</button>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-    
-    hotDisplayIndex = end;
-
-    if (hotDisplayIndex >= HOT_MAX_LIMIT || hotDisplayIndex >= products.length) {
-      sentinel.style.display = 'none';
-      if (hotObserver) hotObserver.disconnect();
-      
-      const cta = document.createElement('div');
-      cta.className = 'cta-download-card';
-      cta.innerHTML = `
-        <div style="font-size: 2.5rem;">📱</div>
-        <h3>${t('hotDownloadTitle')}</h3>
-        <p>${t('hotDownloadDesc')}</p>
-        <a href="${PLAY_STORE_HOT_APP_LINK}" target="_blank" class="cta-btn">
-          <span>▶</span> ${t('hotDownloadBtn')}
-        </a>
-      `;
-      grid.appendChild(cta);
-    } else {
-      sentinel.style.display = 'flex';
-    }
-  }
-
-  function setupHotObserver() {
-    if (hotObserver) hotObserver.disconnect();
-    hotObserver = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && currentHotCategory) {
-        loadMoreHotProducts();
-      }
-    }, { rootMargin: '200px' });
-    hotObserver.observe($('hot-sentinel'));
-  }
-
-  /* ============ MEVCUT SİSTEM FONKSİYONLARI ============ */
-  var currentTheme = localStorage.getItem("theme") || "dark";
+  /* ============ THEME ============ */
+  var currentTheme = "dark";
+  try { currentTheme = localStorage.getItem("theme") || "dark"; } catch(e) {}
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
     currentTheme = theme;
-    $("themeSwitch").classList.toggle("on", theme === "dark");
-    localStorage.setItem("theme", theme);
+    var sw = $("themeSwitch");
+    if (sw) sw.classList.toggle("on", theme === "dark");
+    try { localStorage.setItem("theme", theme); } catch(e) {}
   }
   $("themeSwitch").addEventListener("click", function(){ applyTheme(currentTheme === "dark" ? "light" : "dark"); });
   applyTheme(currentTheme);
 
-  var currentLang = localStorage.getItem("lang") || "tr";
+  /* ============ LANGUAGE ============ */
+  var currentLang = "tr";
+  try { currentLang = localStorage.getItem("lang") || "tr"; } catch(e) {}
+  if (!I18N[currentLang]) currentLang = "tr";
+
+  function t(key) {
+    var dict = I18N[currentLang] || I18N.en;
+    return dict[key] !== undefined ? dict[key] : (I18N.en[key] !== undefined ? I18N.en[key] : key);
+  }
+
   function applyLang(lang) {
+    if (!I18N[lang]) lang = "en";
     currentLang = lang;
-    localStorage.setItem("lang", lang);
+    try { localStorage.setItem("lang", lang); } catch(e) {}
     document.documentElement.lang = lang;
     document.querySelectorAll("[data-i18n]").forEach(function(el){
       var k = el.getAttribute("data-i18n");
@@ -621,10 +1191,15 @@
     document.querySelectorAll(".lang-btn").forEach(function(b){
       b.classList.toggle("active", b.getAttribute("data-lang") === lang);
     });
+    $("toast").textContent = I18N[lang].copied;
+    $("privacyBody").innerHTML = PRIVACY[lang] || PRIVACY.en;
+    $("termsBody").innerHTML = TERMS[lang] || TERMS.en;
+    renderCategories();
+    renderPromoList();
   }
 
   var langGrid = $("langGrid");
-  [{code:"tr", label:"Türkçe", flag:"🇹🇷"}, {code:"en", label:"English", flag:"🇬🇧"}].forEach(function(L){
+  LANGS.forEach(function(L){
     var b = document.createElement("button");
     b.type = "button"; b.className = "lang-btn";
     b.setAttribute("data-lang", L.code);
@@ -633,49 +1208,316 @@
     langGrid.appendChild(b);
   });
 
-  var featGrid = $("featuredGrid");
-  var catList = $("catList");
-  $("catCount").textContent = CATEGORIES.length + " ürün";
-  CATEGORIES.filter(c => c.featured).forEach(cat => {
-    var a = document.createElement("a"); a.className = "feat-card"; a.href = cat.url; a.rel = "noopener noreferrer";
-    a.style.cssText = "display:flex; flex-direction:column; gap:9px; padding:16px 14px; border-radius:14px; background:linear-gradient(145deg, var(--card), var(--card2)); border:1px solid var(--border); text-decoration:none; color:var(--text);";
-    a.innerHTML = '<div style="font-size:1.5rem;">' + cat.icon + '</div><div style="font-size:.86rem; font-weight:800;">' + cat.name + '</div>';
-    featGrid.appendChild(a);
+  /* ============ RENDER CATEGORIES ============ */
+  function renderCategories() {
+    var quickStrip = $("quickStrip");
+    var featGrid = $("featuredGrid");
+    var catList = $("catList");
+    var catCount = $("catCount");
+    quickStrip.innerHTML = "";
+    featGrid.innerHTML = "";
+    catList.innerHTML = "";
+    catCount.textContent = CATEGORIES.length + " " + t("items");
+
+    CATEGORIES.filter(function(c){ return c.featured; }).forEach(function(cat){
+      var a = document.createElement("a");
+      a.className = "quick-chip";
+      a.href = cat.url; a.rel = "noopener noreferrer";
+      a.innerHTML = '<span class="qi">' + cat.icon + '</span><span>' + t("cat_" + cat.key) + '</span>';
+      quickStrip.appendChild(a);
+    });
+    CATEGORIES.filter(function(c){ return c.featured; }).forEach(function(cat){
+      var a = document.createElement("a");
+      a.className = "feat-card"; a.href = cat.url; a.rel = "noopener noreferrer";
+      a.innerHTML = '<div class="feat-icon">' + cat.icon + '</div>' +
+                    '<div class="feat-name">' + t("cat_" + cat.key) + '</div>' +
+                    '<div class="feat-go">' + t("explore") + ' ↗</div>';
+      featGrid.appendChild(a);
+    });
+    CATEGORIES.forEach(function(cat){
+      var a = document.createElement("a");
+      a.className = "cat-card"; a.href = cat.url; a.rel = "noopener noreferrer";
+      var ico = document.createElement("div");
+      ico.className = "cat-ico"; ico.textContent = cat.icon;
+      var body = document.createElement("div");
+      body.className = "cat-body";
+      var nm = document.createElement("div");
+      nm.className = "cat-name"; nm.textContent = t("cat_" + cat.key);
+      var go = document.createElement("div");
+      go.className = "cat-go"; go.textContent = t("explore") + " ↗";
+      body.appendChild(nm); body.appendChild(go);
+      var share = document.createElement("button");
+      share.type = "button"; share.className = "cat-share";
+      share.setAttribute("aria-label", "Share");
+      share.textContent = "📤";
+      share.addEventListener("click", function(e){
+        e.preventDefault(); e.stopPropagation();
+        copyToClipboard(cat.url, function(){ showToast(t("shareCopied")); });
+      });
+      a.appendChild(ico); a.appendChild(body); a.appendChild(share);
+      catList.appendChild(a);
+    });
+  }
+
+  /* ============ PROMO LIST ============ */
+  function renderPromoList() {
+    var list = $("promoList");
+    if (!list) return;
+    list.innerHTML = "";
+    if (PROMO_IMAGES && PROMO_IMAGES.length) {
+      PROMO_IMAGES.forEach(function(p){
+        var a = document.createElement("a");
+        a.className = "promo-img-card";
+        a.href = p.url; a.rel = "noopener noreferrer"; a.target = "_blank";
+        var img = document.createElement("img");
+        img.src = p.img; img.alt = "Alibaba Promo"; img.loading = "lazy";
+        a.appendChild(img);
+        list.appendChild(a);
+      });
+    }
+    if (PROMO_CODES && PROMO_CODES.length > 0) {
+      PROMO_CODES.forEach(function(p){
+        var card = document.createElement("div");
+        card.className = "promo-card";
+        var h = document.createElement("h4"); h.textContent = p.title || "Promo";
+        var d = document.createElement("p"); d.textContent = p.desc || "";
+        var row = document.createElement("div"); row.className = "promo-code-row";
+        var code = document.createElement("div"); code.className = "promo-code-val"; code.textContent = p.code || "—";
+        var btn = document.createElement("button"); btn.type = "button"; btn.className = "copy-btn";
+        btn.innerHTML = '📋 <span>' + t("promoCopy") + '</span>';
+        btn.addEventListener("click", function(){
+          copyToClipboard(p.code, function(){
+            btn.classList.add("copied");
+            showToast(t("copied"));
+            setTimeout(function(){ btn.classList.remove("copied"); }, 1800);
+          });
+        });
+        row.appendChild(code); row.appendChild(btn);
+        card.appendChild(h); if (p.desc) card.appendChild(d); card.appendChild(row);
+        list.appendChild(card);
+      });
+    }
+    if ((!PROMO_IMAGES || !PROMO_IMAGES.length) && (!PROMO_CODES || !PROMO_CODES.length)) {
+      var empty = document.createElement("div");
+      empty.className = "promo-empty";
+      empty.innerHTML =
+        '<div class="pe-icon">🎟️</div>' +
+        '<h3>' + t("promoEmptyTitle") + '</h3>' +
+        '<p>' + t("promoEmptyText") + '</p>';
+      list.appendChild(empty);
+    }
+  }
+
+  /* ============ STARS ============ */
+  var stars = Array.prototype.slice.call(document.querySelectorAll("#stars .star"));
+  function paintStars(v) {
+    stars.forEach(function(s){ s.classList.toggle("lit", parseInt(s.getAttribute("data-v"), 10) <= v); });
+  }
+  stars.forEach(function(star){
+    var v = parseInt(star.getAttribute("data-v"), 10);
+    star.addEventListener("mouseenter", function(){
+      stars.forEach(function(s){ s.classList.toggle("hovered", parseInt(s.getAttribute("data-v"), 10) <= v); });
+    });
+    star.addEventListener("mouseleave", function(){ stars.forEach(function(s){ s.classList.remove("hovered"); }); });
+    star.addEventListener("click", function(){ paintStars(v); setTimeout(openPlayStore, 280); });
   });
-  CATEGORIES.forEach(cat => {
-    var a = document.createElement("a"); a.className = "cat-card"; a.href = cat.url; a.rel = "noopener noreferrer";
-    a.style.cssText = "display:flex; align-items:center; gap:12px; padding:13px 14px; border-radius:14px; background:var(--card); border:1px solid var(--border); text-decoration:none; color:var(--text);";
-    a.innerHTML = '<div style="width:40px; height:40px; border-radius:11px; display:grid; place-items:center; font-size:1.2rem; background:var(--brand-soft);">' + cat.icon + '</div><div style="flex:1; font-size:.86rem; font-weight:750;">' + cat.name + '</div><div style="font-size:.7rem; font-weight:800; color:var(--brand2);">↗</div>';
-    catList.appendChild(a);
+  $("rateBtn").addEventListener("click", function(e){ e.preventDefault(); openPlayStore(); });
+
+  /* ============ COPY ============ */
+  function copyToClipboard(text, cb) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(cb).catch(function(){ fbCopy(text, cb); });
+    } else { fbCopy(text, cb); }
+  }
+  function fbCopy(text, cb) {
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand("copy"); } catch(e) {}
+    document.body.removeChild(ta);
+    if (cb) cb();
+  }
+  var toast = $("toast");
+  function showToast(msg) {
+    if (msg) toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(function(){ toast.classList.remove("show"); }, 2000);
+  }
+  $("copyBtn").addEventListener("click", function(){
+    var btn = this;
+    copyToClipboard("daastudio42@gmail.com", function(){
+      btn.classList.add("copied");
+      showToast(t("copied"));
+      setTimeout(function(){ btn.classList.remove("copied"); }, 1800);
+    });
   });
 
+  /* ============ HOT PRODUCTS ============ */
+  function parseHotData(text) {
+    text = text.replace(/^\uFEFF/, '');
+    var lines = text.split(/\r?\n/);
+    var products = [];
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (!line) continue;
+      if (!line.includes('productId') && !line.startsWith('!')) continue;
+      var parts = line.split(',');
+      if (parts.length < 4) continue;
+      var img = null, link = null, price = null;
+      for (var j = 0; j < parts.length; j++) {
+        var p = parts[j].trim();
+        if (!img && p.startsWith('https://sc') && (p.includes('.jpg') || p.includes('.png') || p.includes('.webp') || p.includes('.jpeg'))) img = p;
+        if (!link && p.includes('offer.alibaba.com')) link = p;
+        if (!price && /^\d+(\.\d+)?\s*(USD|EUR|TRY|€|\$)/i.test(p)) price = p;
+      }
+      if (!img || !link) continue;
+      var title = "Product";
+      for (var k = 1; k < Math.min(parts.length, 8); k++) {
+        var pt = parts[k].trim();
+        if (!pt.includes('http') && !/^\d+$/.test(pt) && pt.length > 10) { title = pt; break; }
+      }
+      var category = "Deal";
+      var cats = ["jewelry", "beauty", "home", "electronics", "apparel", "toy", "sport", "tool", "garden", "machinery", "luggage", "packaging", "safety", "fabric", "furniture", "shoes", "commercial", "health", "construction", "school"];
+      for (var m = 0; m < parts.length; m++) {
+        var low = parts[m].toLowerCase();
+        for (var n = 0; n < cats.length; n++) {
+          if (low.includes(cats[n])) { category = cats[n]; break; }
+        }
+        if (category !== "Deal") break;
+      }
+      products.push({ title: title, image: img, price: price || "—", category: category, link: link });
+    }
+    return products;
+  }
+
+  window.openHotCategory = async function(catKey) {
+    currentHotCategory = catKey;
+    hotDisplayIndex = 0;
+    $("hot-main-view").style.display = "none";
+    $("hot-list-view").style.display = "block";
+    var titles = { eu_local: "🇪🇺 EU Local Stock", special_30k: "💎 Special Offer 30K", up_to_50: "🏷️ Up to 50% Off" };
+    $("hot-list-title").textContent = titles[catKey];
+    $("hot-product-grid").innerHTML = "";
+    $("hot-sentinel").style.display = "flex";
+    $("hot-sentinel").innerHTML = '<div class="spinner"></div> <span>' + t("loading") + '</span>';
+    if (!hotProductsCache[catKey]) {
+      try {
+        var response = await fetch(HOT_FILES[catKey]);
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        var text = await response.text();
+        hotProductsCache[catKey] = parseHotData(text);
+        console.log(catKey + " için " + hotProductsCache[catKey].length + " ürün yüklendi.");
+        if (hotProductsCache[catKey].length === 0) {
+          $("hot-sentinel").innerHTML = '<div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand); width:100%;"><div style="font-size:2rem; margin-bottom:10px;">⚠️</div><p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Boş veya Format Hatalı</p><p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6;">Lütfen dosya yolunu ve içeriğini kontrol edin.<br><code style="background:var(--bg2); padding:8px; display:block; border-radius:8px; word-break:break-all; margin-top:8px; font-size:0.75rem; color:var(--text); text-align:left;">' + text.substring(0, 200).replace(/</g, '&lt;') + '</code></p></div>';
+          return;
+        }
+      } catch (e) {
+        console.error("Dosya okunamadı:", e);
+        $("hot-sentinel").innerHTML = '<div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand); width:100%;"><div style="font-size:2rem; margin-bottom:10px;">⚠️</div><p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Okunamadı</p><p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6;">Hata: ' + e.message + '<br><br>Bu dosyayı Live Server veya <code>python -m http.server</code> ile çalıştırın.</p></div>';
+        return;
+      }
+    }
+    loadMoreHotProducts();
+    setupHotObserver();
+  };
+
+  window.closeHotCategory = function() {
+    currentHotCategory = null;
+    $("hot-main-view").style.display = "block";
+    $("hot-list-view").style.display = "none";
+    if (hotObserver) hotObserver.disconnect();
+  };
+
+  function loadMoreHotProducts() {
+    if (!currentHotCategory) return;
+    var products = hotProductsCache[currentHotCategory];
+    var grid = $("hot-product-grid");
+    var sentinel = $("hot-sentinel");
+    var end = Math.min(hotDisplayIndex + HOT_BATCH_SIZE, HOT_MAX_LIMIT, products.length);
+    var batch = products.slice(hotDisplayIndex, end);
+    batch.forEach(function(p){
+      var card = document.createElement("a");
+      card.className = "product-card";
+      card.href = p.link;
+      card.target = "_blank";
+      card.rel = "noopener noreferrer";
+      card.innerHTML = '<div class="product-img-wrap">' +
+        '<img class="product-img" src="' + p.image + '" alt="' + p.title + '" loading="lazy" onerror="this.closest(\'.product-card\').style.display=\'none\'">' +
+        '<div class="product-badge">' + p.category + '</div></div>' +
+        '<div class="product-info">' +
+        '<div class="product-title">' + p.title + '</div>' +
+        '<div class="product-price">' + p.price + '</div>' +
+        '<button class="product-cta">' + t("explore") + ' ↗</button></div>';
+      grid.appendChild(card);
+    });
+    hotDisplayIndex = end;
+    if (hotDisplayIndex >= HOT_MAX_LIMIT || hotDisplayIndex >= products.length) {
+      sentinel.style.display = "none";
+      if (hotObserver) hotObserver.disconnect();
+      var cta = document.createElement("div");
+      cta.className = "cta-download-card";
+      cta.innerHTML = '<div style="font-size: 2.5rem;">📱</div>' +
+        '<h3>' + t("hotDownloadTitle") + '</h3>' +
+        '<p>' + t("hotDownloadDesc") + '</p>' +
+        '<a href="' + PLAY_STORE_HOT_APP_LINK + '" target="_blank" class="cta-btn">' +
+        '<span>▶</span> ' + t("hotDownloadBtn") + '</a>';
+      grid.appendChild(cta);
+    } else {
+      sentinel.style.display = "flex";
+    }
+  }
+
+  function setupHotObserver() {
+    if (hotObserver) hotObserver.disconnect();
+    hotObserver = new IntersectionObserver(function(entries){
+      if (entries[0].isIntersecting && currentHotCategory) loadMoreHotProducts();
+    }, { rootMargin: "200px" });
+    hotObserver.observe($("hot-sentinel"));
+  }
+
+  /* ============ MODAL ============ */
+  function openModal(name) {
+    var el = $(name + "Modal");
+    if (el) el.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeModal(name) {
+    var el = $(name + "Modal");
+    if (el) el.classList.remove("open");
+    if (!document.querySelector(".modal-ov.open")) document.body.style.overflow = "";
+  }
+  $("settingsBtn").addEventListener("click", function(){ openModal("settings"); });
+  document.querySelectorAll("[data-close]").forEach(function(b){
+    b.addEventListener("click", function(){ closeModal(b.getAttribute("data-close")); });
+  });
+  document.querySelectorAll(".legal-btn").forEach(function(b){
+    b.addEventListener("click", function(){ openModal(b.getAttribute("data-modal")); });
+  });
+  document.querySelectorAll(".modal-ov").forEach(function(ov){
+    ov.addEventListener("click", function(e){
+      if (e.target === ov) { ov.classList.remove("open"); if (!document.querySelector(".modal-ov.open")) document.body.style.overflow = ""; }
+    });
+  });
+
+  /* ============ PAGE SWITCH ============ */
+  var pages = { home: "page-home", promo: "page-promo", hot: "page-hot", info: "page-info" };
   function showPage(name) {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    var target = $("page-" + name);
-    if (target) target.classList.add("active");
-    
-    document.querySelectorAll(".nav-btn").forEach(n => {
+    if (!pages[name]) name = "home";
+    Object.keys(pages).forEach(function(k){
+      var el = $(pages[k]);
+      if (el) el.classList.toggle("active", k === name);
+    });
+    document.querySelectorAll(".nav-btn").forEach(function(n){
       n.classList.toggle("active", n.getAttribute("data-page") === name);
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (name !== 'hot') closeHotCategory();
+    if (name !== "hot") closeHotCategory();
   }
-
   document.querySelectorAll(".nav-btn").forEach(function(item){
-    item.addEventListener("click", function(e){
-      e.preventDefault();
-      showPage(item.getAttribute("data-page"));
-    });
+    item.addEventListener("click", function(){ showPage(item.getAttribute("data-page")); });
   });
 
-  function openModal(name) { $(name + "Modal").classList.add("open"); document.body.style.overflow = "hidden"; }
-  function closeModal(name) { $(name + "Modal").classList.remove("open"); document.body.style.overflow = ""; }
-  $("settingsBtn").addEventListener("click", function(){ openModal("settings"); });
-  document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", function(){ closeModal(b.getAttribute("data-close")); }));
-  document.querySelectorAll(".modal-ov").forEach(ov => {
-    ov.addEventListener("click", function(e){ if (e.target === ov) closeModal(ov.id.replace("Modal","")); });
-  });
-
+  /* ============ INIT ============ */
   applyLang(currentLang);
 })();
 </script>
