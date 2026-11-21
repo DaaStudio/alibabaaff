@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -252,12 +252,40 @@
   .hot-cat-name { font-size: 1.1rem; font-weight: 800; text-align: center; }
   .hot-cat-desc { font-size: 0.85rem; color: var(--text-dim); text-align: center; line-height: 1.4; }
 
-  .hot-list-header { display:flex; align-items:center; gap:12px; margin-bottom: 20px; }
+  .hot-list-header { display:flex; align-items:center; gap:12px; margin-bottom: 16px; flex-wrap:wrap; }
   .back-btn {
     width:40px; height:40px; border-radius:12px; border:1px solid var(--border); background: var(--card);
     color: var(--text); font-size:1.2rem; display:grid; place-items:center; cursor:pointer; flex-shrink:0;
   }
   .back-btn:active { transform: scale(0.9); }
+  .hot-list-title { font-size: 1.2rem; font-weight: 800; flex-shrink:0; }
+
+  .hot-search-wrap {
+    width:100%; margin-bottom: 18px; position: relative;
+  }
+  .hot-search-input {
+    width:100%; padding: 13px 16px 13px 44px;
+    border-radius: 14px; border:1px solid var(--border);
+    background: var(--card); color: var(--text);
+    font-size: 0.92rem; font-weight: 600;
+    outline: none; transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .hot-search-input:focus {
+    border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft);
+  }
+  .hot-search-input::placeholder { color: var(--text-dim); font-weight: 500; }
+  .hot-search-icon {
+    position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+    font-size: 1.1rem; color: var(--text-dim); pointer-events: none;
+  }
+  .hot-search-clear {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    width: 28px; height: 28px; border-radius: 8px; border: none;
+    background: var(--card2); color: var(--text-dim); cursor: pointer;
+    display: none; place-items: center; font-size: 0.9rem;
+  }
+  .hot-search-clear.visible { display: grid; }
+  .hot-search-clear:hover { color: var(--brand2); background: var(--brand-soft); }
 
   .product-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
   @media(min-width:768px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -290,15 +318,15 @@
   }
   .product-cta:hover { background: var(--brand); color: #fff; }
 
-  .cta-download-card {
+  .cta-download-card, .cta-no-result-card {
     grid-column: 1 / -1; background: linear-gradient(135deg, var(--brand-soft), rgba(43,127,255,0.1));
     border: 1px dashed var(--brand); border-radius: 16px; padding: 24px;
     text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px;
     margin-top: 10px; animation: fadeIn 0.5s ease;
   }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-  .cta-download-card h3 { font-size: 1.1rem; font-weight: 800; color: var(--brand2); }
-  .cta-download-card p { font-size: 0.9rem; color: var(--text-dim); max-width: 400px; line-height: 1.5; }
+  .cta-download-card h3, .cta-no-result-card h3 { font-size: 1.1rem; font-weight: 800; color: var(--brand2); }
+  .cta-download-card p, .cta-no-result-card p { font-size: 0.9rem; color: var(--text-dim); max-width: 400px; line-height: 1.5; }
   .cta-btn {
     display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px;
     background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff;
@@ -470,7 +498,12 @@
     <div id="hot-list-view" style="display: none;">
       <div class="hot-list-header">
         <button class="back-btn" onclick="closeHotCategory()" aria-label="Back">←</button>
-        <h2 id="hot-list-title" style="font-size: 1.2rem; font-weight: 800;">Category</h2>
+        <h2 class="hot-list-title" id="hot-list-title">Category</h2>
+      </div>
+      <div class="hot-search-wrap">
+        <span class="hot-search-icon">🔍</span>
+        <input type="text" class="hot-search-input" id="hotSearchInput" autocomplete="off">
+        <button class="hot-search-clear" id="hotSearchClear" type="button">✕</button>
       </div>
       <div class="product-grid" id="hot-product-grid"></div>
       <div class="loading-sentinel" id="hot-sentinel">
@@ -606,12 +639,14 @@
     special_30k: 'hot_products/eu_special_30k.do',
     up_to_50: 'hot_products/up_to_50_off.csv'
   };
-  var hotProductsCache = {};
+  var hotProductsCache = {}; // Orijinal (karıştırılmamış) veriyi tutar
   var currentHotCategory = null;
+  var currentDisplayList = []; // O an gösterilecek (karıştırılmış veya filtrelenmiş) liste
   var hotDisplayIndex = 0;
   var HOT_BATCH_SIZE = 20;
   var HOT_MAX_LIMIT = 100;
   var hotObserver = null;
+  var isSearchMode = false;
 
   /* ============ KATEGORİLER ============ */
   var CATEGORIES = [
@@ -679,7 +714,7 @@
     { code: "zh", label: "中文", flag: "🇨🇳" }
   ];
 
-  /* ============ I18N (TÜM DİLLER + HOT) ============ */
+  /* ============ I18N (TÜM DİLLER) ============ */
   var I18N = {
     en: {
       heroBadge: "Global B2B Marketplace", heroTitle1: "Source Smarter,", heroTitle2: "Trade Global",
@@ -705,9 +740,13 @@
       hotDesc1: "Fast shipping from European warehouses",
       hotDesc2: "30,000+ specially discounted products",
       hotDesc3: "Unmissable deals with up to 50% discount",
-      hotDownloadTitle: "Download Our App for More Products!",
-      hotDownloadDesc: "You've seen 100+ special deals in this category. Download our official mobile app from Google Play for thousands of extra products, instant notifications, and more discounts.",
+      hotDownloadTitle: "Download Productora App for More Products!",
+      hotDownloadDesc: "You've seen 100+ special deals in this category. Download our Productora mobile app from Google Play for thousands of extra products, instant notifications, and more discounts.",
       hotDownloadBtn: "Download on Google Play",
+      hotSearchPlaceholder: "Search by product name, category...",
+      hotNoResultTitle: "No Products Found",
+      hotNoResultDesc: "We couldn't find any products matching your search. Download the Productora mobile app to explore thousands more products and exclusive deals!",
+      hotNoResultBtn: "Browse More in Productora App",
       cat_mainPart: "Main Part", cat_newArrivals: "New Arrivals", cat_topRanking: "Top Ranking", cat_topDeals: "Top Deals",
       cat_apparel: "Apparel & Accessories", cat_beauty: "Beauty", cat_commercialEquip: "Commercial Equipment & Machinery",
       cat_constructionMachinery: "Construction & Building Machinery", cat_constructionRealEstate: "Construction & Real Estate",
@@ -751,9 +790,13 @@
       hotDesc1: "Avrupa depolarından hızlı kargolu ürünler",
       hotDesc2: "30.000+ özel indirimli seçkin ürün",
       hotDesc3: "%50'ye varan indirimlerle kaçırılmayacak fırsatlar",
-      hotDownloadTitle: "Daha Fazla Ürün İçin Uygulamamızı İndirin!",
-      hotDownloadDesc: "Bu kategorideki 100+ özel fırsatı gördünüz. Binlerce ek ürün, anlık bildirimler ve daha fazla indirim için resmi mobil uygulamamızı Google Play'den indirin.",
+      hotDownloadTitle: "Daha Fazla Ürün İçin Productora Uygulamamızı İndirin!",
+      hotDownloadDesc: "Bu kategorideki 100+ özel fırsatı gördünüz. Binlerce ek ürün, anlık bildirimler ve daha fazla indirim için Productora mobil uygulamamızı Google Play'den indirin.",
       hotDownloadBtn: "Google Play'den İndir",
+      hotSearchPlaceholder: "Ürün adı, kategori ile ara...",
+      hotNoResultTitle: "Ürün Bulunamadı",
+      hotNoResultDesc: "Aramanıza uygun ürün bulamadık. Binlerce ürün ve özel fırsatları keşfetmek için Productora mobil uygulamamızı indirin!",
+      hotNoResultBtn: "Productora Uygulamasında Daha Fazla Ürüne Göz At",
       cat_mainPart: "Ana Bölüm", cat_newArrivals: "Yeni Gelenler", cat_topRanking: "En İyiler", cat_topDeals: "En İyi Fırsatlar",
       cat_apparel: "Giyim & Aksesuar", cat_beauty: "Güzellik", cat_commercialEquip: "Ticari Ekipman & Makine",
       cat_constructionMachinery: "İnşaat & Yapı Makineleri", cat_constructionRealEstate: "İnşaat & Gayrimenkul",
@@ -797,9 +840,13 @@
       hotDesc1: "Envío rápido desde almacenes europeos",
       hotDesc2: "Más de 30.000 productos con descuento especial",
       hotDesc3: "Ofertas irresistibles con hasta un 50% de descuento",
-      hotDownloadTitle: "¡Descarga Nuestra App para Más Productos!",
-      hotDownloadDesc: "Has visto más de 100 ofertas especiales en esta categoría. Descarga nuestra app oficial desde Google Play para miles de productos adicionales, notificaciones instantáneas y más descuentos.",
+      hotDownloadTitle: "¡Descarga la App Productora para Más Productos!",
+      hotDownloadDesc: "Has visto más de 100 ofertas especiales en esta categoría. Descarga nuestra aplicación móvil Productora desde Google Play para miles de productos adicionales, notificaciones instantáneas y más descuentos.",
       hotDownloadBtn: "Descargar en Google Play",
+      hotSearchPlaceholder: "Buscar por nombre de producto, categoría...",
+      hotNoResultTitle: "No Se Encontraron Productos",
+      hotNoResultDesc: "No pudimos encontrar productos que coincidan con tu búsqueda. ¡Descarga la app móvil Productora para explorar miles de productos más y ofertas exclusivas!",
+      hotNoResultBtn: "Explorar Más en la App Productora",
       cat_mainPart: "Parte Principal", cat_newArrivals: "Novedades", cat_topRanking: "Mejor Valorados", cat_topDeals: "Mejores Ofertas",
       cat_apparel: "Ropa y Accesorios", cat_beauty: "Belleza", cat_commercialEquip: "Equipos y Maquinaria Comercial",
       cat_constructionMachinery: "Maquinaria de Construcción", cat_constructionRealEstate: "Construcción e Inmobiliaria",
@@ -843,9 +890,13 @@
       hotDesc1: "Schneller Versand aus europäischen Lagern",
       hotDesc2: "Über 30.000 speziell reduzierte Produkte",
       hotDesc3: "Unschlagbare Angebote mit bis zu 50% Rabatt",
-      hotDownloadTitle: "Lade Unsere App für Mehr Produkte!",
-      hotDownloadDesc: "Du hast über 100 Sonderangebote in dieser Kategorie gesehen. Lade unsere offizielle mobile App von Google Play für tausende weitere Produkte, sofortige Benachrichtigungen und mehr Rabatte.",
+      hotDownloadTitle: "Lade die Productora App für Mehr Produkte!",
+      hotDownloadDesc: "Du hast über 100 Sonderangebote in dieser Kategorie gesehen. Lade unsere Productora Mobile App von Google Play für tausende weitere Produkte, sofortige Benachrichtigungen und mehr Rabatte.",
       hotDownloadBtn: "Bei Google Play herunterladen",
+      hotSearchPlaceholder: "Nach Produktname, Kategorie suchen...",
+      hotNoResultTitle: "Keine Produkte Gefunden",
+      hotNoResultDesc: "Wir konnten keine Produkte finden, die deiner Suche entsprechen. Lade die Productora Mobile App herunter, um tausende weitere Produkte und exklusive Angebote zu entdecken!",
+      hotNoResultBtn: "Mehr in der Productora App Entdecken",
       cat_mainPart: "Hauptbereich", cat_newArrivals: "Neuankömmlinge", cat_topRanking: "Top-Bewertet", cat_topDeals: "Top-Angebote",
       cat_apparel: "Bekleidung & Accessoires", cat_beauty: "Schönheit", cat_commercialEquip: "Gewerbliche Ausrüstung & Maschinen",
       cat_constructionMachinery: "Bau- & Baumaschinen", cat_constructionRealEstate: "Bau & Immobilien",
@@ -889,9 +940,13 @@
       hotDesc1: "Expédition rapide depuis les entrepôts européens",
       hotDesc2: "Plus de 30 000 produits en promotion spéciale",
       hotDesc3: "Des offres irrésistibles avec jusqu'à 50% de réduction",
-      hotDownloadTitle: "Téléchargez Notre App pour Plus de Produits !",
-      hotDownloadDesc: "Vous avez vu plus de 100 offres spéciales dans cette catégorie. Téléchargez notre application officielle sur Google Play pour des milliers de produits supplémentaires, des notifications instantanées et plus de réductions.",
+      hotDownloadTitle: "Téléchargez l'App Productora pour Plus de Produits !",
+      hotDownloadDesc: "Vous avez vu plus de 100 offres spéciales dans cette catégorie. Téléchargez notre application mobile Productora sur Google Play pour des milliers de produits supplémentaires, des notifications instantanées et plus de réductions.",
       hotDownloadBtn: "Télécharger sur Google Play",
+      hotSearchPlaceholder: "Rechercher par nom de produit, catégorie...",
+      hotNoResultTitle: "Aucun Produit Trouvé",
+      hotNoResultDesc: "Nous n'avons trouvé aucun produit correspondant à votre recherche. Téléchargez l'application mobile Productora pour découvrir des milliers de produits supplémentaires et des offres exclusives !",
+      hotNoResultBtn: "Parcourir Plus dans l'App Productora",
       cat_mainPart: "Partie Principale", cat_newArrivals: "Nouveautés", cat_topRanking: "Mieux Classés", cat_topDeals: "Meilleures Offres",
       cat_apparel: "Vêtements & Accessoires", cat_beauty: "Beauté", cat_commercialEquip: "Équipement & Machines Commerciales",
       cat_constructionMachinery: "Machines de Construction", cat_constructionRealEstate: "Construction & Immobilier",
@@ -935,9 +990,13 @@
       hotDesc1: "Spedizione rapida dai magazzini europei",
       hotDesc2: "Oltre 30.000 prodotti con sconti speciali",
       hotDesc3: "Offerte imperdibili con sconti fino al 50%",
-      hotDownloadTitle: "Scarica la Nostra App per Più Prodotti!",
-      hotDownloadDesc: "Hai visto oltre 100 offerte speciali in questa categoria. Scarica la nostra app ufficiale da Google Play per migliaia di prodotti aggiuntivi, notifiche istantanee e più sconti.",
+      hotDownloadTitle: "Scarica l'App Productora per Più Prodotti!",
+      hotDownloadDesc: "Hai visto oltre 100 offerte speciali in questa categoria. Scarica la nostra app mobile Productora da Google Play per migliaia di prodotti aggiuntivi, notifiche istantanee e più sconti.",
       hotDownloadBtn: "Scarica su Google Play",
+      hotSearchPlaceholder: "Cerca per nome prodotto, categoria...",
+      hotNoResultTitle: "Nessun Prodotto Trovato",
+      hotNoResultDesc: "Non abbiamo trovato prodotti corrispondenti alla tua ricerca. Scarica l'app mobile Productora per esplorare migliaia di prodotti in più e offerte esclusive!",
+      hotNoResultBtn: "Sfoglia di Più nell'App Productora",
       cat_mainPart: "Parte Principale", cat_newArrivals: "Novità", cat_topRanking: "Più Votati", cat_topDeals: "Migliori Offerte",
       cat_apparel: "Abbigliamento & Accessori", cat_beauty: "Bellezza", cat_commercialEquip: "Attrezzature & Macchinari Commerciali",
       cat_constructionMachinery: "Macchinari per Costruzioni", cat_constructionRealEstate: "Costruzioni & Immobiliare",
@@ -981,9 +1040,13 @@
       hotDesc1: "Envio rápido dos armazéns europeus",
       hotDesc2: "Mais de 30.000 produtos com desconto especial",
       hotDesc3: "Ofertas imperdíveis com até 50% de desconto",
-      hotDownloadTitle: "Baixe Nosso App para Mais Produtos!",
-      hotDownloadDesc: "Você viu mais de 100 ofertas especiais nesta categoria. Baixe nosso app oficial no Google Play para milhares de produtos adicionais, notificações instantâneas e mais descontos.",
+      hotDownloadTitle: "Baixe o App Productora para Mais Produtos!",
+      hotDownloadDesc: "Você viu mais de 100 ofertas especiais nesta categoria. Baixe nosso app móvel Productora no Google Play para milhares de produtos adicionais, notificações instantâneas e mais descontos.",
       hotDownloadBtn: "Baixar no Google Play",
+      hotSearchPlaceholder: "Pesquisar por nome do produto, categoria...",
+      hotNoResultTitle: "Nenhum Produto Encontrado",
+      hotNoResultDesc: "Não encontramos produtos correspondentes à sua pesquisa. Baixe o app móvel Productora para explorar milhares de produtos a mais e ofertas exclusivas!",
+      hotNoResultBtn: "Ver Mais no App Productora",
       cat_mainPart: "Parte Principal", cat_newArrivals: "Novidades", cat_topRanking: "Mais Bem Avaliados", cat_topDeals: "Melhores Ofertas",
       cat_apparel: "Roupas & Acessórios", cat_beauty: "Beleza", cat_commercialEquip: "Equipamentos & Máquinas Comerciais",
       cat_constructionMachinery: "Máquinas de Construção", cat_constructionRealEstate: "Construção & Imobiliário",
@@ -1027,9 +1090,13 @@
       hotDesc1: "ヨーロッパの倉庫から迅速な配送",
       hotDesc2: "30,000以上の特別割引製品",
       hotDesc3: "最大50%オフの見逃せないお得情報",
-      hotDownloadTitle: "もっと多くの製品のためにアプリをダウンロード！",
-      hotDownloadDesc: "このカテゴリで100以上の特別なお得情報を見ました。数千の追加製品、即時通知、さらなる割引のためにGoogle Playから公式モバイルアプリをダウンロードしてください。",
+      hotDownloadTitle: "もっと多くの製品のためにProductoraアプリをダウンロード！",
+      hotDownloadDesc: "このカテゴリで100以上の特別なお得情報を見ました。数千の追加製品、即時通知、さらなる割引のためにGoogle PlayからProductoraモバイルアプリをダウンロードしてください。",
       hotDownloadBtn: "Google Playでダウンロード",
+      hotSearchPlaceholder: "製品名、カテゴリで検索...",
+      hotNoResultTitle: "製品が見つかりません",
+      hotNoResultDesc: "検索に一致する製品が見つかりませんでした。Productoraモバイルアプリをダウンロードして、何千もの追加製品や限定セールをご覧ください！",
+      hotNoResultBtn: "Productoraアプリでもっと見る",
       cat_mainPart: "メインパート", cat_newArrivals: "新着", cat_topRanking: "トップランキング", cat_topDeals: "トップディール",
       cat_apparel: "アパレル＆アクセサリー", cat_beauty: "ビューティー", cat_commercialEquip: "商業機器＆機械",
       cat_constructionMachinery: "建設・建築機械", cat_constructionRealEstate: "建設＆不動産",
@@ -1073,9 +1140,13 @@
       hotDesc1: "유럽 창고에서 빠른 배송",
       hotDesc2: "30,000개 이상의 특별 할인 제품",
       hotDesc3: "최대 50% 할인되는 놓칠 수 없는 거래",
-      hotDownloadTitle: "더 많은 제품을 위해 앱을 다운로드하세요!",
-      hotDownloadDesc: "이 카테고리에서 100개 이상의 특별 거래를 확인했습니다. 수천 개의 추가 제품, 즉시 알림 및 추가 할인을 위해 Google Play에서 공식 모바일 앱을 다운로드하세요.",
+      hotDownloadTitle: "더 많은 제품을 위해 Productora 앱을 다운로드하세요!",
+      hotDownloadDesc: "이 카테고리에서 100개 이상의 특별 거래를 확인했습니다. 수천 개의 추가 제품, 즉시 알림 및 추가 할인을 위해 Google Play에서 Productora 모바일 앱을 다운로드하세요.",
       hotDownloadBtn: "Google Play에서 다운로드",
+      hotSearchPlaceholder: "제품 이름, 카테고리로 검색...",
+      hotNoResultTitle: "제품을 찾을 수 없습니다",
+      hotNoResultDesc: "검색과 일치하는 제품을 찾을 수 없습니다. Productora 모바일 앱을 다운로드하여 수천 개의 추가 제품과 독점 특가 상품을 확인하세요!",
+      hotNoResultBtn: "Productora 앱에서 더 보기",
       cat_mainPart: "메인 파트", cat_newArrivals: "신상품", cat_topRanking: "톱 랭킹", cat_topDeals: "톱 딜",
       cat_apparel: "의류 & 액세서리", cat_beauty: "뷰티", cat_commercialEquip: "상업용 장비 & 기계",
       cat_constructionMachinery: "건설 & 건축 기계", cat_constructionRealEstate: "건설 & 부동산",
@@ -1119,9 +1190,13 @@
       hotDesc1: "欧洲仓库快速发货",
       hotDesc2: "30,000+特别折扣产品",
       hotDesc3: "最高50%折扣的不可错过的优惠",
-      hotDownloadTitle: "下载我们的应用获取更多产品！",
-      hotDownloadDesc: "您已在此类别中看到了100+特别优惠。从Google Play下载我们的官方移动应用，获取数千种额外产品、即时通知和更多折扣。",
+      hotDownloadTitle: "下载Productora应用获取更多产品！",
+      hotDownloadDesc: "您已在此类别中看到了100+特别优惠。从Google Play下载我们的Productora移动应用，获取数千种额外产品、即时通知和更多折扣。",
       hotDownloadBtn: "在 Google Play 下载",
+      hotSearchPlaceholder: "按产品名称、类别搜索...",
+      hotNoResultTitle: "未找到产品",
+      hotNoResultDesc: "我们找不到与您的搜索匹配的产品。下载Productora移动应用，探索数千种更多产品和独家优惠！",
+      hotNoResultBtn: "在Productora应用中浏览更多",
       cat_mainPart: "主要部分", cat_newArrivals: "新品上市", cat_topRanking: "热门排行", cat_topDeals: "热门优惠",
       cat_apparel: "服装与配饰", cat_beauty: "美妆", cat_commercialEquip: "商用设备与机械",
       cat_constructionMachinery: "建筑与施工机械", cat_constructionRealEstate: "建筑与房地产",
@@ -1170,9 +1245,9 @@
   applyTheme(currentTheme);
 
   /* ============ LANGUAGE ============ */
-  var currentLang = "tr";
-  try { currentLang = localStorage.getItem("lang") || "tr"; } catch(e) {}
-  if (!I18N[currentLang]) currentLang = "tr";
+  var currentLang = "en";
+  try { currentLang = localStorage.getItem("lang") || "en"; } catch(e) {}
+  if (!I18N[currentLang]) currentLang = "en";
 
   function t(key) {
     var dict = I18N[currentLang] || I18N.en;
@@ -1194,8 +1269,15 @@
     $("toast").textContent = I18N[lang].copied;
     $("privacyBody").innerHTML = PRIVACY[lang] || PRIVACY.en;
     $("termsBody").innerHTML = TERMS[lang] || TERMS.en;
+    var searchInput = $("hotSearchInput");
+    if (searchInput) searchInput.placeholder = t("hotSearchPlaceholder");
     renderCategories();
     renderPromoList();
+    // Eğer hot list açıksa ve arama modundaysa, arama sonuçlarını yeniden render et
+    if (currentHotCategory && isSearchMode) {
+      var q = $("hotSearchInput").value;
+      performSearch(q);
+    }
   }
 
   var langGrid = $("langGrid");
@@ -1353,6 +1435,16 @@
   });
 
   /* ============ HOT PRODUCTS ============ */
+  // Fisher-Yates Shuffle - her seferinde farklı sıra için
+  function shuffleArray(arr) {
+    var a = arr.slice(); // kopya al
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
   function parseHotData(text) {
     text = text.replace(/^\uFEFF/, '');
     var lines = text.split(/\r?\n/);
@@ -1393,11 +1485,14 @@
   window.openHotCategory = async function(catKey) {
     currentHotCategory = catKey;
     hotDisplayIndex = 0;
+    isSearchMode = false;
     $("hot-main-view").style.display = "none";
     $("hot-list-view").style.display = "block";
     var titles = { eu_local: "🇪🇺 EU Local Stock", special_30k: "💎 Special Offer 30K", up_to_50: "🏷️ Up to 50% Off" };
     $("hot-list-title").textContent = titles[catKey];
     $("hot-product-grid").innerHTML = "";
+    $("hotSearchInput").value = "";
+    $("hotSearchClear").classList.remove("visible");
     $("hot-sentinel").style.display = "flex";
     $("hot-sentinel").innerHTML = '<div class="spinner"></div> <span>' + t("loading") + '</span>';
     if (!hotProductsCache[catKey]) {
@@ -1408,21 +1503,25 @@
         hotProductsCache[catKey] = parseHotData(text);
         console.log(catKey + " için " + hotProductsCache[catKey].length + " ürün yüklendi.");
         if (hotProductsCache[catKey].length === 0) {
-          $("hot-sentinel").innerHTML = '<div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand); width:100%;"><div style="font-size:2rem; margin-bottom:10px;">⚠️</div><p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Boş veya Format Hatalı</p><p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6;">Lütfen dosya yolunu ve içeriğini kontrol edin.<br><code style="background:var(--bg2); padding:8px; display:block; border-radius:8px; word-break:break-all; margin-top:8px; font-size:0.75rem; color:var(--text); text-align:left;">' + text.substring(0, 200).replace(/</g, '&lt;') + '</code></p></div>';
+          $("hot-sentinel").innerHTML = '<div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand); width:100%;"><div style="font-size:2rem; margin-bottom:10px;">⚠️</div><p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Boş veya Format Hatalı</p><p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6;">Lütfen dosya yolunu ve içeriğini kontrol edin.</p></div>';
           return;
         }
       } catch (e) {
         console.error("Dosya okunamadı:", e);
-        $("hot-sentinel").innerHTML = '<div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand); width:100%;"><div style="font-size:2rem; margin-bottom:10px;">⚠️</div><p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Okunamadı</p><p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6;">Hata: ' + e.message + '<br><br>Bu dosyayı Live Server veya <code>python -m http.server</code> ile çalıştırın.</p></div>';
+        $("hot-sentinel").innerHTML = '<div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand); width:100%;"><div style="font-size:2rem; margin-bottom:10px;">⚠️</div><p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Okunamadı</p><p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6;">Hata: ' + e.message + '</p></div>';
         return;
       }
     }
+    // Her açılışta farklı sıra için karıştır
+    currentDisplayList = shuffleArray(hotProductsCache[catKey]);
     loadMoreHotProducts();
     setupHotObserver();
   };
 
   window.closeHotCategory = function() {
     currentHotCategory = null;
+    currentDisplayList = [];
+    isSearchMode = false;
     $("hot-main-view").style.display = "block";
     $("hot-list-view").style.display = "none";
     if (hotObserver) hotObserver.disconnect();
@@ -1430,50 +1529,141 @@
 
   function loadMoreHotProducts() {
     if (!currentHotCategory) return;
-    var products = hotProductsCache[currentHotCategory];
     var grid = $("hot-product-grid");
     var sentinel = $("hot-sentinel");
-    var end = Math.min(hotDisplayIndex + HOT_BATCH_SIZE, HOT_MAX_LIMIT, products.length);
-    var batch = products.slice(hotDisplayIndex, end);
+    var end = Math.min(hotDisplayIndex + HOT_BATCH_SIZE, HOT_MAX_LIMIT, currentDisplayList.length);
+    var batch = currentDisplayList.slice(hotDisplayIndex, end);
     batch.forEach(function(p){
-      var card = document.createElement("a");
-      card.className = "product-card";
-      card.href = p.link;
-      card.target = "_blank";
-      card.rel = "noopener noreferrer";
-      card.innerHTML = '<div class="product-img-wrap">' +
-        '<img class="product-img" src="' + p.image + '" alt="' + p.title + '" loading="lazy" onerror="this.closest(\'.product-card\').style.display=\'none\'">' +
-        '<div class="product-badge">' + p.category + '</div></div>' +
-        '<div class="product-info">' +
-        '<div class="product-title">' + p.title + '</div>' +
-        '<div class="product-price">' + p.price + '</div>' +
-        '<button class="product-cta">' + t("explore") + ' ↗</button></div>';
-      grid.appendChild(card);
+      appendProductCard(grid, p);
     });
     hotDisplayIndex = end;
-    if (hotDisplayIndex >= HOT_MAX_LIMIT || hotDisplayIndex >= products.length) {
+    if (hotDisplayIndex >= HOT_MAX_LIMIT || hotDisplayIndex >= currentDisplayList.length) {
       sentinel.style.display = "none";
       if (hotObserver) hotObserver.disconnect();
-      var cta = document.createElement("div");
-      cta.className = "cta-download-card";
-      cta.innerHTML = '<div style="font-size: 2.5rem;">📱</div>' +
-        '<h3>' + t("hotDownloadTitle") + '</h3>' +
-        '<p>' + t("hotDownloadDesc") + '</p>' +
-        '<a href="' + PLAY_STORE_HOT_APP_LINK + '" target="_blank" class="cta-btn">' +
-        '<span>▶</span> ' + t("hotDownloadBtn") + '</a>';
-      grid.appendChild(cta);
+      appendDownloadCTA(grid);
     } else {
       sentinel.style.display = "flex";
     }
   }
 
+  function appendProductCard(grid, p) {
+    var card = document.createElement("a");
+    card.className = "product-card";
+    card.href = p.link;
+    card.target = "_blank";
+    card.rel = "noopener noreferrer";
+    card.innerHTML = '<div class="product-img-wrap">' +
+      '<img class="product-img" src="' + p.image + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy" onerror="this.closest(\'.product-card\').style.display=\'none\'">' +
+      '<div class="product-badge">' + p.category + '</div></div>' +
+      '<div class="product-info">' +
+      '<div class="product-title">' + p.title + '</div>' +
+      '<div class="product-price">' + p.price + '</div>' +
+      '<button class="product-cta">' + t("explore") + ' ↗</button></div>';
+    grid.appendChild(card);
+  }
+
+  function appendDownloadCTA(grid) {
+    var cta = document.createElement("div");
+    cta.className = "cta-download-card";
+    cta.innerHTML = '<div style="font-size: 2.5rem;">📱</div>' +
+      '<h3>' + t("hotDownloadTitle") + '</h3>' +
+      '<p>' + t("hotDownloadDesc") + '</p>' +
+      '<a href="' + PLAY_STORE_HOT_APP_LINK + '" target="_blank" class="cta-btn">' +
+      '<span>▶</span> ' + t("hotDownloadBtn") + '</a>';
+    grid.appendChild(cta);
+  }
+
+  function appendNoResultCTA(grid) {
+    var cta = document.createElement("div");
+    cta.className = "cta-no-result-card";
+    cta.innerHTML = '<div style="font-size: 2.5rem;">🔍</div>' +
+      '<h3>' + t("hotNoResultTitle") + '</h3>' +
+      '<p>' + t("hotNoResultDesc") + '</p>' +
+      '<a href="' + PLAY_STORE_HOT_APP_LINK + '" target="_blank" class="cta-btn">' +
+      '<span>▶</span> ' + t("hotNoResultBtn") + '</a>';
+    grid.appendChild(cta);
+  }
+
   function setupHotObserver() {
     if (hotObserver) hotObserver.disconnect();
     hotObserver = new IntersectionObserver(function(entries){
-      if (entries[0].isIntersecting && currentHotCategory) loadMoreHotProducts();
+      if (entries[0].isIntersecting && currentHotCategory && !isSearchMode) loadMoreHotProducts();
     }, { rootMargin: "200px" });
     hotObserver.observe($("hot-sentinel"));
   }
+
+  /* ============ SEARCH ============ */
+  function performSearch(query) {
+    if (!currentHotCategory) return;
+    var grid = $("hot-product-grid");
+    var sentinel = $("hot-sentinel");
+    grid.innerHTML = "";
+    if (hotObserver) hotObserver.disconnect();
+    sentinel.style.display = "none";
+
+    query = (query || "").trim().toLowerCase();
+    if (!query) {
+      // Arama boşsa normal moda dön
+      isSearchMode = false;
+      currentDisplayList = shuffleArray(hotProductsCache[currentHotCategory]);
+      hotDisplayIndex = 0;
+      loadMoreHotProducts();
+      setupHotObserver();
+      return;
+    }
+
+    isSearchMode = true;
+    // Orijinal listeden filtrele
+    var filtered = hotProductsCache[currentHotCategory].filter(function(p){
+      return (p.title && p.title.toLowerCase().includes(query)) ||
+             (p.category && p.category.toLowerCase().includes(query)) ||
+             (p.price && p.price.toLowerCase().includes(query));
+    });
+
+    if (filtered.length === 0) {
+      appendNoResultCTA(grid);
+      return;
+    }
+
+    // Arama sonuçlarını da karıştır (farklı sıralama için)
+    filtered = shuffleArray(filtered);
+    currentDisplayList = filtered;
+    hotDisplayIndex = 0;
+
+    // Arama sonuçları için sınırlı yükleme (hepsi 100'den az olabilir)
+    var end = Math.min(HOT_MAX_LIMIT, filtered.length);
+    var batch = filtered.slice(0, end);
+    batch.forEach(function(p){
+      appendProductCard(grid, p);
+    });
+    hotDisplayIndex = end;
+
+    if (hotDisplayIndex >= filtered.length || hotDisplayIndex >= HOT_MAX_LIMIT) {
+      appendDownloadCTA(grid);
+    }
+  }
+
+  var searchInput = $("hotSearchInput");
+  var searchClear = $("hotSearchClear");
+  var searchTimeout = null;
+  searchInput.addEventListener("input", function(e){
+    var val = e.target.value;
+    if (val.length > 0) {
+      searchClear.classList.add("visible");
+    } else {
+      searchClear.classList.remove("visible");
+    }
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(function(){
+      performSearch(val);
+    }, 300);
+  });
+  searchClear.addEventListener("click", function(){
+    searchInput.value = "";
+    searchClear.classList.remove("visible");
+    performSearch("");
+    searchInput.focus();
+  });
 
   /* ============ MODAL ============ */
   function openModal(name) {
