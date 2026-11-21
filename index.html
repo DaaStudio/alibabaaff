@@ -300,16 +300,28 @@
   }
   .product-card:hover { transform: translateY(-3px); border-color: var(--brand); }
   .product-img-wrap { position: relative; width: 100%; padding-top: 100%; background: var(--bg2); overflow: hidden; }
+  
+  /* GELİŞMİŞ YÜKLEME ANİMASYONU */
+  .product-img-loading {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--card2);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1; transition: opacity 0.3s ease;
+  }
+  .product-img-loading::after {
+    content: ""; width: 28px; height: 28px;
+    border: 3px solid var(--border-strong);
+    border-top-color: var(--brand);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  
   .product-img { 
     position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; 
-    transition: transform 0.3s ease; z-index: 2;
+    transition: opacity 0.4s ease; opacity: 0; z-index: 2;
   }
-  .product-img-loading {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 32px; height: 32px; border: 3px solid var(--border);
-    border-top-color: var(--brand); border-radius: 50%;
-    animation: spin 0.8s linear infinite; z-index: 1;
-  }
+  .product-img.loaded { opacity: 1; }
+  
   .product-card:hover .product-img { transform: scale(1.05); }
   .product-badge {
     position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
@@ -609,6 +621,14 @@
           <div class="switch" id="themeSwitch"></div>
         </div>
       </div>
+      <!-- YENİ KODULAR APP MODE TOGGLE -->
+      <div class="settings-block">
+        <div class="settings-lbl" data-i18n="appBehavior">App Behavior</div>
+        <div class="theme-row">
+          <span id="appModeLabel" data-i18n="openInMedia">Open in Media</span>
+          <div class="switch" id="appModeSwitch"></div>
+        </div>
+      </div>
       <div class="settings-block">
         <div class="settings-lbl" data-i18n="language">Language</div>
         <div class="lang-grid" id="langGrid"></div>
@@ -763,6 +783,7 @@
       importantText: "Deals and links are regularly updated. Make sure you are using the latest version.",
       legalTitle: "Legal", privacy: "Privacy Policy", terms: "Terms & Conditions",
       settingsTitle: "Settings", appearance: "Appearance", darkMode: "Dark Mode", language: "Language",
+      appBehavior: "App Behavior", openInMedia: "Open in Media", openInApp: "Open in App",
       copied: "Copied!", shareCopied: "Link copied! You can share it with your friends.",
       promoCopy: "Copy Code", explore: "Explore", items: "items", loading: "Loading...",
       hotTitle: "Hot Products", hotSub: "Discover top-selling, local stock, and specially discounted products.",
@@ -817,6 +838,7 @@
       importantText: "Fırsatlar ve linkler düzenli olarak güncellenmektedir. En son sürümü kullandığınızdan emin olun.",
       legalTitle: "Yasal", privacy: "Gizlilik Politikası", terms: "Kullanım Şartları",
       settingsTitle: "Ayarlar", appearance: "Görünüm", darkMode: "Karanlık Mod", language: "Dil",
+      appBehavior: "Uygulama Davranışı", openInMedia: "Medya Oynatıcıda Aç", openInApp: "Uygulamada Aç",
       copied: "Kopyalandı!", shareCopied: "Link kopyalandı! Arkadaşlarınızla paylaşabilirsiniz.",
       promoCopy: "Kodu Kopyala", explore: "Keşfet", items: "ürün", loading: "Yükleniyor...",
       hotTitle: "Sıcak Fırsatlar", hotSub: "En çok satan, yerel depolu ve özel indirimli ürünleri keşfedin.",
@@ -871,6 +893,7 @@
       importantText: "Las ofertas y enlaces se actualizan regularmente. Asegúrate de usar la última versión.",
       legalTitle: "Legal", privacy: "Política de Privacidad", terms: "Términos y Condiciones",
       settingsTitle: "Ajustes", appearance: "Apariencia", darkMode: "Modo Oscuro", language: "Idioma",
+      appBehavior: "Comportamiento de la App", openInMedia: "Abrir en Media", openInApp: "Abrir en App",
       copied: "¡Copiado!", shareCopied: "¡Enlace copiado! Puedes compartirlo con tus amigos.",
       promoCopy: "Copiar Código", explore: "Explorar", items: "artículos", loading: "Cargando...",
       hotTitle: "Productos Destacados", hotSub: "Descubre productos más vendidos, de stock local y con descuentos especiales.",
@@ -925,6 +948,7 @@
       importantText: "Angebote und Links werden regelmäßig aktualisiert. Stelle sicher, dass du die neueste Version verwendest.",
       legalTitle: "Rechtliches", privacy: "Datenschutzrichtlinie", terms: "AGB",
       settingsTitle: "Einstellungen", appearance: "Erscheinungsbild", darkMode: "Dunkelmodus", language: "Sprache",
+      appBehavior: "App-Verhalten", openInMedia: "In Media öffnen", openInApp: "In App öffnen",
       copied: "Kopiert!", shareCopied: "Link kopiert! Du kannst ihn mit deinen Freunden teilen.",
       promoCopy: "Code Kopieren", explore: "Entdecken", items: "Artikel", loading: "Laden...",
       hotTitle: "Top-Produkte", hotSub: "Entdecke Bestseller, lokale Lagerware und speziell reduzierte Produkte.",
@@ -979,6 +1003,7 @@
       importantText: "Les offres et les liens sont régulièrement mis à jour. Assurez-vous d'utiliser la dernière version.",
       legalTitle: "Mentions Légales", privacy: "Politique de Confidentialité", terms: "Conditions d'Utilisation",
       settingsTitle: "Paramètres", appearance: "Apparence", darkMode: "Mode Sombre", language: "Langue",
+      appBehavior: "Comportement de l'App", openInMedia: "Ouvrir dans Média", openInApp: "Ouvrir dans l'App",
       copied: "Copié !", shareCopied: "Lien copié ! Vous pouvez le partager avec vos amis.",
       promoCopy: "Copier le Code", explore: "Explorer", items: "articles", loading: "Chargement...",
       hotTitle: "Produits Phares", hotSub: "Découvrez les meilleures ventes, le stock local et les produits en promotion spéciale.",
@@ -1033,6 +1058,7 @@
       importantText: "Le offerte e i link vengono aggiornati regolarmente. Assicurati di utilizzare la versione più recente.",
       legalTitle: "Legale", privacy: "Informativa sulla Privacy", terms: "Termini e Condizioni",
       settingsTitle: "Impostazioni", appearance: "Aspetto", darkMode: "Modalità Scura", language: "Lingua",
+      appBehavior: "Comportamento App", openInMedia: "Apri in Media", openInApp: "Apri in App",
       copied: "Copiato!", shareCopied: "Link copiato! Puoi condividerlo con i tuoi amici.",
       promoCopy: "Copia Codice", explore: "Esplora", items: "articoli", loading: "Caricamento...",
       hotTitle: "Prodotti in Evidenza", hotSub: "Scopri i più venduti, stock locale e prodotti con sconti speciali.",
@@ -1087,6 +1113,7 @@
       importantText: "Ofertas e links são atualizados regularmente. Certifique-se de usar a versão mais recente.",
       legalTitle: "Legal", privacy: "Política de Privacidade", terms: "Termos e Condições",
       settingsTitle: "Configurações", appearance: "Aparência", darkMode: "Modo Escuro", language: "Idioma",
+      appBehavior: "Comportamento do App", openInMedia: "Abrir em Mídia", openInApp: "Abrir no App",
       copied: "Copiado!", shareCopied: "Link copiado! Você pode compartilhá-lo com seus amigos.",
       promoCopy: "Copiar Código", explore: "Explorar", items: "itens", loading: "Carregando...",
       hotTitle: "Produtos em Destaque", hotSub: "Descubra os mais vendidos, estoque local e produtos com descontos especiais.",
@@ -1141,6 +1168,7 @@
       importantText: "お得情報とリンクは定期的に更新されます。最新バージョンを使用していることを確認してください。",
       legalTitle: "法的情報", privacy: "プライバシーポリシー", terms: "利用規約",
       settingsTitle: "設定", appearance: "外観", darkMode: "ダークモード", language: "言語",
+      appBehavior: "アプリの動作", openInMedia: "メディアで開く", openInApp: "アプリで開く",
       copied: "コピーしました！", shareCopied: "リンクをコピーしました！友達と共有できます。",
       promoCopy: "コードをコピー", explore: "探索", items: "アイテム", loading: "読み込み中...",
       hotTitle: "人気商品", hotSub: "ベストセラー、ローカル在庫、特別割引製品を発見。",
@@ -1195,6 +1223,7 @@
       importantText: "할인 및 링크는 정기적으로 업데이트됩니다. 최신 버전을 사용하고 있는지 확인하세요.",
       legalTitle: "법적 고지", privacy: "개인정보 처리방침", terms: "이용약관",
       settingsTitle: "설정", appearance: "화면", darkMode: "다크 모드", language: "언어",
+      appBehavior: "앱 동작", openInMedia: "미디어에서 열기", openInApp: "앱에서 열기",
       copied: "복사됨!", shareCopied: "링크가 복사되었습니다! 친구들과 공유할 수 있습니다.",
       promoCopy: "코드 복사", explore: "탐색", items: "개 항목", loading: "로딩 중...",
       hotTitle: "인기 상품", hotSub: "베스트셀러, 현지 재고 및 특별 할인 제품을 발견하세요.",
@@ -1249,6 +1278,7 @@
       importantText: "优惠和链接会定期更新。请确保您使用的是最新版本。",
       legalTitle: "法律", privacy: "隐私政策", terms: "条款和条件",
       settingsTitle: "设置", appearance: "外观", darkMode: "深色模式", language: "语言",
+      appBehavior: "应用行为", openInMedia: "在媒体中打开", openInApp: "在应用中打开",
       copied: "已复制！", shareCopied: "链接已复制！您可以与朋友分享。",
       promoCopy: "复制代码", explore: "探索", items: "项", loading: "加载中...",
       hotTitle: "热门产品", hotSub: "发现畅销品、本地库存和特别折扣产品。",
@@ -1313,6 +1343,33 @@
   $("themeSwitch").addEventListener("click", function(){ applyTheme(currentTheme === "dark" ? "light" : "dark"); });
   applyTheme(currentTheme);
 
+  /* ============ APP MODE (KODULAR BRIDGE) ============ */
+  var appMode = false; // Default kapalı
+  try { appMode = localStorage.getItem("appMode") === "true"; } catch(e) {}
+  
+  function applyAppMode(mode) {
+    appMode = mode;
+    var sw = $("appModeSwitch");
+    var label = $("appModeLabel");
+    if (sw) sw.classList.toggle("on", mode);
+    
+    // Metni duruma göre güncelle
+    if (label) {
+      label.textContent = mode ? t("openInApp") : t("openInMedia");
+    }
+    
+    try { localStorage.setItem("appMode", mode); } catch(e) {}
+
+    // KODULAR JAVASCRIPT BRIDGE GÖNDERİMİ
+    if (window.AppInventor) {
+      window.AppInventor.setWebViewString(mode ? "webview_acik" : "webview_kapali");
+    }
+  }
+
+  $("appModeSwitch").addEventListener("click", function(){ 
+    applyAppMode(!appMode); 
+  });
+
   /* ============ LANGUAGE ============ */
   var currentLang = "en";
   try { currentLang = localStorage.getItem("lang") || "en"; } catch(e) {}
@@ -1338,6 +1395,10 @@
     $("toast").textContent = I18N[lang].copied;
     $("privacyBody").innerHTML = PRIVACY[lang] || PRIVACY.en;
     $("termsBody").innerHTML = TERMS[lang] || TERMS.en;
+    
+    // App mode label'ını da dil değişince güncelle
+    applyAppMode(appMode);
+    
     var searchInput = $("hotSearchInput");
     if (searchInput) searchInput.placeholder = t("hotSearchPlaceholder");
     renderCategories();
@@ -1614,7 +1675,7 @@
     card.rel = "noopener noreferrer";
     card.innerHTML = '<div class="product-img-wrap">' +
       '<div class="product-img-loading"></div>' +
-      '<img class="product-img" src="' + p.image + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+      '<img class="product-img" src="' + p.image + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy" onload="this.classList.add(\'loaded\'); this.parentElement.querySelector(\'.product-img-loading\').style.display=\'none\';" onerror="this.classList.add(\'loaded\'); this.parentElement.querySelector(\'.product-img-loading\').style.display=\'none\';">' +
       '<div class="product-badge">' + p.category + '</div></div>' +
       '<div class="product-info">' +
       '<div class="product-title">' + p.title + '</div>' +
@@ -1766,6 +1827,7 @@
 
   /* ============ INIT ============ */
   applyLang(currentLang);
+  applyAppMode(appMode); // Başlangıçta App Mode durumunu uygula
 })();
 </script>
 </body>
