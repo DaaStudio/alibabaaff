@@ -624,7 +624,7 @@
 (function () {
   "use strict";
 
-  var PLAY_STORE_HOT_APP_LINK = "https://play.google.com/store/apps/details?id=com.DaaStudio.Productora";
+  var PLAY_STORE_HOT_APP_LINK = "https://play.google.com/store/apps/details?id=com.DaaStudio.AlibabaAffiliate";
   var HOT_FILES = {
     eu_local: 'hot_products/eu_local_stock.csv',
     special_30k: 'hot_products/eu_special_30k.do',
@@ -1296,13 +1296,14 @@
   $("themeSwitch").addEventListener("click", function(){ applyTheme(currentTheme === "dark" ? "light" : "dark"); });
   applyTheme(currentTheme);
 
+  /* ============ APP MODE - SADECE TOGGLE TIKLAMASINDA MESAJ GÖNDER ============ */
   var appMode = false;
   try { 
     var savedMode = localStorage.getItem("appMode");
     if (savedMode !== null) appMode = savedMode === "true";
   } catch(e) {}
   
-  function applyAppMode(mode) {
+  function applyAppMode(mode, sendMessage) {
     appMode = mode;
     var sw = $("appModeSwitch");
     var label = $("appModeLabel");
@@ -1311,13 +1312,16 @@
       label.textContent = mode ? t("openInApp") : t("openInMedia");
     }
     try { localStorage.setItem("appMode", mode); } catch(e) {}
-    if (window.AppInventor) {
+    
+    // SADECE sendMessage true ise JavaScript köprüsü mesajı gönder
+    if (sendMessage && window.AppInventor) {
       window.AppInventor.setWebViewString(mode ? "webview_acik" : "webview_kapali");
     }
   }
 
+  // Toggle switch'e tıklandığında mesaj gönder
   $("appModeSwitch").addEventListener("click", function(){ 
-    applyAppMode(!appMode); 
+    applyAppMode(!appMode, true); // true = mesaj gönder
   });
 
   var currentLang = "en";
@@ -1329,45 +1333,13 @@
     return dict[key] !== undefined ? dict[key] : (I18N.en[key] !== undefined ? I18N.en[key] : key);
   }
 
-  /* ============ DİL UYGULAMA - DÜZELTİLMİŞ SIRALAMA ============ */
+  /* ============ DİL DEĞİŞTİRME - SİTE YENİLENSİN ============ */
   function applyLang(lang) {
     if (!I18N[lang]) lang = "en";
-    currentLang = lang;
     try { localStorage.setItem("lang", lang); } catch(e) {}
-    document.documentElement.lang = lang;
-
-    // 1. ÖNCE RENDER İŞLEMLERİNİ YAP (yeni elementler oluşturulur)
-    renderCategories();
-    renderPromoList();
-
-    // 2. SONRA TÜM data-i18n ELEMENTLERİNİ GÜNCELLE
-    document.querySelectorAll("[data-i18n]").forEach(function(el){
-      var k = el.getAttribute("data-i18n");
-      if (I18N[lang][k] !== undefined) el.textContent = I18N[lang][k];
-    });
-
-    // 3. LANG BUTONLARINI GÜNCELLE
-    document.querySelectorAll(".lang-btn").forEach(function(b){
-      b.classList.toggle("active", b.getAttribute("data-lang") === lang);
-    });
-
-    // 4. DİĞER DİNAMİK İÇERİKLER
-    $("toast").textContent = I18N[lang].copied;
-    $("privacyBody").innerHTML = PRIVACY[lang] || PRIVACY.en;
-    $("termsBody").innerHTML = TERMS[lang] || TERMS.en;
     
-    // 5. APP MODE LABEL'INI GÜNCELLE
-    applyAppMode(appMode);
-    
-    // 6. SEARCH PLACEHOLDER
-    var searchInput = $("hotSearchInput");
-    if (searchInput) searchInput.placeholder = t("hotSearchPlaceholder");
-
-    // 7. AKTİF ARAMA VARSA YENİDEN UYGULA
-    if (currentHotCategory && isSearchMode) {
-      var q = $("hotSearchInput").value;
-      performSearch(q);
-    }
+    // Sayfayı yenile - dil aktif olsun
+    location.reload();
   }
 
   var langGrid = $("langGrid");
@@ -1394,12 +1366,14 @@
       var a = document.createElement("a");
       a.className = "quick-chip";
       a.href = cat.url; a.rel = "noopener noreferrer";
+      a.target = "_self"; // Site içi - WebView içinde aç
       a.innerHTML = '<span class="qi">' + cat.icon + '</span><span>' + t("cat_" + cat.key) + '</span>';
       quickStrip.appendChild(a);
     });
     CATEGORIES.filter(function(c){ return c.featured; }).forEach(function(cat){
       var a = document.createElement("a");
       a.className = "feat-card"; a.href = cat.url; a.rel = "noopener noreferrer";
+      a.target = "_self"; // Site içi - WebView içinde aç
       a.innerHTML = '<div class="feat-icon">' + cat.icon + '</div>' +
                     '<div class="feat-name">' + t("cat_" + cat.key) + '</div>' +
                     '<div class="feat-go">' + t("explore") + ' ↗</div>';
@@ -1408,6 +1382,7 @@
     CATEGORIES.forEach(function(cat){
       var a = document.createElement("a");
       a.className = "cat-card"; a.href = cat.url; a.rel = "noopener noreferrer";
+      a.target = "_self"; // Site içi - WebView içinde aç
       var ico = document.createElement("div");
       ico.className = "cat-ico"; ico.textContent = cat.icon;
       var body = document.createElement("div");
@@ -1430,20 +1405,18 @@
     });
   }
 
-  /* ============ PROMO LIST - t() FONKSİYONU İLE DOĞRUDAN ÇEVİRİ ============ */
   function renderPromoList() {
     var specialGrid = $("promoSpecialGrid");
     var list = $("promoList");
     if (!specialGrid || !list) return;
     
-    // DOĞRUDAN t() FONKSİYONU KULLAN - data-i18n DEĞİL
     specialGrid.innerHTML = 
-      '<a href="https://offer.alibaba.com/cps/u6la1bhj?bm=cps&src=saf" class="promo-special-card" target="_blank" rel="noopener noreferrer">' +
+      '<a href="https://offer.alibaba.com/cps/u6la1bhj?bm=cps&src=saf" class="promo-special-card" target="_self" rel="noopener noreferrer">' +
         '<div class="promo-special-icon">⚡</div>' +
         '<h3>' + t("promoFlashTitle") + '</h3>' +
         '<p>' + t("promoFlashDesc") + '</p>' +
       '</a>' +
-      '<a href="https://offer.alibaba.com/cps/3j064s17?bm=cps&src=saf" class="promo-special-card" target="_blank" rel="noopener noreferrer">' +
+      '<a href="https://offer.alibaba.com/cps/3j064s17?bm=cps&src=saf" class="promo-special-card" target="_self" rel="noopener noreferrer">' +
         '<div class="promo-special-icon">🚚</div>' +
         '<h3>' + t("promoFreeTitle") + '</h3>' +
         '<p>' + t("promoFreeDesc") + '</p>' +
@@ -1622,12 +1595,27 @@
     }
   }
 
+  /* ============ HARİCİ ÜRÜN LİNKLERİ - ŞALTER DURUMUNA GÖRE AÇ ============ */
+  function openProductLink(url, event) {
+    event.preventDefault();
+    if (appMode) {
+      // Open in App - Harici tarayıcıda/uygulamada aç
+      window.open(url, '_blank');
+    } else {
+      // Open in Media - WebView içinde aç
+      window.location.href = url;
+    }
+  }
+
   function appendProductCard(grid, p) {
     var card = document.createElement("a");
     card.className = "product-card";
     card.href = p.link;
-    card.target = "_blank";
     card.rel = "noopener noreferrer";
+    // Click handler ile şalter durumuna göre aç
+    card.addEventListener("click", function(e) {
+      openProductLink(p.link, e);
+    });
     card.innerHTML = '<div class="product-img-wrap">' +
       '<div class="product-img-loading"></div>' +
       '<img class="product-img" src="' + p.image + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy" onload="this.classList.add(\'loaded\'); this.parentElement.querySelector(\'.product-img-loading\').style.display=\'none\';" onerror="this.style.display=\'none\';">' +
@@ -1777,8 +1765,30 @@
     item.addEventListener("click", function(){ showPage(item.getAttribute("data-page")); });
   });
 
-  applyLang(currentLang);
-  applyAppMode(appMode);
+  /* ============ SAYFA YÜKLEME - MESAJ GÖNDERME ============ */
+  renderCategories();
+  renderPromoList();
+  
+  // Tüm data-i18n elementlerini güncelle
+  document.querySelectorAll("[data-i18n]").forEach(function(el){
+    var k = el.getAttribute("data-i18n");
+    if (I18N[currentLang][k] !== undefined) el.textContent = I18N[currentLang][k];
+  });
+  
+  // Lang butonlarını güncelle
+  document.querySelectorAll(".lang-btn").forEach(function(b){
+    b.classList.toggle("active", b.getAttribute("data-lang") === currentLang);
+  });
+  
+  $("toast").textContent = I18N[currentLang].copied;
+  $("privacyBody").innerHTML = PRIVACY[currentLang] || PRIVACY.en;
+  $("termsBody").innerHTML = TERMS[currentLang] || TERMS.en;
+  
+  // App mode UI güncelle - MESAJ GÖNDERME
+  applyAppMode(appMode, false);
+  
+  var searchInputInit = $("hotSearchInput");
+  if (searchInputInit) searchInputInit.placeholder = t("hotSearchPlaceholder");
 })();
 </script>
 </body>
