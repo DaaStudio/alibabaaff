@@ -1296,7 +1296,6 @@
   $("themeSwitch").addEventListener("click", function(){ applyTheme(currentTheme === "dark" ? "light" : "dark"); });
   applyTheme(currentTheme);
 
-  /* ============ APP MODE - SADECE TOGGLE TIKLAMASINDA MESAJ GÖNDER ============ */
   var appMode = false;
   try { 
     var savedMode = localStorage.getItem("appMode");
@@ -1312,16 +1311,13 @@
       label.textContent = mode ? t("openInApp") : t("openInMedia");
     }
     try { localStorage.setItem("appMode", mode); } catch(e) {}
-    
-    // SADECE sendMessage true ise JavaScript köprüsü mesajı gönder
     if (sendMessage && window.AppInventor) {
       window.AppInventor.setWebViewString(mode ? "webview_acik" : "webview_kapali");
     }
   }
 
-  // Toggle switch'e tıklandığında mesaj gönder
   $("appModeSwitch").addEventListener("click", function(){ 
-    applyAppMode(!appMode, true); // true = mesaj gönder
+    applyAppMode(!appMode, true);
   });
 
   var currentLang = "en";
@@ -1333,12 +1329,9 @@
     return dict[key] !== undefined ? dict[key] : (I18N.en[key] !== undefined ? I18N.en[key] : key);
   }
 
-  /* ============ DİL DEĞİŞTİRME - SİTE YENİLENSİN ============ */
   function applyLang(lang) {
     if (!I18N[lang]) lang = "en";
     try { localStorage.setItem("lang", lang); } catch(e) {}
-    
-    // Sayfayı yenile - dil aktif olsun
     location.reload();
   }
 
@@ -1366,14 +1359,14 @@
       var a = document.createElement("a");
       a.className = "quick-chip";
       a.href = cat.url; a.rel = "noopener noreferrer";
-      a.target = "_self"; // Site içi - WebView içinde aç
+      a.target = "_self";
       a.innerHTML = '<span class="qi">' + cat.icon + '</span><span>' + t("cat_" + cat.key) + '</span>';
       quickStrip.appendChild(a);
     });
     CATEGORIES.filter(function(c){ return c.featured; }).forEach(function(cat){
       var a = document.createElement("a");
       a.className = "feat-card"; a.href = cat.url; a.rel = "noopener noreferrer";
-      a.target = "_self"; // Site içi - WebView içinde aç
+      a.target = "_self";
       a.innerHTML = '<div class="feat-icon">' + cat.icon + '</div>' +
                     '<div class="feat-name">' + t("cat_" + cat.key) + '</div>' +
                     '<div class="feat-go">' + t("explore") + ' ↗</div>';
@@ -1382,7 +1375,7 @@
     CATEGORIES.forEach(function(cat){
       var a = document.createElement("a");
       a.className = "cat-card"; a.href = cat.url; a.rel = "noopener noreferrer";
-      a.target = "_self"; // Site içi - WebView içinde aç
+      a.target = "_self";
       var ico = document.createElement("div");
       ico.className = "cat-ico"; ico.textContent = cat.icon;
       var body = document.createElement("div");
@@ -1534,6 +1527,53 @@
     return products;
   }
 
+  /* ============ STATE KAYDETME - GERİ TUŞU DESTEĞİ ============ */
+  function saveHotState() {
+    if (currentHotCategory) {
+      var state = {
+        category: currentHotCategory,
+        scrollY: window.scrollY,
+        searchQuery: $("hotSearchInput").value,
+        displayIndex: hotDisplayIndex,
+        isSearchMode: isSearchMode
+      };
+      try {
+        localStorage.setItem('hotState', JSON.stringify(state));
+        history.replaceState(state, '', '#hot/' + currentHotCategory);
+      } catch(e) {}
+    }
+  }
+
+  function restoreHotState() {
+    try {
+      var stateStr = localStorage.getItem('hotState');
+      if (stateStr) {
+        var state = JSON.parse(stateStr);
+        if (state.category) {
+          openHotCategory(state.category).then(function() {
+            if (state.searchQuery) {
+              $("hotSearchInput").value = state.searchQuery;
+              performSearch(state.searchQuery);
+            }
+            setTimeout(function() {
+              window.scrollTo(0, state.scrollY || 0);
+            }, 200);
+          });
+          return true;
+        }
+      }
+    } catch(e) {}
+    return false;
+  }
+
+  window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.category) {
+      openHotCategory(event.state.category);
+    } else {
+      closeHotCategory();
+    }
+  });
+
   window.openHotCategory = async function(catKey) {
     currentHotCategory = catKey;
     hotDisplayIndex = 0;
@@ -1565,6 +1605,7 @@
     currentDisplayList = dailyShuffle(hotProductsCache[catKey]);
     loadMoreHotProducts();
     setupHotObserver();
+    saveHotState();
   };
 
   window.closeHotCategory = function() {
@@ -1574,6 +1615,10 @@
     $("hot-main-view").style.display = "block";
     $("hot-list-view").style.display = "none";
     if (hotObserver) hotObserver.disconnect();
+    try {
+      localStorage.removeItem('hotState');
+      history.replaceState(null, '', window.location.pathname);
+    } catch(e) {}
   };
 
   function loadMoreHotProducts() {
@@ -1593,29 +1638,16 @@
     } else {
       sentinel.style.display = "flex";
     }
+    saveHotState();
   }
 
-  /* ============ HARİCİ ÜRÜN LİNKLERİ - ŞALTER DURUMUNA GÖRE AÇ ============ */
-  function openProductLink(url, event) {
-    event.preventDefault();
-    if (appMode) {
-      // Open in App - Harici tarayıcıda/uygulamada aç
-      window.open(url, '_blank');
-    } else {
-      // Open in Media - WebView içinde aç
-      window.location.href = url;
-    }
-  }
-
+  /* ============ TÜM ÜRÜN LİNKLERİ YENİ SEKMEDE AÇILIR ============ */
   function appendProductCard(grid, p) {
     var card = document.createElement("a");
     card.className = "product-card";
     card.href = p.link;
+    card.target = "_blank"; // HER ZAMAN YENİ SEKMEDE AÇ
     card.rel = "noopener noreferrer";
-    // Click handler ile şalter durumuna göre aç
-    card.addEventListener("click", function(e) {
-      openProductLink(p.link, e);
-    });
     card.innerHTML = '<div class="product-img-wrap">' +
       '<div class="product-img-loading"></div>' +
       '<img class="product-img" src="' + p.image + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy" onload="this.classList.add(\'loaded\'); this.parentElement.querySelector(\'.product-img-loading\').style.display=\'none\';" onerror="this.style.display=\'none\';">' +
@@ -1701,6 +1733,7 @@
     if (hotDisplayIndex >= filtered.length || hotDisplayIndex >= HOT_MAX_LIMIT) {
       appendDownloadCTA(grid);
     }
+    saveHotState();
   }
 
   var searchInput = $("hotSearchInput");
@@ -1765,17 +1798,15 @@
     item.addEventListener("click", function(){ showPage(item.getAttribute("data-page")); });
   });
 
-  /* ============ SAYFA YÜKLEME - MESAJ GÖNDERME ============ */
+  /* ============ SAYFA YÜKLEME ============ */
   renderCategories();
   renderPromoList();
   
-  // Tüm data-i18n elementlerini güncelle
   document.querySelectorAll("[data-i18n]").forEach(function(el){
     var k = el.getAttribute("data-i18n");
     if (I18N[currentLang][k] !== undefined) el.textContent = I18N[currentLang][k];
   });
   
-  // Lang butonlarını güncelle
   document.querySelectorAll(".lang-btn").forEach(function(b){
     b.classList.toggle("active", b.getAttribute("data-lang") === currentLang);
   });
@@ -1784,11 +1815,22 @@
   $("privacyBody").innerHTML = PRIVACY[currentLang] || PRIVACY.en;
   $("termsBody").innerHTML = TERMS[currentLang] || TERMS.en;
   
-  // App mode UI güncelle - MESAJ GÖNDERME
   applyAppMode(appMode, false);
   
   var searchInputInit = $("hotSearchInput");
   if (searchInputInit) searchInputInit.placeholder = t("hotSearchPlaceholder");
+
+  /* ============ GERİ TUŞU - STATE GERİ YÜKLEME ============ */
+  if (!restoreHotState()) {
+    // Hash'ten de kontrol et
+    var hash = window.location.hash;
+    if (hash.startsWith('#hot/')) {
+      var catKey = hash.replace('#hot/', '');
+      if (HOT_FILES[catKey]) {
+        openHotCategory(catKey);
+      }
+    }
+  }
 })();
 </script>
 </body>
