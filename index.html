@@ -147,14 +147,20 @@
   .cat-share:hover { color: var(--brand2); border-color: var(--brand); background: var(--brand-soft); }
   .cat-share:active { transform: scale(0.85); }
 
-  .promo-wrap { margin-top: 6px; display:flex; flex-direction:column; gap: 14px; }
-  .promo-img-card {
-    display:block; border-radius: 16px; overflow:hidden; border:1px solid var(--border);
-    background: var(--card); transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; text-decoration:none;
+  /* YENİ PROMO BUTONLARI STİLİ */
+  .promo-special-grid { display:grid; grid-template-columns: 1fr; gap: 14px; margin-top: 10px; }
+  @media(min-width:640px) { .promo-special-grid { grid-template-columns: repeat(2, 1fr); } }
+  .promo-special-card {
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px;
+    padding: 28px 20px; border-radius: 18px; background: linear-gradient(145deg, var(--card), var(--card2));
+    border:1px solid var(--border); text-decoration:none; color: var(--text);
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
   }
-  .promo-img-card:hover { transform: translateY(-3px); border-color: var(--brand); box-shadow: 0 12px 30px var(--shadow); }
-  .promo-img-card:active { transform: scale(0.98); }
-  .promo-img-card img { display:block; width:100%; height:auto; }
+  .promo-special-card:hover { transform: translateY(-4px); border-color: var(--brand); box-shadow: 0 12px 30px var(--shadow); }
+  .promo-special-card:active { transform: scale(0.97); }
+  .promo-special-icon { font-size: 2.8rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+  .promo-special-card h3 { font-size: 1.15rem; font-weight: 800; color: var(--brand2); margin: 0; }
+  .promo-special-card p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.4; margin: 0; }
 
   .promo-empty {
     text-align:center; padding: 56px 22px; background: var(--card); border:1px dashed var(--border-strong); border-radius: 20px;
@@ -460,7 +466,8 @@
     <div class="sec-head">
       <div class="sec-title"><span class="bar"></span><h2 data-i18n="promoActive">Active Promo Codes</h2></div>
     </div>
-    <div class="promo-wrap" id="promoList"></div>
+    <div class="promo-special-grid" id="promoSpecialGrid"></div>
+    <div class="promo-wrap" id="promoList" style="margin-top: 20px;"></div>
   </div>
 </div>
 
@@ -640,9 +647,30 @@
   var currentDisplayList = [];
   var hotDisplayIndex = 0;
   var HOT_BATCH_SIZE = 20;
-  var HOT_MAX_LIMIT = 100;
+  var HOT_MAX_LIMIT = 100; // TAM OLARAK 100 ÜRÜN LİMİTİ
   var hotObserver = null;
   var isSearchMode = false;
+
+  /* ============ GÜNLÜK KARMA (SEED) FONKSİYONU ============ */
+  // Her gün farklı bir liste sunmak için tarih tabanlı seed kullanır
+  function getDailySeed() {
+    var d = new Date();
+    return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  }
+  function seededRandom(seed) {
+    var x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  }
+  function dailyShuffle(array) {
+    var arr = array.slice();
+    var seed = getDailySeed();
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(seededRandom(seed) * (i + 1));
+      seed += 1;
+      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr;
+  }
 
   /* ============ KATEGORİLER ============ */
   var CATEGORIES = [
@@ -690,10 +718,6 @@
     { key: "vehiclesTransport", name: "Vehicles & Transportation", icon: "🚚", url: "https://offer.alibaba.com/cps/jo85d551?bm=cps&src=saf" }
   ];
 
-  var PROMO_IMAGES = [
-    { url: "https://offer.alibaba.com/cps/velnrsab?bm=cps&src=saf", img: "https://sc01.alicdn.com/kf/Sc57c8331a5b54c738fea5a4edfae3f00o.png" },
-    { url: "https://offer.alibaba.com/cps/lsc2gqt8?bm=cps&src=saf", img: "https://sc01.alicdn.com/kf/Sfb1046c4869841baaadeb1032f7e6a220.png" }
-  ];
   var PROMO_CODES = [];
   var PLAY_URL = "https://play.google.com/store/apps/details?id=com.DaaStudio.AlibabaAffiliate";
 
@@ -710,7 +734,7 @@
     { code: "zh", label: "中文", flag: "🇨🇳" }
   ];
 
-  /* ============ I18N (TÜM DİLLER - ALİBABA KELİMESİ KALDIRILDI) ============ */
+  /* ============ I18N (TÜM DİLLER) ============ */
   var I18N = {
     en: {
       heroBadge: "Global B2B Marketplace", heroTitle1: "Source Smarter,", heroTitle2: "Trade Global",
@@ -737,12 +761,16 @@
       hotDesc2: "30,000+ specially discounted products",
       hotDesc3: "Unmissable deals with up to 50% discount",
       hotDownloadTitle: "Download Productora App for More Products!",
-      hotDownloadDesc: "You've seen 100+ special deals in this category. Download our Productora mobile app from Google Play for thousands of extra products, instant notifications, and more discounts.",
+      hotDownloadDesc: "You've seen 100 special deals in this category. Download our Productora mobile app from Google Play for thousands of extra products, instant notifications, and more discounts.",
       hotDownloadBtn: "Download on Google Play",
       hotSearchPlaceholder: "Search by product name, category...",
       hotNoResultTitle: "No Products Found",
       hotNoResultDesc: "We couldn't find any products matching your search. Download the Productora mobile app to explore thousands more products and exclusive deals!",
       hotNoResultBtn: "Browse More in Productora App",
+      promoFlashTitle: "Flash Deals",
+      promoFlashDesc: "FREE shipping capped at US$20 on your first order via Logistics",
+      promoFreeTitle: "FREE shipping",
+      promoFreeDesc: "On your first order via Logistics",
       cat_mainPart: "Main Part", cat_newArrivals: "New Arrivals", cat_topRanking: "Top Ranking", cat_topDeals: "Top Deals",
       cat_apparel: "Apparel & Accessories", cat_beauty: "Beauty", cat_commercialEquip: "Commercial Equipment & Machinery",
       cat_constructionMachinery: "Construction & Building Machinery", cat_constructionRealEstate: "Construction & Real Estate",
@@ -787,12 +815,16 @@
       hotDesc2: "30.000+ özel indirimli seçkin ürün",
       hotDesc3: "%50'ye varan indirimlerle kaçırılmayacak fırsatlar",
       hotDownloadTitle: "Daha Fazla Ürün İçin Productora Uygulamamızı İndirin!",
-      hotDownloadDesc: "Bu kategorideki 100+ özel fırsatı gördünüz. Binlerce ek ürün, anlık bildirimler ve daha fazla indirim için Productora mobil uygulamamızı Google Play'den indirin.",
+      hotDownloadDesc: "Bu kategorideki 100 özel fırsatı gördünüz. Binlerce ek ürün, anlık bildirimler ve daha fazla indirim için Productora mobil uygulamamızı Google Play'den indirin.",
       hotDownloadBtn: "Google Play'den İndir",
       hotSearchPlaceholder: "Ürün adı, kategori ile ara...",
       hotNoResultTitle: "Ürün Bulunamadı",
       hotNoResultDesc: "Aramanıza uygun ürün bulamadık. Binlerce ürün ve özel fırsatları keşfetmek için Productora mobil uygulamamızı indirin!",
       hotNoResultBtn: "Productora Uygulamasında Daha Fazla Ürüne Göz At",
+      promoFlashTitle: "Flash İndirimler",
+      promoFlashDesc: "İlk siparişinizde Lojistik ile 20 USD'ye kadar ÜCRETSİZ kargo",
+      promoFreeTitle: "ÜCRETSİZ kargo",
+      promoFreeDesc: "Lojistik ile ilk siparişinizde",
       cat_mainPart: "Ana Bölüm", cat_newArrivals: "Yeni Gelenler", cat_topRanking: "En İyiler", cat_topDeals: "En İyi Fırsatlar",
       cat_apparel: "Giyim & Aksesuar", cat_beauty: "Güzellik", cat_commercialEquip: "Ticari Ekipman & Makine",
       cat_constructionMachinery: "İnşaat & Yapı Makineleri", cat_constructionRealEstate: "İnşaat & Gayrimenkul",
@@ -837,12 +869,16 @@
       hotDesc2: "Más de 30.000 productos con descuento especial",
       hotDesc3: "Ofertas irresistibles con hasta un 50% de descuento",
       hotDownloadTitle: "¡Descarga la App Productora para Más Productos!",
-      hotDownloadDesc: "Has visto más de 100 ofertas especiales en esta categoría. Descarga nuestra aplicación móvil Productora desde Google Play para miles de productos adicionales, notificaciones instantáneas y más descuentos.",
+      hotDownloadDesc: "Has visto 100 ofertas especiales en esta categoría. Descarga nuestra aplicación móvil Productora desde Google Play para miles de productos adicionales, notificaciones instantáneas y más descuentos.",
       hotDownloadBtn: "Descargar en Google Play",
       hotSearchPlaceholder: "Buscar por nombre de producto, categoría...",
       hotNoResultTitle: "No Se Encontraron Productos",
       hotNoResultDesc: "No pudimos encontrar productos que coincidan con tu búsqueda. ¡Descarga la app móvil Productora para explorar miles de productos más y ofertas exclusivas!",
       hotNoResultBtn: "Explorar Más en la App Productora",
+      promoFlashTitle: "Ofertas Flash",
+      promoFlashDesc: "Envío GRATIS limitado a 20 USD en tu primer pedido a través de Logística",
+      promoFreeTitle: "Envío GRATIS",
+      promoFreeDesc: "En tu primer pedido a través de Logística",
       cat_mainPart: "Parte Principal", cat_newArrivals: "Novedades", cat_topRanking: "Mejor Valorados", cat_topDeals: "Mejores Ofertas",
       cat_apparel: "Ropa y Accesorios", cat_beauty: "Belleza", cat_commercialEquip: "Equipos y Maquinaria Comercial",
       cat_constructionMachinery: "Maquinaria de Construcción", cat_constructionRealEstate: "Construcción e Inmobiliaria",
@@ -887,12 +923,16 @@
       hotDesc2: "Über 30.000 speziell reduzierte Produkte",
       hotDesc3: "Unschlagbare Angebote mit bis zu 50% Rabatt",
       hotDownloadTitle: "Lade die Productora App für Mehr Produkte!",
-      hotDownloadDesc: "Du hast über 100 Sonderangebote in dieser Kategorie gesehen. Lade unsere Productora Mobile App von Google Play für tausende weitere Produkte, sofortige Benachrichtigungen und mehr Rabatte.",
+      hotDownloadDesc: "Du hast 100 Sonderangebote in dieser Kategorie gesehen. Lade unsere Productora Mobile App von Google Play für tausende weitere Produkte, sofortige Benachrichtigungen und mehr Rabatte.",
       hotDownloadBtn: "Bei Google Play herunterladen",
       hotSearchPlaceholder: "Nach Produktname, Kategorie suchen...",
       hotNoResultTitle: "Keine Produkte Gefunden",
       hotNoResultDesc: "Wir konnten keine Produkte finden, die deiner Suche entsprechen. Lade die Productora Mobile App herunter, um tausende weitere Produkte und exklusive Angebote zu entdecken!",
       hotNoResultBtn: "Mehr in der Productora App Entdecken",
+      promoFlashTitle: "Blitzangebote",
+      promoFlashDesc: "KOSTENLOSER Versand bis zu 20 USD bei Ihrer ersten Bestellung über Logistik",
+      promoFreeTitle: "KOSTENLOSER Versand",
+      promoFreeDesc: "Bei Ihrer ersten Bestellung über Logistik",
       cat_mainPart: "Hauptbereich", cat_newArrivals: "Neuankömmlinge", cat_topRanking: "Top-Bewertet", cat_topDeals: "Top-Angebote",
       cat_apparel: "Bekleidung & Accessoires", cat_beauty: "Schönheit", cat_commercialEquip: "Gewerbliche Ausrüstung & Maschinen",
       cat_constructionMachinery: "Bau- & Baumaschinen", cat_constructionRealEstate: "Bau & Immobilien",
@@ -937,12 +977,16 @@
       hotDesc2: "Plus de 30 000 produits en promotion spéciale",
       hotDesc3: "Des offres irrésistibles avec jusqu'à 50% de réduction",
       hotDownloadTitle: "Téléchargez l'App Productora pour Plus de Produits !",
-      hotDownloadDesc: "Vous avez vu plus de 100 offres spéciales dans cette catégorie. Téléchargez notre application mobile Productora sur Google Play pour des milliers de produits supplémentaires, des notifications instantanées et plus de réductions.",
+      hotDownloadDesc: "Vous avez vu 100 offres spéciales dans cette catégorie. Téléchargez notre application mobile Productora sur Google Play pour des milliers de produits supplémentaires, des notifications instantanées et plus de réductions.",
       hotDownloadBtn: "Télécharger sur Google Play",
       hotSearchPlaceholder: "Rechercher par nom de produit, catégorie...",
       hotNoResultTitle: "Aucun Produit Trouvé",
       hotNoResultDesc: "Nous n'avons trouvé aucun produit correspondant à votre recherche. Téléchargez l'application mobile Productora pour découvrir des milliers de produits supplémentaires et des offres exclusives !",
       hotNoResultBtn: "Parcourir Plus dans l'App Productora",
+      promoFlashTitle: "Ventes Flash",
+      promoFlashDesc: "Livraison GRATUITE plafonnée à 20 USD sur votre première commande via la Logistique",
+      promoFreeTitle: "Livraison GRATUITE",
+      promoFreeDesc: "Sur votre première commande via la Logistique",
       cat_mainPart: "Partie Principale", cat_newArrivals: "Nouveautés", cat_topRanking: "Mieux Classés", cat_topDeals: "Meilleures Offres",
       cat_apparel: "Vêtements & Accessoires", cat_beauty: "Beauté", cat_commercialEquip: "Équipement & Machines Commerciales",
       cat_constructionMachinery: "Machines de Construction", cat_constructionRealEstate: "Construction & Immobilier",
@@ -987,12 +1031,16 @@
       hotDesc2: "Oltre 30.000 prodotti con sconti speciali",
       hotDesc3: "Offerte imperdibili con sconti fino al 50%",
       hotDownloadTitle: "Scarica l'App Productora per Più Prodotti!",
-      hotDownloadDesc: "Hai visto oltre 100 offerte speciali in questa categoria. Scarica la nostra app mobile Productora da Google Play per migliaia di prodotti aggiuntivi, notifiche istantanee e più sconti.",
+      hotDownloadDesc: "Hai visto 100 offerte speciali in questa categoria. Scarica la nostra app mobile Productora da Google Play per migliaia di prodotti aggiuntivi, notifiche istantanee e più sconti.",
       hotDownloadBtn: "Scarica su Google Play",
       hotSearchPlaceholder: "Cerca per nome prodotto, categoria...",
       hotNoResultTitle: "Nessun Prodotto Trovato",
       hotNoResultDesc: "Non abbiamo trovato prodotti corrispondenti alla tua ricerca. Scarica l'app mobile Productora per esplorare migliaia di prodotti in più e offerte esclusive!",
       hotNoResultBtn: "Sfoglia di Più nell'App Productora",
+      promoFlashTitle: "Offerte Lampo",
+      promoFlashDesc: "Spedizione GRATUITA con limite di 20 USD sul tuo primo ordine tramite Logistica",
+      promoFreeTitle: "Spedizione GRATUITA",
+      promoFreeDesc: "Sul tuo primo ordine tramite Logistica",
       cat_mainPart: "Parte Principale", cat_newArrivals: "Novità", cat_topRanking: "Più Votati", cat_topDeals: "Migliori Offerte",
       cat_apparel: "Abbigliamento & Accessori", cat_beauty: "Bellezza", cat_commercialEquip: "Attrezzature & Macchinari Commerciali",
       cat_constructionMachinery: "Macchinari per Costruzioni", cat_constructionRealEstate: "Costruzioni & Immobiliare",
@@ -1037,12 +1085,16 @@
       hotDesc2: "Mais de 30.000 produtos com desconto especial",
       hotDesc3: "Ofertas imperdíveis com até 50% de desconto",
       hotDownloadTitle: "Baixe o App Productora para Mais Produtos!",
-      hotDownloadDesc: "Você viu mais de 100 ofertas especiais nesta categoria. Baixe nosso app móvel Productora no Google Play para milhares de produtos adicionais, notificações instantâneas e mais descontos.",
+      hotDownloadDesc: "Você viu 100 ofertas especiais nesta categoria. Baixe nosso app móvel Productora no Google Play para milhares de produtos adicionais, notificações instantâneas e mais descontos.",
       hotDownloadBtn: "Baixar no Google Play",
       hotSearchPlaceholder: "Pesquisar por nome do produto, categoria...",
       hotNoResultTitle: "Nenhum Produto Encontrado",
       hotNoResultDesc: "Não encontramos produtos correspondentes à sua pesquisa. Baixe o app móvel Productora para explorar milhares de produtos a mais e ofertas exclusivas!",
       hotNoResultBtn: "Ver Mais no App Productora",
+      promoFlashTitle: "Ofertas Relâmpago",
+      promoFlashDesc: "Frete GRÁTIS limitado a 20 USD no seu primeiro pedido via Logística",
+      promoFreeTitle: "Frete GRÁTIS",
+      promoFreeDesc: "No seu primeiro pedido via Logística",
       cat_mainPart: "Parte Principal", cat_newArrivals: "Novidades", cat_topRanking: "Mais Bem Avaliados", cat_topDeals: "Melhores Ofertas",
       cat_apparel: "Roupas & Acessórios", cat_beauty: "Beleza", cat_commercialEquip: "Equipamentos & Máquinas Comerciais",
       cat_constructionMachinery: "Máquinas de Construção", cat_constructionRealEstate: "Construção & Imobiliário",
@@ -1087,12 +1139,16 @@
       hotDesc2: "30,000以上の特別割引製品",
       hotDesc3: "最大50%オフの見逃せないお得情報",
       hotDownloadTitle: "もっと多くの製品のためにProductoraアプリをダウンロード！",
-      hotDownloadDesc: "このカテゴリで100以上の特別なお得情報を見ました。数千の追加製品、即時通知、さらなる割引のためにGoogle PlayからProductoraモバイルアプリをダウンロードしてください。",
+      hotDownloadDesc: "このカテゴリで100件の特別なお得情報を見ました。数千の追加製品、即時通知、さらなる割引のためにGoogle PlayからProductoraモバイルアプリをダウンロードしてください。",
       hotDownloadBtn: "Google Playでダウンロード",
       hotSearchPlaceholder: "製品名、カテゴリで検索...",
       hotNoResultTitle: "製品が見つかりません",
       hotNoResultDesc: "検索に一致する製品が見つかりませんでした。Productoraモバイルアプリをダウンロードして、何千もの追加製品や限定セールをご覧ください！",
       hotNoResultBtn: "Productoraアプリでもっと見る",
+      promoFlashTitle: "フラッシュセール",
+      promoFlashDesc: "ロジスティクス経由の初回注文で最大20米ドルまで送料無料",
+      promoFreeTitle: "送料無料",
+      promoFreeDesc: "ロジスティクス経由の初回注文で",
       cat_mainPart: "メインパート", cat_newArrivals: "新着", cat_topRanking: "トップランキング", cat_topDeals: "トップディール",
       cat_apparel: "アパレル＆アクセサリー", cat_beauty: "ビューティー", cat_commercialEquip: "商業機器＆機械",
       cat_constructionMachinery: "建設・建築機械", cat_constructionRealEstate: "建設＆不動産",
@@ -1137,12 +1193,16 @@
       hotDesc2: "30,000개 이상의 특별 할인 제품",
       hotDesc3: "최대 50% 할인되는 놓칠 수 없는 거래",
       hotDownloadTitle: "더 많은 제품을 위해 Productora 앱을 다운로드하세요!",
-      hotDownloadDesc: "이 카테고리에서 100개 이상의 특별 거래를 확인했습니다. 수천 개의 추가 제품, 즉시 알림 및 추가 할인을 위해 Google Play에서 Productora 모바일 앱을 다운로드하세요.",
+      hotDownloadDesc: "이 카테고리에서 100개의 특별 거래를 확인했습니다. 수천 개의 추가 제품, 즉시 알림 및 추가 할인을 위해 Google Play에서 Productora 모바일 앱을 다운로드하세요.",
       hotDownloadBtn: "Google Play에서 다운로드",
       hotSearchPlaceholder: "제품 이름, 카테고리로 검색...",
       hotNoResultTitle: "제품을 찾을 수 없습니다",
       hotNoResultDesc: "검색과 일치하는 제품을 찾을 수 없습니다. Productora 모바일 앱을 다운로드하여 수천 개의 추가 제품과 독점 특가 상품을 확인하세요!",
       hotNoResultBtn: "Productora 앱에서 더 보기",
+      promoFlashTitle: "플래시 딜",
+      promoFlashDesc: "물류를 통한 첫 주문 시 최대 20 USD까지 무료 배송",
+      promoFreeTitle: "무료 배송",
+      promoFreeDesc: "물류를 통한 첫 주문 시",
       cat_mainPart: "메인 파트", cat_newArrivals: "신상품", cat_topRanking: "톱 랭킹", cat_topDeals: "톱 딜",
       cat_apparel: "의류 & 액세서리", cat_beauty: "뷰티", cat_commercialEquip: "상업용 장비 & 기계",
       cat_constructionMachinery: "건설 & 건축 기계", cat_constructionRealEstate: "건설 & 부동산",
@@ -1187,12 +1247,16 @@
       hotDesc2: "30,000+特别折扣产品",
       hotDesc3: "最高50%折扣的不可错过的优惠",
       hotDownloadTitle: "下载Productora应用获取更多产品！",
-      hotDownloadDesc: "您已在此类别中看到了100+特别优惠。从Google Play下载我们的Productora移动应用，获取数千种额外产品、即时通知和更多折扣。",
+      hotDownloadDesc: "您已在此类别中看到了100件特别优惠。从Google Play下载我们的Productora移动应用，获取数千种额外产品、即时通知和更多折扣。",
       hotDownloadBtn: "在 Google Play 下载",
       hotSearchPlaceholder: "按产品名称、类别搜索...",
       hotNoResultTitle: "未找到产品",
       hotNoResultDesc: "我们找不到与您的搜索匹配的产品。下载Productora移动应用，探索数千种更多产品和独家优惠！",
       hotNoResultBtn: "在Productora应用中浏览更多",
+      promoFlashTitle: "限时抢购",
+      promoFlashDesc: "首次通过物流下单可享最高 20 美元免邮",
+      promoFreeTitle: "免费送货",
+      promoFreeDesc: "您的首次物流订单",
       cat_mainPart: "主要部分", cat_newArrivals: "新品上市", cat_topRanking: "热门排行", cat_topDeals: "热门优惠",
       cat_apparel: "服装与配饰", cat_beauty: "美妆", cat_commercialEquip: "商用设备与机械",
       cat_constructionMachinery: "建筑与施工机械", cat_constructionRealEstate: "建筑与房地产",
@@ -1336,22 +1400,28 @@
     });
   }
 
-  /* ============ PROMO LIST ============ */
+  /* ============ PROMO LIST (RESİMLER KALDIRILDI, 2 BUTON EKLENDİ) ============ */
   function renderPromoList() {
+    var specialGrid = $("promoSpecialGrid");
     var list = $("promoList");
-    if (!list) return;
+    if (!specialGrid || !list) return;
+    
+    // 1. Özel 2 Butonu Render Et
+    specialGrid.innerHTML = `
+      <a href="https://offer.alibaba.com/cps/u6la1bhj?bm=cps&src=saf" class="promo-special-card" target="_blank" rel="noopener noreferrer">
+        <div class="promo-special-icon">⚡</div>
+        <h3 data-i18n="promoFlashTitle">Flash Deals</h3>
+        <p data-i18n="promoFlashDesc">FREE shipping capped at US$20 on your first order via Logistics</p>
+      </a>
+      <a href="https://offer.alibaba.com/cps/3j064s17?bm=cps&src=saf" class="promo-special-card" target="_blank" rel="noopener noreferrer">
+        <div class="promo-special-icon">🚚</div>
+        <h3 data-i18n="promoFreeTitle">FREE shipping</h3>
+        <p data-i18n="promoFreeDesc">On your first order via Logistics</p>
+      </a>
+    `;
+
+    // 2. Varsa Promo Kodlarını Render Et
     list.innerHTML = "";
-    if (PROMO_IMAGES && PROMO_IMAGES.length) {
-      PROMO_IMAGES.forEach(function(p){
-        var a = document.createElement("a");
-        a.className = "promo-img-card";
-        a.href = p.url; a.rel = "noopener noreferrer"; a.target = "_blank";
-        var img = document.createElement("img");
-        img.src = p.img; img.alt = "Affiliate Marketing Promo"; img.loading = "lazy";
-        a.appendChild(img);
-        list.appendChild(a);
-      });
-    }
     if (PROMO_CODES && PROMO_CODES.length > 0) {
       PROMO_CODES.forEach(function(p){
         var card = document.createElement("div");
@@ -1373,8 +1443,7 @@
         card.appendChild(h); if (p.desc) card.appendChild(d); card.appendChild(row);
         list.appendChild(card);
       });
-    }
-    if ((!PROMO_IMAGES || !PROMO_IMAGES.length) && (!PROMO_CODES || !PROMO_CODES.length)) {
+    } else {
       var empty = document.createElement("div");
       empty.className = "promo-empty";
       empty.innerHTML =
@@ -1430,15 +1499,6 @@
   });
 
   /* ============ HOT PRODUCTS ============ */
-  function shuffleArray(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-    }
-    return a;
-  }
-
   function parseHotData(text) {
     text = text.replace(/^\uFEFF/, '');
     var lines = text.split(/\r?\n/);
@@ -1506,7 +1566,8 @@
         return;
       }
     }
-    currentDisplayList = shuffleArray(hotProductsCache[catKey]);
+    // HER GÜN FARKLI LİSTE İÇİN TARİH TABANLI KARMA (SEED) KULLANILIYOR
+    currentDisplayList = dailyShuffle(hotProductsCache[catKey]);
     loadMoreHotProducts();
     setupHotObserver();
   };
@@ -1524,6 +1585,7 @@
     if (!currentHotCategory) return;
     var grid = $("hot-product-grid");
     var sentinel = $("hot-sentinel");
+    // MAX 100 ÜRÜN LİMİTİ KESİN OLARAK UYGULANIYOR
     var end = Math.min(hotDisplayIndex + HOT_BATCH_SIZE, HOT_MAX_LIMIT, currentDisplayList.length);
     var batch = currentDisplayList.slice(hotDisplayIndex, end);
     batch.forEach(function(p){
@@ -1597,7 +1659,7 @@
     query = (query || "").trim().toLowerCase();
     if (!query) {
       isSearchMode = false;
-      currentDisplayList = shuffleArray(hotProductsCache[currentHotCategory]);
+      currentDisplayList = dailyShuffle(hotProductsCache[currentHotCategory]);
       hotDisplayIndex = 0;
       loadMoreHotProducts();
       setupHotObserver();
@@ -1616,7 +1678,7 @@
       return;
     }
 
-    filtered = shuffleArray(filtered);
+    filtered = dailyShuffle(filtered);
     currentDisplayList = filtered;
     hotDisplayIndex = 0;
 
