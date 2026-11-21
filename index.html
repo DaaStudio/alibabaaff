@@ -169,20 +169,6 @@
   @keyframes bob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
   .promo-empty h3 { font-size:1.12rem; margin-bottom:8px; }
   .promo-empty p { color: var(--text-dim); font-size:.88rem; line-height:1.6; max-width: 400px; margin: 0 auto; }
-  .promo-card {
-    background: var(--card); border:1px solid var(--border); border-radius: 16px; padding: 16px;
-    display:flex; flex-direction:column; gap:10px;
-  }
-  .promo-card h4 { font-size:.95rem; }
-  .promo-card p { color: var(--text-dim); font-size:.84rem; line-height:1.5; }
-  .promo-code-row {
-    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
-    background: var(--brand-soft); border:1px dashed var(--brand); border-radius:12px; padding: 11px 14px;
-  }
-  .promo-code-val {
-    font-family:"SF Mono", Menlo, Consolas, monospace; font-size:1rem; font-weight:800; color: var(--brand2);
-    letter-spacing:.06em; word-break:break-all;
-  }
 
   .info-block { margin-bottom: 22px; }
   .info-block:last-child { margin-bottom:0; }
@@ -243,7 +229,6 @@
   .legal-btn:hover { background: var(--card2); border-color: var(--brand); color: var(--brand2); }
   .legal-btn:active { transform: scale(0.97); }
 
-  /* HOT PRODUCTS */
   .hot-categories { display:grid; grid-template-columns: 1fr; gap: 14px; margin-top: 10px; }
   @media(min-width:640px) { .hot-categories { grid-template-columns: repeat(3, 1fr); } }
   .hot-cat-card {
@@ -301,7 +286,7 @@
   .product-card:hover { transform: translateY(-3px); border-color: var(--brand); }
   .product-img-wrap { position: relative; width: 100%; padding-top: 100%; background: var(--bg2); overflow: hidden; }
   
-  /* GELİŞMİŞ YÜKLEME ANİMASYONU */
+  /* GELİŞMİŞ YÜKLEME ANİMASYONU - HATA DURUMUNDA DA DÖNER */
   .product-img-loading {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: var(--card2);
@@ -456,7 +441,6 @@
   </div>
 </header>
 
-<!-- ============ HOME ============ -->
 <div class="page active" id="page-home">
   <section class="hero">
     <div class="hero-badge"><span class="dot"></span><span data-i18n="heroBadge">Global B2B Marketplace</span></div>
@@ -465,19 +449,13 @@
   </section>
   <div class="quick-strip" id="quickStrip"></div>
   <div class="container">
-    <div class="sec-head">
-      <div class="sec-title"><span class="bar"></span><h2 data-i18n="featured">Featured</h2></div>
-    </div>
+    <div class="sec-head"><div class="sec-title"><span class="bar"></span><h2 data-i18n="featured">Featured</h2></div></div>
     <div class="featured" id="featuredGrid"></div>
-    <div class="sec-head">
-      <div class="sec-title"><span class="bar"></span><h2 data-i18n="allCategories">All Categories</h2></div>
-      <span class="sec-count" id="catCount"></span>
-    </div>
+    <div class="sec-head"><div class="sec-title"><span class="bar"></span><h2 data-i18n="allCategories">All Categories</h2></div><span class="sec-count" id="catCount"></span></div>
     <div class="cat-list" id="catList"></div>
   </div>
 </div>
 
-<!-- ============ PROMO ============ -->
 <div class="page" id="page-promo">
   <section class="hero">
     <div class="hero-badge"><span class="dot"></span><span data-i18n="heroBadge">Global B2B Marketplace</span></div>
@@ -485,15 +463,12 @@
     <p data-i18n="promoSub">Exclusive promo codes for Affiliate Marketing. Check back soon!</p>
   </section>
   <div class="container">
-    <div class="sec-head">
-      <div class="sec-title"><span class="bar"></span><h2 data-i18n="promoActive">Active Promo Codes</h2></div>
-    </div>
+    <div class="sec-head"><div class="sec-title"><span class="bar"></span><h2 data-i18n="promoActive">Active Promo Codes</h2></div></div>
     <div class="promo-special-grid" id="promoSpecialGrid"></div>
     <div class="promo-wrap" id="promoList"></div>
   </div>
 </div>
 
-<!-- ============ HOT PRODUCTS ============ -->
 <div class="page" id="page-hot">
   <section class="hero">
     <div class="hero-badge"><span class="dot"></span><span data-i18n="heroBadge">Global B2B Marketplace</span></div>
@@ -538,7 +513,6 @@
   </div>
 </div>
 
-<!-- ============ INFO ============ -->
 <div class="page" id="page-info">
   <section class="hero">
     <div class="hero-badge"><span class="dot"></span><span data-i18n="heroBadge">Global B2B Marketplace</span></div>
@@ -558,15 +532,9 @@
       <div class="info-card rate-card">
         <p class="sub" data-i18n="rateSub">If you like our app, give us 5 stars on Google Play!</p>
         <div class="stars" id="stars">
-          <span class="star" data-v="1">★</span>
-          <span class="star" data-v="2">★</span>
-          <span class="star" data-v="3">★</span>
-          <span class="star" data-v="4">★</span>
-          <span class="star" data-v="5">★</span>
+          <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span>
         </div>
-        <button class="rate-btn" id="rateBtn" type="button">
-          <span>▶</span> <span data-i18n="rateBtn">Rate on Google Play</span>
-        </button>
+        <button class="rate-btn" id="rateBtn" type="button"><span>▶</span> <span data-i18n="rateBtn">Rate on Google Play</span></button>
       </div>
     </div>
     <div class="info-block">
@@ -598,7 +566,6 @@
   </div>
 </div>
 
-<!-- Bottom Nav -->
 <nav class="bottom-nav">
   <button class="nav-btn active" type="button" data-page="home"><span class="ni">🏠</span><span data-i18n="navHome">Home</span></button>
   <button class="nav-btn" type="button" data-page="promo"><span class="ni">🎟️</span><span data-i18n="navPromo">Promo</span></button>
@@ -606,7 +573,6 @@
   <button class="nav-btn" type="button" data-page="info"><span class="ni">ℹ️</span><span data-i18n="navInfo">Info</span></button>
 </nav>
 
-<!-- SETTINGS MODAL -->
 <div class="modal-ov" id="settingsModal">
   <div class="modal">
     <div class="modal-head">
@@ -621,7 +587,6 @@
           <div class="switch" id="themeSwitch"></div>
         </div>
       </div>
-      <!-- YENİ KODULAR APP MODE TOGGLE -->
       <div class="settings-block">
         <div class="settings-lbl" data-i18n="appBehavior">App Behavior</div>
         <div class="theme-row">
@@ -637,7 +602,6 @@
   </div>
 </div>
 
-<!-- PRIVACY MODAL -->
 <div class="modal-ov" id="privacyModal">
   <div class="modal">
     <div class="modal-head">
@@ -648,7 +612,6 @@
   </div>
 </div>
 
-<!-- TERMS MODAL -->
 <div class="modal-ov" id="termsModal">
   <div class="modal">
     <div class="modal-head">
@@ -665,7 +628,6 @@
 (function () {
   "use strict";
 
-  /* ============ HOT PRODUCTS AYARLARI ============ */
   var PLAY_STORE_HOT_APP_LINK = "https://play.google.com/store/apps/details?id=com.DaaStudio.AlibabaAffiliate";
   var HOT_FILES = {
     eu_local: 'hot_products/eu_local_stock.csv',
@@ -677,11 +639,10 @@
   var currentDisplayList = [];
   var hotDisplayIndex = 0;
   var HOT_BATCH_SIZE = 20;
-  var HOT_MAX_LIMIT = 100; // TAM OLARAK 100 ÜRÜN LİMİTİ
+  var HOT_MAX_LIMIT = 100;
   var hotObserver = null;
   var isSearchMode = false;
 
-  /* ============ GÜNLÜK KARMA (SEED) FONKSİYONU ============ */
   function getDailySeed() {
     var d = new Date();
     return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
@@ -701,7 +662,6 @@
     return arr;
   }
 
-  /* ============ KATEGORİLER ============ */
   var CATEGORIES = [
     { key: "mainPart", name: "Main Part", icon: "🌐", url: "https://offer.alibaba.com/cps/578enqbs?bm=cps&src=saf", featured: true },
     { key: "newArrivals", name: "New Arrivals", icon: "🆕", url: "https://offer.alibaba.com/cps/qj75l1o9?bm=cps&src=saf", featured: true },
@@ -763,7 +723,6 @@
     { code: "zh", label: "中文", flag: "🇨🇳" }
   ];
 
-  /* ============ I18N (TÜM DİLLER) ============ */
   var I18N = {
     en: {
       heroBadge: "Global B2B Marketplace", heroTitle1: "Source Smarter,", heroTitle2: "Trade Global",
@@ -1317,7 +1276,6 @@
     }
   };
 
-  /* ============ PRIVACY & TERMS (ALİBABA KELİMESİ KORUNDU) ============ */
   var PRIVACY = {
     en: "<p><strong>Privacy Policy</strong></p><p>Daa Studio built the Alibaba Affiliate Marketing app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p><p>This page informs visitors regarding our policies with the collection, use, and disclosure of Personal Information.</p><p>If you choose to use our Service, you agree to the collection and use of information in relation to this policy. We will not use or share your information with anyone except as described in this Privacy Policy.</p><h4>Information Collection and Use</h4><p>For a better experience, we may require you to provide certain personally identifiable information. The information we request is retained on your device and is not collected by us in any way.</p><p>The app uses third-party services that may collect information used to identify you: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p><h4>Log Data</h4><p>Whenever you use our Service, in case of an error we collect data and information (through third-party products) called Log Data. This may include your IP address, device name, OS version, app configuration, time and date of use, and other statistics.</p><h4>Cookies</h4><p>The app may use third-party code and libraries that use cookies to collect information and improve services. You can accept or refuse these cookies.</p><h4>Service Providers</h4><p>We may employ third-party companies to facilitate our Service, provide it on our behalf, perform related services, or assist in analyzing usage. They have access to Personal Information to perform tasks on our behalf and are obligated not to disclose or use it for other purposes.</p><h4>Security</h4><p>Alibaba Affiliate Marketing app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. We value your trust and strive to use commercially acceptable means to protect your Personal Information, but no method of transmission or storage is 100% secure.</p><h4>Links to Other Sites</h4><p>This Service may contain links to other sites. If you click a third-party link, you will be directed to that site. We strongly advise you to review their Privacy Policy.</p><h4>Children's Privacy</h4><p>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p><h4>Changes to This Privacy Policy</h4><p>We may update our Privacy Policy from time to time. You are advised to review this page periodically. This policy is effective as of 2021-11-01.</p><h4>Contact Us</h4><p>If you have questions or suggestions, contact us at daastudio42@gmail.com.</p>",
     tr: "<p><strong>Gizlilik Politikası</strong></p><p>Daa Studio, Alibaba Affiliate Marketing uygulamasını ücretsiz bir uygulama olarak geliştirmiştir. Bu HİZMET, Daa Studio tarafından ücretsiz olarak sunulmaktadır ve olduğu gibi kullanılması amaçlanmıştır.</p><p>Bu sayfa, ziyaretçileri Kişisel Bilgilerin toplanması, kullanılması ve ifşa edilmesiyle ilgili politikalarımız hakkında bilgilendirir.</p><p>Hizmetimizi kullanmayı seçerseniz, bu politikayla ilgili bilgilerin toplanmasına ve kullanılmasına onay vermiş olursunuz. Bilgilerinizi bu Gizlilik Politikasında açıklananlar dışında kimseyle paylaşmayız.</p><h4>Bilgi Toplama ve Kullanımı</h4><p>Daha iyi bir deneyim için sizden belirli kişisel bilgiler sağlamanızı isteyebiliriz. Talep ettiğimiz bilgiler cihazınızda saklanır ve tarafımızca toplanmaz.</p><p>Uygulama, sizi tanımlamak için bilgi toplayabilecek üçüncü taraf hizmetleri kullanır: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p><h4>Günlük Verileri</h4><p>Hizmetimizi kullandığınızda, bir hata durumunda telefonunuzda Günlük Verileri toplanır. Bu veriler IP adresinizi, cihaz adınızı, işletim sistemi sürümünü, kullanım tarih ve saatinizi ve diğer istatistikleri içerebilir.</p><h4>Çerezler</h4><p>Uygulama, bilgi toplamak ve hizmetleri geliştirmek için çerez kullanan üçüncü taraf kod ve kitaplıkları kullanabilir. Bu çerezleri kabul edebilir veya reddedebilirsiniz.</p><h4>Hizmet Sağlayıcılar</h4><p>Hizmetimizi kolaylaştırmak, sağlamak, ilgili hizmetleri gerçekleştirmek veya kullanımı analiz etmemize yardımcı olmak için üçüncü taraf şirketler kullanabiliriz. Bu taraflar, kendilerine verilen görevleri yerine getirmek için Kişisel Bilgilerinize erişebilir ve başka amaçla kullanmamakla yükümlüdür.</p><h4>Güvenlik</h4><p>Alibaba Affiliate Marketing uygulaması yapımcısı ve yapımcıları hiçbir sorumluluk ve zarardan sorumlu değildir. Tüm sorumluluk kullanıcıya aittir. Kişisel Bilgilerinizi korumak için ticari olarak kabul edilebilir yöntemler kullanmaya çalışıyoruz, ancak hiçbir iletim veya depolama yöntemi %100 güvenli değildir.</p><h4>Diğer Sitelere Bağlantılar</h4><p>Bu Hizmet diğer sitelere bağlantılar içerebilir. Üçüncü taraf bir bağlantıya tıklarsanız o siteye yönlendirilirsiniz. Gizlilik Politikalarını incelemenizi öneririz.</p><h4>Çocukların Gizliliği</h4><p>Bu Hizmetler 13 yaşın altındaki hiç kimseye hitap etmez. 13 yaşın altındaki çocuklardan bilerek kişisel bilgi toplamıyoruz.</p><h4>Değişiklikler</h4><p>Gizlilik Politikamızı zaman zaman güncelleyebiliriz. Bu sayfayı periyodik olarak incelemeniz önerilir. Bu politika 2021-11-01 tarihinden itibaren geçerlidir.</p><h4>Bize Ulaşın</h4><p>Sorularınız için daastudio42@gmail.com adresinden bizimle iletişime geçin.</p>"
@@ -1330,7 +1288,6 @@
   function $(id) { return document.getElementById(id); }
   function openPlayStore() { window.location.href = PLAY_URL; }
 
-  /* ============ THEME ============ */
   var currentTheme = "dark";
   try { currentTheme = localStorage.getItem("theme") || "dark"; } catch(e) {}
   function applyTheme(theme) {
@@ -1343,24 +1300,22 @@
   $("themeSwitch").addEventListener("click", function(){ applyTheme(currentTheme === "dark" ? "light" : "dark"); });
   applyTheme(currentTheme);
 
-  /* ============ APP MODE (KODULAR BRIDGE) ============ */
-  var appMode = false; // Default kapalı
-  try { appMode = localStorage.getItem("appMode") === "true"; } catch(e) {}
+  /* ============ APP MODE (DEFAULT: OPEN IN MEDIA = false) ============ */
+  var appMode = false; // DEFAULT: Open in Media (kapalı)
+  try { 
+    var savedMode = localStorage.getItem("appMode");
+    if (savedMode !== null) appMode = savedMode === "true";
+  } catch(e) {}
   
   function applyAppMode(mode) {
     appMode = mode;
     var sw = $("appModeSwitch");
     var label = $("appModeLabel");
     if (sw) sw.classList.toggle("on", mode);
-    
-    // Metni duruma göre güncelle
     if (label) {
       label.textContent = mode ? t("openInApp") : t("openInMedia");
     }
-    
     try { localStorage.setItem("appMode", mode); } catch(e) {}
-
-    // KODULAR JAVASCRIPT BRIDGE GÖNDERİMİ
     if (window.AppInventor) {
       window.AppInventor.setWebViewString(mode ? "webview_acik" : "webview_kapali");
     }
@@ -1370,7 +1325,6 @@
     applyAppMode(!appMode); 
   });
 
-  /* ============ LANGUAGE ============ */
   var currentLang = "en";
   try { currentLang = localStorage.getItem("lang") || "en"; } catch(e) {}
   if (!I18N[currentLang]) currentLang = "en";
@@ -1395,10 +1349,7 @@
     $("toast").textContent = I18N[lang].copied;
     $("privacyBody").innerHTML = PRIVACY[lang] || PRIVACY.en;
     $("termsBody").innerHTML = TERMS[lang] || TERMS.en;
-    
-    // App mode label'ını da dil değişince güncelle
     applyAppMode(appMode);
-    
     var searchInput = $("hotSearchInput");
     if (searchInput) searchInput.placeholder = t("hotSearchPlaceholder");
     renderCategories();
@@ -1419,7 +1370,6 @@
     langGrid.appendChild(b);
   });
 
-  /* ============ RENDER CATEGORIES ============ */
   function renderCategories() {
     var quickStrip = $("quickStrip");
     var featGrid = $("featuredGrid");
@@ -1470,24 +1420,22 @@
     });
   }
 
-  /* ============ PROMO LIST ============ */
   function renderPromoList() {
     var specialGrid = $("promoSpecialGrid");
     var list = $("promoList");
     if (!specialGrid || !list) return;
     
-    specialGrid.innerHTML = `
-      <a href="https://offer.alibaba.com/cps/u6la1bhj?bm=cps&src=saf" class="promo-special-card" target="_blank" rel="noopener noreferrer">
-        <div class="promo-special-icon">⚡</div>
-        <h3 data-i18n="promoFlashTitle">Flash Deals</h3>
-        <p data-i18n="promoFlashDesc">FREE shipping capped at US$20 on your first order via Logistics</p>
-      </a>
-      <a href="https://offer.alibaba.com/cps/3j064s17?bm=cps&src=saf" class="promo-special-card" target="_blank" rel="noopener noreferrer">
-        <div class="promo-special-icon">🚚</div>
-        <h3 data-i18n="promoFreeTitle">FREE shipping</h3>
-        <p data-i18n="promoFreeDesc">On your first order via Logistics</p>
-      </a>
-    `;
+    specialGrid.innerHTML = 
+      '<a href="https://offer.alibaba.com/cps/u6la1bhj?bm=cps&src=saf" class="promo-special-card" target="_blank" rel="noopener noreferrer">' +
+        '<div class="promo-special-icon">⚡</div>' +
+        '<h3 data-i18n="promoFlashTitle">Flash Deals</h3>' +
+        '<p data-i18n="promoFlashDesc">FREE shipping capped at US$20 on your first order via Logistics</p>' +
+      '</a>' +
+      '<a href="https://offer.alibaba.com/cps/3j064s17?bm=cps&src=saf" class="promo-special-card" target="_blank" rel="noopener noreferrer">' +
+        '<div class="promo-special-icon">🚚</div>' +
+        '<h3 data-i18n="promoFreeTitle">FREE shipping</h3>' +
+        '<p data-i18n="promoFreeDesc">On your first order via Logistics</p>' +
+      '</a>';
 
     list.innerHTML = "";
     if (PROMO_CODES && PROMO_CODES.length > 0) {
@@ -1522,7 +1470,6 @@
     }
   }
 
-  /* ============ STARS ============ */
   var stars = Array.prototype.slice.call(document.querySelectorAll("#stars .star"));
   function paintStars(v) {
     stars.forEach(function(s){ s.classList.toggle("lit", parseInt(s.getAttribute("data-v"), 10) <= v); });
@@ -1537,7 +1484,6 @@
   });
   $("rateBtn").addEventListener("click", function(e){ e.preventDefault(); openPlayStore(); });
 
-  /* ============ COPY ============ */
   function copyToClipboard(text, cb) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(cb).catch(function(){ fbCopy(text, cb); });
@@ -1566,7 +1512,6 @@
     });
   });
 
-  /* ============ HOT PRODUCTS ============ */
   function parseHotData(text) {
     text = text.replace(/^\uFEFF/, '');
     var lines = text.split(/\r?\n/);
@@ -1667,6 +1612,7 @@
     }
   }
 
+  /* ============ GÖRSEL YÜKLEME - HATA DURUMUNDA LOADING DEVAM EDER ============ */
   function appendProductCard(grid, p) {
     var card = document.createElement("a");
     card.className = "product-card";
@@ -1675,7 +1621,7 @@
     card.rel = "noopener noreferrer";
     card.innerHTML = '<div class="product-img-wrap">' +
       '<div class="product-img-loading"></div>' +
-      '<img class="product-img" src="' + p.image + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy" onload="this.classList.add(\'loaded\'); this.parentElement.querySelector(\'.product-img-loading\').style.display=\'none\';" onerror="this.classList.add(\'loaded\'); this.parentElement.querySelector(\'.product-img-loading\').style.display=\'none\';">' +
+      '<img class="product-img" src="' + p.image + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy" onload="this.classList.add(\'loaded\'); this.parentElement.querySelector(\'.product-img-loading\').style.display=\'none\';" onerror="this.style.display=\'none\';">' +
       '<div class="product-badge">' + p.category + '</div></div>' +
       '<div class="product-info">' +
       '<div class="product-title">' + p.title + '</div>' +
@@ -1714,7 +1660,6 @@
     hotObserver.observe($("hot-sentinel"));
   }
 
-  /* ============ SEARCH ============ */
   function performSearch(query) {
     if (!currentHotCategory) return;
     var grid = $("hot-product-grid");
@@ -1783,7 +1728,6 @@
     searchInput.focus();
   });
 
-  /* ============ MODAL ============ */
   function openModal(name) {
     var el = $(name + "Modal");
     if (el) el.classList.add("open");
@@ -1807,7 +1751,6 @@
     });
   });
 
-  /* ============ PAGE SWITCH ============ */
   var pages = { home: "page-home", promo: "page-promo", hot: "page-hot", info: "page-info" };
   function showPage(name) {
     if (!pages[name]) name = "home";
@@ -1825,9 +1768,8 @@
     item.addEventListener("click", function(){ showPage(item.getAttribute("data-page")); });
   });
 
-  /* ============ INIT ============ */
   applyLang(currentLang);
-  applyAppMode(appMode); // Başlangıçta App Mode durumunu uygula
+  applyAppMode(appMode);
 })();
 </script>
 </body>
