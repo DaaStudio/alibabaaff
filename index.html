@@ -1318,20 +1318,29 @@
   $("themeSwitch").addEventListener("click", function(){ applyTheme(currentTheme === "dark" ? "light" : "dark"); });
   applyTheme(currentTheme);
 
+  /* ============ APP MODE - SADECE TOGGLE'DA VERİ GÖNDER ============ */
   var appMode = false;
   try { appMode = localStorage.getItem("appMode") === "true"; } catch(e) { appMode = false; }
-  function applyAppMode(mode) {
+  
+  // sendToApp parametresi: true ise Kodular'a veri gönder, false ise sadece UI güncelle
+  function applyAppMode(mode, sendToApp) {
     appMode = mode;
     var sw = $("appModeSwitch");
     var label = $("appModeLabel");
     if (sw) sw.classList.toggle("on", mode);
     if (label) label.textContent = mode ? t("openInApp") : t("openInMedia");
     try { localStorage.setItem("appMode", mode); } catch(e) {}
-    if (window.AppInventor) {
+    
+    // SADECE toggle'a tıklandığında Kodular'a veri gönder
+    if (sendToApp === true && window.AppInventor) {
       window.AppInventor.setWebViewString(mode ? "webview_acik" : "webview_kapali");
     }
   }
-  $("appModeSwitch").addEventListener("click", function(){ applyAppMode(!appMode); });
+
+  // Toggle'a tıklama -> veri gönder
+  $("appModeSwitch").addEventListener("click", function(){ 
+    applyAppMode(!appMode, true); 
+  });
 
   var currentLang = "en";
   try { currentLang = localStorage.getItem("lang") || "en"; } catch(e) {}
@@ -1357,7 +1366,10 @@
     $("toast").textContent = I18N[lang].copied;
     $("privacyBody").innerHTML = PRIVACY[lang] || PRIVACY.en;
     $("termsBody").innerHTML = TERMS[lang] || TERMS.en;
-    applyAppMode(appMode);
+    
+    // Dil değişiminde sadece UI güncelle, veri GÖNDERME
+    applyAppMode(appMode, false);
+    
     var searchInput = $("hotSearchInput");
     if (searchInput) searchInput.placeholder = t("hotSearchPlaceholder");
     var pullText = $("pullText");
@@ -1519,6 +1531,7 @@
     });
   });
 
+  /* ============ PULL TO REFRESH ============ */
   var pullRefresh = $("pullRefresh");
   var pullIcon = $("pullIcon");
   var pullText = $("pullText");
@@ -1564,6 +1577,62 @@
     isRefreshing = false;
   }
 
+  /* ============ SAYFA İÇİ YENİLEME (DIŞ TARAYICIYA ÇIKMAZ) ============ */
+  function performRefresh() {
+    // Hot Products cache'ini temizle - yeni veri çekilsin
+    hotProductsCache = {};
+    
+    // Mevcut sayfayı yeniden render et
+    renderCategories();
+    renderPromoList();
+    
+    // Hot Products listesi açıksa ve bir kategori seçilmişse
+    if (currentHotCategory && $("hot-list-view").style.display === "block") {
+      hotDisplayIndex = 0;
+      $("hot-product-grid").innerHTML = "";
+      $("hot-sentinel").style.display = "flex";
+      $("hot-sentinel").innerHTML = '<div class="spinner"></div> <span>' + t("loading") + '</span>';
+      
+      // Mevcut kategoriyi yeniden fetch et
+      fetch(HOT_FILES[currentHotCategory])
+        .then(function(response) {
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          return response.text();
+        })
+        .then(function(text) {
+          hotProductsCache[currentHotCategory] = parseHotData(text);
+          
+          // Arama modu aktifse, arama sonuçlarını koru
+          var searchVal = $("hotSearchInput").value.trim().toLowerCase();
+          if (searchVal && isSearchMode) {
+            var filtered = hotProductsCache[currentHotCategory].filter(function(p){
+              return (p.title && p.title.toLowerCase().includes(searchVal)) ||
+                     (p.category && p.category.toLowerCase().includes(searchVal)) ||
+                     (p.price && p.price.toLowerCase().includes(searchVal));
+            });
+            filtered = dailyShuffle(filtered);
+            currentDisplayList = filtered;
+          } else {
+            // Günlük karıştırma ile yeni liste
+            currentDisplayList = dailyShuffle(hotProductsCache[currentHotCategory]);
+          }
+          
+          loadMoreHotProducts();
+          setupHotObserver();
+        })
+        .catch(function(e) {
+          console.error("Yenileme hatası:", e);
+          $("hot-sentinel").innerHTML = '<div style="color:var(--brand); text-align:center; padding:20px; background:var(--card); border-radius:12px; width:100%;"><p style="font-size:0.85rem;">Yenileme hatası</p></div>';
+        });
+    }
+    
+    // Pull UI'ı sıfırla
+    resetPullUI();
+    
+    // Sayfayı en üste kaydır
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   document.addEventListener("touchstart", function(e) {
     if (isRefreshing) return;
     if (window.scrollY <= 0) {
@@ -1593,7 +1662,10 @@
     if (pullDistance >= PULL_THRESHOLD && !isRefreshing) {
       isRefreshing = true;
       updatePullUI(PULL_THRESHOLD);
-      setTimeout(function() { location.reload(); }, 600);
+      // DIŞ TARAYICIYA ÇIKMA - Sayfa içi yenileme
+      setTimeout(function() { 
+        performRefresh(); 
+      }, 600);
     } else {
       resetPullUI();
     }
@@ -1629,7 +1701,10 @@
     if (pullDistance >= PULL_THRESHOLD && !isRefreshing) {
       isRefreshing = true;
       updatePullUI(PULL_THRESHOLD);
-      setTimeout(function() { location.reload(); }, 600);
+      // DIŞ TARAYICIYA ÇIKMA - Sayfa içi yenileme
+      setTimeout(function() { 
+        performRefresh(); 
+      }, 600);
     } else {
       resetPullUI();
     }
@@ -1875,7 +1950,8 @@
   });
 
   applyLang(currentLang);
-  applyAppMode(appMode);
+  // Başlangıçta sadece UI güncelle, veri GÖNDERME
+  applyAppMode(appMode, false);
 })();
 </script>
 </body>
