@@ -422,24 +422,31 @@
     return dict[key] !== undefined ? dict[key] : (I18N.tr[key] !== undefined ? I18N.tr[key] : key);
   }
 
-  /* ============ GELİŞMİŞ CSV AYRIŞTIRICI ============ */
+  /* ============ GELİŞMİŞ CSV AYRIŞTIRICI (BOM UYUMLU) ============ */
   function parseHotData(text) {
-    const lines = text.split(/\r?\n/); // Hem \n hem \r\n uyumlu
+    // UTF-8 BOM karakterini temizle
+    text = text.replace(/^\uFEFF/, '');
+    const lines = text.split(/\r?\n/);
     const products = [];
     
     for (let line of lines) {
       line = line.trim();
-      if (!line || (!line.startsWith('?productId') && !line.startsWith('!'))) continue;
+      if (!line) continue;
+      
+      // Daha esnek kontrol: productId içermeli veya ! ile başlamalı
+      if (!line.includes('productId') && !line.startsWith('!')) continue;
       
       const parts = line.split(',');
       if (parts.length < 4) continue;
 
-      let img = parts.find(p => p.trim().startsWith('https://sc') && (p.includes('.jpg') || p.includes('.png') || p.includes('.webp')));
-      let link = parts.find(p => p.trim().startsWith('https://offer.alibaba.com'));
-      let price = parts.find(p => p.trim().match(/^\d+(\.\d+)?\s*(USD|EUR|TRY|€|\$)$/i));
+      // Resim ve link bulma (daha esnek)
+      let img = parts.find(p => p.trim().startsWith('https://sc') && (p.includes('.jpg') || p.includes('.png') || p.includes('.webp') || p.includes('.jpeg')));
+      let link = parts.find(p => p.trim().startsWith('https://offer.alibaba.com')) || parts.find(p => p.trim().includes('offer.alibaba.com'));
       
       if (!img || !link) continue;
 
+      let price = parts.find(p => p.trim().match(/^\d+(\.\d+)?\s*(USD|EUR|TRY|€|\$)/i));
+      
       let title = "Ürün";
       for (let i = 1; i < Math.min(parts.length, 8); i++) {
         if (!parts[i].includes('http') && !parts[i].match(/^\d+$/) && parts[i].length > 10) {
@@ -448,7 +455,7 @@
       }
 
       let category = "Fırsat";
-      const cats = ["jewelry", "beauty", "home", "electronics", "apparel", "toy", "sport", "tool", "garden", "machinery", "luggage", "packaging"];
+      const cats = ["jewelry", "beauty", "home", "electronics", "apparel", "toy", "sport", "tool", "garden", "machinery", "luggage", "packaging", "safety", "fabric", "furniture", "shoes", "commercial", "health"];
       for (let p of parts) {
         let lower = p.toLowerCase();
         for (let c of cats) { if (lower.includes(c)) { category = c; break; } }
@@ -476,23 +483,42 @@
         const response = await fetch(HOT_FILES[catKey]);
         if (!response.ok) throw new Error(`HTTP Hata: ${response.status} ${response.statusText}`);
         const text = await response.text();
-        if (!text || text.trim().length < 50) throw new Error("Dosya boş veya çok kısa.");
         
-        hotProductsCache[catKey] = parseHotData(text);
+        // BOM temizlenmiş metin
+        const cleanText = text.replace(/^\uFEFF/, '');
+        hotProductsCache[catKey] = parseHotData(cleanText);
         console.log(`${catKey} için ${hotProductsCache[catKey].length} ürün başarıyla yüklendi.`);
+        
+        // Eğer 0 ürün geldiyse, ekrana debug bilgisi göster
+        if (hotProductsCache[catKey].length === 0) {
+            console.warn("Dosya içeriği (ilk 300 karakter):", cleanText.substring(0, 300));
+            $('hot-sentinel').innerHTML = `
+              <div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand);">
+                <div style="font-size:2rem; margin-bottom:10px;">⚠️</div>
+                <p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Okundu Ama Ürün Bulunamadı</p>
+                <p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6; margin-bottom:16px;">
+                  Dosya başarıyla indirildi ancak ayrıştırıcı (parser) içinde geçerli ürün satırı bulamadı.<br><br>
+                  <strong>Olası Sebepler:</strong><br>
+                  1. <code>${HOT_FILES[catKey]}</code> dosyası tamamen boş.<br>
+                  2. Dosya formatı, paylaştığınız örnekteki gibi <code>?productId</code> veya <code>!</code> ile başlamıyor.<br>
+                  3. Satırlarda <code>https://sc...</code> (resim) veya <code>offer.alibaba.com</code> (link) bulunamadı.<br><br>
+                  <strong>Debug Bilgisi (Dosyanın ilk 250 karakteri):</strong><br>
+                  <code style="background:var(--bg2); padding:10px; display:block; border-radius:8px; word-break:break-all; margin-top:8px; font-size:0.75rem; color:var(--text); text-align:left;">${cleanText.substring(0, 250).replace(/</g, '&lt;')}</code>
+                </p>
+              </div>
+            `;
+            return;
+        }
       } catch (e) {
         console.error("Dosya okunamadı:", e);
         $('hot-sentinel').innerHTML = `
           <div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand);">
             <div style="font-size:2rem; margin-bottom:10px;">⚠️</div>
             <p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Okunamadı</p>
-            <p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6; margin-bottom:16px;">
+            <p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6;">
               <strong>Hata:</strong> ${e.message}<br><br>
-              <strong>Hızlı Çözüm Adımları:</strong><br>
-              1. <code>hot_products</code> klasörünün bu HTML dosyasıyla <strong>aynı klasörde</strong> olduğundan emin olun.<br>
-              2. Bu dosyayı doğrudan çift tıklayarak (file://) açmayın. Tarayıcılar güvenlik nedeniyle yerel dosya okumayı engeller.<br>
-              3. <strong>VS Code</strong> kullanıyorsanız "Live Server" eklentisiyle açın.<br>
-              4. Veya klasörde terminal açıp <code>python -m http.server</code> yazıp <code>http://localhost:8000</code> adresine gidin.
+              <strong>Çözüm:</strong> Bu dosyayı doğrudan çift tıklayarak (file://) açmayın. Tarayıcılar güvenlik nedeniyle yerel dosya okumayı engeller.<br>
+              VS Code "Live Server" eklentisiyle veya <code>python -m http.server</code> komutuyla çalıştırın.
             </p>
           </div>
         `;
