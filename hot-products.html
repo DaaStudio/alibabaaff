@@ -557,7 +557,7 @@
      ============================================================ */
   var CATEGORIES = [
     { id: "eu_stock",    name: "EU Local Stock",        icon: "🇪🇺", file: "hot_products/eu_local_stock.csv" },
-    { id: "special_30k", name: "Special Offer 30K",     icon: "🌟", file: "hot_products/eu_special_30k.do" },
+    { id: "special_30k", name: "Special Offer 30K",     icon: "🌟", file: "hot_products/eu_special_30k.csv" },
     { id: "up50",        name: "Up to 50% Off",         icon: "💸", file: "hot_products/up_to_50_off.csv" }
   ];
 
@@ -637,12 +637,18 @@
        if(cat) $("subcatScreenTitle").innerHTML = '<span>' + cat.icon + '</span> ' + esc(cat.name);
     }
     renderChangeCatList();
-    renderSubcatList(); // Alt kategori listesini yeniden çiz
+    renderSubcatList();
 
     if (state.isSearching) {
       performSearch(state.searchQuery);
     } else if (state.currentList.length > 0) {
       renderFilteredList();
+    }
+
+    // Ürün ekranı başlığını güncelle
+    if (state.activeSubCategory) {
+      var title = (state.activeSubCategory === "all") ? t("allSubcats") : state.activeSubCategory;
+      $("productScreenTitle").textContent = title;
     }
   }
 
@@ -815,7 +821,7 @@
   }
 
   /* ============================================================
-     ADIM 1: ALT KATEGORİ LİSTESİ
+     VİTRİN: ANA KATEGORİLER
      ============================================================ */
   function renderHomeCategories() {
     var grid = $("mainCatGrid");
@@ -836,6 +842,9 @@
     });
   }
 
+  /* ============================================================
+     ADIM 1: ALT KATEGORİ SEÇİMİ
+     ============================================================ */
   function openSubcatScreen(catId) {
     state.activeCategory = catId;
     var cat = CATEGORIES.find(function(c) { return c.id === catId; });
@@ -843,9 +852,9 @@
     $("subcatScreenTitle").innerHTML = '<span>' + cat.icon + '</span> ' + esc(cat.name);
     $("homeView").classList.remove("active");
     $("subcatScreen").classList.add("open");
-    $("categoryScreen").classList.remove("open"); // Ürün ekranı kapalı olsun
+    $("categoryScreen").classList.remove("open");
 
-    // Veriyi yükle ve alt kategori listesini oluştur
+    // Yükleme durumu
     $("subcatList").innerHTML = '<div class="loading-state" style="background:transparent; border:none;"><div class="spinner"></div></div>';
     
     loadCategoryData(catId).then(function(products) {
@@ -896,21 +905,17 @@
      ADIM 2: ÜRÜN EKRANI
      ============================================================ */
   function openProductScreen() {
-    // Başlığı güncelle
     var title = (state.activeSubCategory === "all") ? t("allSubcats") : state.activeSubCategory;
     $("productScreenTitle").textContent = title;
     
-    // Ekranları değiştir
     $("subcatScreen").classList.remove("open");
     $("categoryScreen").classList.add("open");
     
-    // Arama çubuğunu temizle
     $("searchInput").value = "";
     state.searchQuery = "";
     state.isSearching = false;
     $("searchStatus").classList.remove("show");
 
-    // Ürünleri göster
     renderFilteredList();
   }
 
@@ -997,7 +1002,7 @@
   }
 
   /* ============================================================
-     YENİ: KATEGORİ DEĞİŞTİRME MODALI
+     KATEGORİ DEĞİŞTİRME MODALI
      ============================================================ */
   function renderChangeCatList() {
     var list = $("catSelectList");
@@ -1011,7 +1016,7 @@
       
       item.addEventListener("click", function() {
         $("changeCatModal").classList.remove("open");
-        openSubcatScreen(cat.id);
+        openSubcatScreen(cat.id); // doğrudan alt kategori listesine yönlendir
       });
       list.appendChild(item);
     });
