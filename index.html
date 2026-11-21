@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0b1220">
-<title>Alibaba Affiliate Marketing</title>
+<title>Affiliate Marketing</title>
 <style>
   :root {
     --bg: #0b1220; --bg2: #111a2e; --card: #131e35; --card2: #1a2742;
@@ -260,9 +260,7 @@
   .back-btn:active { transform: scale(0.9); }
   .hot-list-title { font-size: 1.2rem; font-weight: 800; flex-shrink:0; }
 
-  .hot-search-wrap {
-    width:100%; margin-bottom: 18px; position: relative;
-  }
+  .hot-search-wrap { width:100%; margin-bottom: 18px; position: relative; }
   .hot-search-input {
     width:100%; padding: 13px 16px 13px 44px;
     border-radius: 14px; border:1px solid var(--border);
@@ -270,9 +268,7 @@
     font-size: 0.92rem; font-weight: 600;
     outline: none; transition: border-color .2s ease, box-shadow .2s ease;
   }
-  .hot-search-input:focus {
-    border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft);
-  }
+  .hot-search-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
   .hot-search-input::placeholder { color: var(--text-dim); font-weight: 500; }
   .hot-search-icon {
     position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
@@ -437,7 +433,7 @@
   <section class="hero">
     <div class="hero-badge"><span class="dot"></span><span data-i18n="heroBadge">Global B2B Marketplace</span></div>
     <h1><span data-i18n="heroTitle1">Source Smarter,</span> <span class="accent" data-i18n="heroTitle2">Trade Global</span></h1>
-    <p data-i18n="heroSub">Discover verified suppliers and unbeatable wholesale deals across 40+ categories — powered by Alibaba affiliate links.</p>
+    <p data-i18n="heroSub">Discover verified suppliers and unbeatable wholesale deals across 40+ categories — powered by our affiliate links.</p>
   </section>
   <div class="quick-strip" id="quickStrip"></div>
   <div class="container">
@@ -458,7 +454,7 @@
   <section class="hero">
     <div class="hero-badge"><span class="dot"></span><span data-i18n="heroBadge">Global B2B Marketplace</span></div>
     <h1><span data-i18n="promoTitle">Promo Codes</span></h1>
-    <p data-i18n="promoSub">Exclusive promo codes for Alibaba Affiliate Marketing. Check back soon!</p>
+    <p data-i18n="promoSub">Exclusive promo codes for Affiliate Marketing. Check back soon!</p>
   </section>
   <div class="container">
     <div class="sec-head">
@@ -524,7 +520,7 @@
     <div class="info-block">
       <div class="info-block-head">📦 <span data-i18n="infoSectionTitle">App Purpose</span></div>
       <div class="info-card">
-        <p data-i18n="infoText">This app gives you fast access to Alibaba wholesale products and the latest B2B deals through affiliate links. Our goal is to simplify sourcing and bring the best supplier offers together in one place.</p>
+        <p data-i18n="infoText">This app gives you fast access to wholesale products and the latest B2B deals through affiliate links. Our goal is to simplify sourcing and bring the best supplier offers together in one place.</p>
         <p data-i18n="infoShareText">Share campaigns with your partners and unlock savings together! The more people you share with, the more deals everyone can benefit from.</p>
       </div>
     </div>
@@ -639,9 +635,9 @@
     special_30k: 'hot_products/eu_special_30k.do',
     up_to_50: 'hot_products/up_to_50_off.csv'
   };
-  var hotProductsCache = {}; // Orijinal (karıştırılmamış) veriyi tutar
+  var hotProductsCache = {};
   var currentHotCategory = null;
-  var currentDisplayList = []; // O an gösterilecek (karıştırılmış veya filtrelenmiş) liste
+  var currentDisplayList = [];
   var hotDisplayIndex = 0;
   var HOT_BATCH_SIZE = 20;
   var HOT_MAX_LIMIT = 100;
@@ -714,19 +710,19 @@
     { code: "zh", label: "中文", flag: "🇨🇳" }
   ];
 
-  /* ============ I18N (TÜM DİLLER) ============ */
+  /* ============ I18N (TÜM DİLLER - ALİBABA KELİMESİ KALDIRILDI) ============ */
   var I18N = {
     en: {
       heroBadge: "Global B2B Marketplace", heroTitle1: "Source Smarter,", heroTitle2: "Trade Global",
-      heroSub: "Discover verified suppliers and unbeatable wholesale deals across 40+ categories — powered by Alibaba affiliate links.",
+      heroSub: "Discover verified suppliers and unbeatable wholesale deals across 40+ categories — powered by our affiliate links.",
       featured: "Featured", allCategories: "All Categories",
       navHome: "Home", navPromo: "Promo", navHot: "Hot Products", navInfo: "Info",
-      promoTitle: "Promo Codes", promoSub: "Exclusive promo codes for Alibaba Affiliate Marketing. Check back soon!",
+      promoTitle: "Promo Codes", promoSub: "Exclusive promo codes for Affiliate Marketing. Check back soon!",
       promoActive: "Active Promo Codes",
       promoEmptyTitle: "No Promo Codes Yet", promoEmptyText: "We don't have any promo codes right now. Stay tuned — new codes are coming soon!",
       infoPageTitle: "About & Info", infoPageSub: "Learn more about the app and get in touch.",
       infoSectionTitle: "App Purpose",
-      infoText: "This app gives you fast access to Alibaba wholesale products and the latest B2B deals through affiliate links. Our goal is to simplify sourcing and bring the best supplier offers together in one place.",
+      infoText: "This app gives you fast access to wholesale products and the latest B2B deals through affiliate links. Our goal is to simplify sourcing and bring the best supplier offers together in one place.",
       infoShareText: "Share campaigns with your partners and unlock savings together! The more people you share with, the more deals everyone can benefit from.",
       rateTitle: "Rate the App", rateSub: "If you like our app, give us 5 stars on Google Play!", rateBtn: "Rate on Google Play",
       contactTitle: "Contact", copy: "Copy",
@@ -768,15 +764,15 @@
     },
     tr: {
       heroBadge: "Küresel B2B Pazar Yeri", heroTitle1: "Daha Akıllı Tedarik,", heroTitle2: "Küresel Ticaret",
-      heroSub: "40'tan fazla kategoride onaylı tedarikçileri ve kaçırılmayacak toptan fırsatları keşfedin — Alibaba affiliate linkleriyle.",
+      heroSub: "40'tan fazla kategoride onaylı tedarikçileri ve kaçırılmayacak toptan fırsatları keşfedin — affiliate linklerimizle.",
       featured: "Öne Çıkanlar", allCategories: "Tüm Kategoriler",
       navHome: "Ana Sayfa", navPromo: "Promosyon", navHot: "Sıcak Ürünler", navInfo: "Bilgi",
-      promoTitle: "Promosyon Kodları", promoSub: "Alibaba Affiliate Marketing için özel promosyon kodları. Yakında tekrar kontrol edin!",
+      promoTitle: "Promosyon Kodları", promoSub: "Affiliate Marketing için özel promosyon kodları. Yakında tekrar kontrol edin!",
       promoActive: "Aktif Promosyon Kodları",
       promoEmptyTitle: "Henüz Promosyon Kodu Yok", promoEmptyText: "Şu anda promosyon kodumuz bulunmuyor. Takipte kalın — yakında yenileri gelecek!",
       infoPageTitle: "Hakkında & Bilgi", infoPageSub: "Uygulama hakkında daha fazla bilgi edinin ve bizimle iletişime geçin.",
       infoSectionTitle: "Uygulama Amacı",
-      infoText: "Bu uygulama, Alibaba toptan ürünlerine hızlı erişim sağlamak ve en güncel B2B fırsatlarını affiliate linkler aracılığıyla sunmak için geliştirilmiştir. Amacımız tedarik sürecini kolaylaştırmak ve en iyi tedarikçi tekliflerini tek bir yerde toplamaktır.",
+      infoText: "Bu uygulama, toptan ürünlere hızlı erişim sağlamak ve en güncel B2B fırsatlarını affiliate linkler aracılığıyla sunmak için geliştirilmiştir. Amacımız tedarik sürecini kolaylaştırmak ve en iyi tedarikçi tekliflerini tek bir yerde toplamaktır.",
       infoShareText: "Kampanyaları iş ortaklarınızla paylaşın ve birlikte tasarruf edin! Ne kadar çok kişiyle paylaşırsanız, o kadar çok kişi fırsatlardan yararlanır.",
       rateTitle: "Uygulamaya Oy Ver", rateSub: "Uygulamamızı beğendiyseniz Google Play'de 5 yıldız verin!", rateBtn: "Google Play'de Oyla",
       contactTitle: "İletişim", copy: "Kopyala",
@@ -784,7 +780,7 @@
       importantText: "Fırsatlar ve linkler düzenli olarak güncellenmektedir. En son sürümü kullandığınızdan emin olun.",
       legalTitle: "Yasal", privacy: "Gizlilik Politikası", terms: "Kullanım Şartları",
       settingsTitle: "Ayarlar", appearance: "Görünüm", darkMode: "Karanlık Mod", language: "Dil",
-      copied: "Kopyalandı!", shareCopied: "Link kopyalandı! İş ortaklarınızla paylaşabilirsiniz.",
+      copied: "Kopyalandı!", shareCopied: "Link kopyalandı! Arkadaşlarınızla paylaşabilirsiniz.",
       promoCopy: "Kodu Kopyala", explore: "Keşfet", items: "ürün", loading: "Yükleniyor...",
       hotTitle: "Sıcak Fırsatlar", hotSub: "En çok satan, yerel depolu ve özel indirimli ürünleri keşfedin.",
       hotDesc1: "Avrupa depolarından hızlı kargolu ürünler",
@@ -818,15 +814,15 @@
     },
     es: {
       heroBadge: "Mercado Global B2B", heroTitle1: "Abastece Mejor,", heroTitle2: "Comercia Global",
-      heroSub: "Descubre proveedores verificados y ofertas mayoristas en más de 40 categorías — con enlaces de afiliado de Alibaba.",
+      heroSub: "Descubre proveedores verificados y ofertas mayoristas en más de 40 categorías — con nuestros enlaces de afiliado.",
       featured: "Destacados", allCategories: "Todas las Categorías",
       navHome: "Inicio", navPromo: "Promo", navHot: "Productos Calientes", navInfo: "Info",
-      promoTitle: "Códigos Promocionales", promoSub: "Códigos promo exclusivos para Alibaba Affiliate Marketing. ¡Vuelve pronto!",
+      promoTitle: "Códigos Promocionales", promoSub: "Códigos promo exclusivos para Affiliate Marketing. ¡Vuelve pronto!",
       promoActive: "Códigos Promo Activos",
       promoEmptyTitle: "Aún No Hay Códigos Promo", promoEmptyText: "No tenemos códigos promocionales ahora. ¡Mantente atento — nuevos códigos llegarán pronto!",
       infoPageTitle: "Acerca & Info", infoPageSub: "Conoce más sobre la app y ponte en contacto.",
       infoSectionTitle: "Propósito de la App",
-      infoText: "Esta app te da acceso rápido a productos mayoristas de Alibaba y a las mejores ofertas B2B mediante enlaces de afiliado. Nuestro objetivo es simplificar el abastecimiento y reunir las mejores ofertas de proveedores en un solo lugar.",
+      infoText: "Esta app te da acceso rápido a productos mayoristas y a las mejores ofertas B2B mediante enlaces de afiliado. Nuestro objetivo es simplificar el abastecimiento y reunir las mejores ofertas de proveedores en un solo lugar.",
       infoShareText: "¡Comparte las campañas con tus socios y ahorren juntos! Cuantas más personas compartas, más gente podrá beneficiarse.",
       rateTitle: "Valora la App", rateSub: "Si te gusta nuestra app, ¡danos 5 estrellas en Google Play!", rateBtn: "Valorar en Google Play",
       contactTitle: "Contacto", copy: "Copiar",
@@ -868,15 +864,15 @@
     },
     de: {
       heroBadge: "Globaler B2B-Marktplatz", heroTitle1: "Smarter Beschaffen,", heroTitle2: "Global Handeln",
-      heroSub: "Entdecke verifizierte Lieferanten und unschlagbare Großhandelsangebote in über 40 Kategorien — mit Alibaba-Affiliate-Links.",
+      heroSub: "Entdecke verifizierte Lieferanten und unschlagbare Großhandelsangebote in über 40 Kategorien — mit unseren Affiliate-Links.",
       featured: "Empfohlen", allCategories: "Alle Kategorien",
       navHome: "Start", navPromo: "Promo", navHot: "Top-Produkte", navInfo: "Info",
-      promoTitle: "Promo-Codes", promoSub: "Exklusive Promo-Codes für Alibaba Affiliate Marketing. Schau bald wieder vorbei!",
+      promoTitle: "Promo-Codes", promoSub: "Exklusive Promo-Codes für Affiliate Marketing. Schau bald wieder vorbei!",
       promoActive: "Aktive Promo-Codes",
       promoEmptyTitle: "Noch Keine Promo-Codes", promoEmptyText: "Wir haben derzeit keine Promo-Codes. Bleib dran — neue Codes kommen bald!",
       infoPageTitle: "Über & Info", infoPageSub: "Erfahre mehr über die App und kontaktiere uns.",
       infoSectionTitle: "Zweck der App",
-      infoText: "Diese App bietet schnellen Zugriff auf Alibaba-Großhandelsprodukte und die neuesten B2B-Angebote über Affiliate-Links. Unser Ziel ist es, die Beschaffung zu vereinfachen und die besten Lieferantenangebote an einem Ort zu bündeln.",
+      infoText: "Diese App bietet schnellen Zugriff auf Großhandelsprodukte und die neuesten B2B-Angebote über Affiliate-Links. Unser Ziel ist es, die Beschaffung zu vereinfachen und die besten Lieferantenangebote an einem Ort zu bündeln.",
       infoShareText: "Teile Kampagnen mit deinen Partnern und spart gemeinsam! Je mehr Menschen du teilst, desto mehr können profitieren.",
       rateTitle: "App Bewerten", rateSub: "Wenn dir unsere App gefällt, gib uns 5 Sterne auf Google Play!", rateBtn: "Auf Google Play Bewerten",
       contactTitle: "Kontakt", copy: "Kopieren",
@@ -918,15 +914,15 @@
     },
     fr: {
       heroBadge: "Marché Mondial B2B", heroTitle1: "Sourcez Mieux,", heroTitle2: "Commercez Global",
-      heroSub: "Découvrez des fournisseurs vérifiés et des offres de gros imbattables dans plus de 40 catégories — avec des liens d'affiliation Alibaba.",
+      heroSub: "Découvrez des fournisseurs vérifiés et des offres de gros imbattables dans plus de 40 catégories — avec nos liens d'affiliation.",
       featured: "En Vedette", allCategories: "Toutes les Catégories",
       navHome: "Accueil", navPromo: "Promo", navHot: "Produits Phares", navInfo: "Info",
-      promoTitle: "Codes Promotionnels", promoSub: "Codes promo exclusifs pour Alibaba Affiliate Marketing. Revenez bientôt !",
+      promoTitle: "Codes Promotionnels", promoSub: "Codes promo exclusifs pour Affiliate Marketing. Revenez bientôt !",
       promoActive: "Codes Promo Actifs",
       promoEmptyTitle: "Pas Encore de Codes Promo", promoEmptyText: "Nous n'avons pas de codes promo pour le moment. Restez à l'écoute — de nouveaux codes arrivent bientôt !",
       infoPageTitle: "À Propos & Info", infoPageSub: "En savoir plus sur l'app et nous contacter.",
       infoSectionTitle: "Objectif de l'App",
-      infoText: "Cette application vous donne un accès rapide aux produits de gros Alibaba et aux meilleures offres B2B via des liens d'affiliation. Notre objectif est de simplifier l'approvisionnement et de regrouper les meilleures offres de fournisseurs en un seul endroit.",
+      infoText: "Cette application vous donne un accès rapide aux produits de gros et aux meilleures offres B2B via des liens d'affiliation. Notre objectif est de simplifier l'approvisionnement et de regrouper les meilleures offres de fournisseurs en un seul endroit.",
       infoShareText: "Partagez les campagnes avec vos partenaires et économisez ensemble ! Plus vous partagez avec de personnes, plus de gens peuvent en bénéficier.",
       rateTitle: "Noter l'App", rateSub: "Si vous aimez notre app, donnez-nous 5 étoiles sur Google Play !", rateBtn: "Noter sur Google Play",
       contactTitle: "Contact", copy: "Copier",
@@ -968,15 +964,15 @@
     },
     it: {
       heroBadge: "Marketplace Globale B2B", heroTitle1: "Approvvigiona Meglio,", heroTitle2: "Commercia Globale",
-      heroSub: "Scopri fornitori verificati e offerte all'ingrosso imbattibili in oltre 40 categorie — con link di affiliazione Alibaba.",
+      heroSub: "Scopri fornitori verificati e offerte all'ingrosso imbattibili in oltre 40 categorie — con i nostri link di affiliazione.",
       featured: "In Evidenza", allCategories: "Tutte le Categorie",
       navHome: "Home", navPromo: "Promo", navHot: "Prodotti Caldi", navInfo: "Info",
-      promoTitle: "Codici Promozionali", promoSub: "Codici promo esclusivi per Alibaba Affiliate Marketing. Torna presto!",
+      promoTitle: "Codici Promozionali", promoSub: "Codici promo esclusivi per Affiliate Marketing. Torna presto!",
       promoActive: "Codici Promo Attivi",
       promoEmptyTitle: "Ancora Nessun Codice Promo", promoEmptyText: "Al momento non abbiamo codici promo. Resta sintonizzato — nuovi codici in arrivo!",
       infoPageTitle: "Informazioni & Info", infoPageSub: "Scopri di più sull'app e contattaci.",
       infoSectionTitle: "Scopo dell'App",
-      infoText: "Questa app offre un accesso rapido ai prodotti all'ingrosso Alibaba e alle migliori offerte B2B tramite link di affiliazione. Il nostro obiettivo è semplificare l'approvvigionamento e riunire le migliori offerte dei fornitori in un unico posto.",
+      infoText: "Questa app offre un accesso rapido ai prodotti all'ingrosso e alle migliori offerte B2B tramite link di affiliazione. Il nostro obiettivo è semplificare l'approvvigionamento e riunire le migliori offerte dei fornitori in un unico posto.",
       infoShareText: "Condividi le campagne con i tuoi partner e risparmiate insieme! Più persone condividi, più persone possono beneficiare.",
       rateTitle: "Valuta l'App", rateSub: "Se ti piace la nostra app, dacci 5 stelle su Google Play!", rateBtn: "Valuta su Google Play",
       contactTitle: "Contatti", copy: "Copia",
@@ -1018,15 +1014,15 @@
     },
     pt: {
       heroBadge: "Marketplace Global B2B", heroTitle1: "Abasteça Melhor,", heroTitle2: "Comercie Global",
-      heroSub: "Descubra fornecedores verificados e ofertas por atacado imbatíveis em mais de 40 categorias — com links de afiliado Alibaba.",
+      heroSub: "Descubra fornecedores verificados e ofertas por atacado imbatíveis em mais de 40 categorias — com nossos links de afiliado.",
       featured: "Destaques", allCategories: "Todas as Categorias",
       navHome: "Início", navPromo: "Promo", navHot: "Produtos Quentes", navInfo: "Info",
-      promoTitle: "Códigos Promocionais", promoSub: "Códigos promocionais exclusivos para Alibaba Affiliate Marketing. Volte em breve!",
+      promoTitle: "Códigos Promocionais", promoSub: "Códigos promocionais exclusivos para Affiliate Marketing. Volte em breve!",
       promoActive: "Códigos Promo Ativos",
       promoEmptyTitle: "Ainda Sem Códigos Promo", promoEmptyText: "Não temos códigos promocionais no momento. Fique ligado — novos códigos em breve!",
       infoPageTitle: "Sobre & Info", infoPageSub: "Saiba mais sobre o app e entre em contato.",
       infoSectionTitle: "Objetivo do App",
-      infoText: "Este app dá acesso rápido aos produtos por atacado da Alibaba e às melhores ofertas B2B por meio de links de afiliado. Nosso objetivo é simplificar o abastecimento e reunir as melhores ofertas de fornecedores em um só lugar.",
+      infoText: "Este app dá acesso rápido aos produtos por atacado e às melhores ofertas B2B por meio de links de afiliado. Nosso objetivo é simplificar o abastecimento e reunir as melhores ofertas de fornecedores em um só lugar.",
       infoShareText: "Compartilhe as campanhas com seus parceiros e economizem juntos! Quanto mais pessoas você compartilhar, mais gente pode se beneficiar.",
       rateTitle: "Avalie o App", rateSub: "Se você gosta do nosso app, nos dê 5 estrelas no Google Play!", rateBtn: "Avaliar no Google Play",
       contactTitle: "Contato", copy: "Copiar",
@@ -1068,15 +1064,15 @@
     },
     ja: {
       heroBadge: "グローバルB2Bマーケットプレイス", heroTitle1: "よりスマートに調達、", heroTitle2: "グローバルに取引",
-      heroSub: "40以上のカテゴリで認証済みサプライヤーと卸売ディールを発見 — Alibabaアフィリエイトリンク搭載。",
+      heroSub: "40以上のカテゴリで認証済みサプライヤーと卸売ディールを発見 — 私たちのアフィリエイトリンク搭載。",
       featured: "注目", allCategories: "すべてのカテゴリ",
       navHome: "ホーム", navPromo: "プロモ", navHot: "人気商品", navInfo: "情報",
-      promoTitle: "プロモコード", promoSub: "Alibabaアフィリエイトマーケティング限定プロモコード。近日公開！",
+      promoTitle: "プロモコード", promoSub: "Affiliate Marketing限定プロモコード。近日公開！",
       promoActive: "有効なプロモコード",
       promoEmptyTitle: "プロモコードはまだありません", promoEmptyText: "現在プロモコードはありません。お楽しみに — 新しいコードが近日登場！",
       infoPageTitle: "アプリについて", infoPageSub: "アプリについて詳しく知り、お問い合わせください。",
       infoSectionTitle: "アプリの目的",
-      infoText: "このアプリは、Alibabaの卸売製品と最新のB2Bディールにアフィリエイトリンクを通じて素早くアクセスできるようにします。私たちの目標は調達を簡素化し、最高のサプライヤーオファーを一か所に集めることです。",
+      infoText: "このアプリは、卸売製品と最新のB2Bディールにアフィリエイトリンクを通じて素早くアクセスできるようにします。私たちの目標は調達を簡素化し、最高のサプライヤーオファーを一か所に集めることです。",
       infoShareText: "キャンペーンをパートナーと共有して、一緒に節約しましょう！より多くの人と共有するほど、より多くの人が恩恵を受けられます。",
       rateTitle: "アプリを評価", rateSub: "アプリが気に入ったら、Google Playで5つ星をお願いします！", rateBtn: "Google Playで評価",
       contactTitle: "お問い合わせ", copy: "コピー",
@@ -1118,15 +1114,15 @@
     },
     ko: {
       heroBadge: "글로벌 B2B 마켓플레이스", heroTitle1: "더 스마트한 소싱,", heroTitle2: "글로벌 거래",
-      heroSub: "40개 이상의 카테고리에서 검증된 공급업체와 최고의 도매 거래를 만나보세요 — Alibaba 제휴 링크 제공.",
+      heroSub: "40개 이상의 카테고리에서 검증된 공급업체와 최고의 도매 거래를 만나보세요 — 제휴 링크 제공.",
       featured: "추천", allCategories: "모든 카테고리",
       navHome: "홈", navPromo: "프로모", navHot: "인기 상품", navInfo: "정보",
-      promoTitle: "프로모 코드", promoSub: "Alibaba 제휴 마케팅 독점 프로모 코드. 곧 다시 확인하세요!",
+      promoTitle: "프로모 코드", promoSub: "Affiliate Marketing 독점 프로모 코드. 곧 다시 확인하세요!",
       promoActive: "활성 프로모 코드",
       promoEmptyTitle: "아직 프로모 코드가 없습니다", promoEmptyText: "현재 프로모 코드가 없습니다. 기대해 주세요 — 곧 새로운 코드가 나옵니다!",
       infoPageTitle: "정보 & 안내", infoPageSub: "앱에 대해 자세히 알아보고 문의하세요.",
       infoSectionTitle: "앱 목적",
-      infoText: "이 앱은 Alibaba 도매 제품과 최신 B2B 거래를 제휴 링크를 통해 빠르게 제공합니다. 우리의 목표는 소싱을 단순화하고 최고의 공급업체 혜택을 한 곳에 모으는 것입니다.",
+      infoText: "이 앱은 도매 제품과 최신 B2B 거래를 제휴 링크를 통해 빠르게 제공합니다. 우리의 목표는 소싱을 단순화하고 최고의 공급업체 혜택을 한 곳에 모으는 것입니다.",
       infoShareText: "파트너와 캠페인을 공유하고 함께 절약하세요! 더 많은 사람과 공유할수록 더 많은 사람이 혜택을 받을 수 있습니다.",
       rateTitle: "앱 평가하기", rateSub: "앱이 마음에 드시면 Google Play에서 별 5개를 주세요!", rateBtn: "Google Play에서 평가",
       contactTitle: "연락처", copy: "복사",
@@ -1168,15 +1164,15 @@
     },
     zh: {
       heroBadge: "全球B2B市场", heroTitle1: "更智能的采购，", heroTitle2: "全球贸易",
-      heroSub: "在40多个类别中发现经过验证的供应商和无与伦比的批发优惠 — 由阿里巴巴联盟链接提供支持。",
+      heroSub: "在40多个类别中发现经过验证的供应商和无与伦比的批发优惠 — 由我们的联盟链接提供支持。",
       featured: "精选", allCategories: "所有类别",
       navHome: "首页", navPromo: "优惠", navHot: "热门产品", navInfo: "信息",
-      promoTitle: "优惠码", promoSub: "阿里巴巴联盟营销专属优惠码。敬请期待！",
+      promoTitle: "优惠码", promoSub: "Affiliate Marketing专属优惠码。敬请期待！",
       promoActive: "有效优惠码",
       promoEmptyTitle: "暂无优惠码", promoEmptyText: "我们目前没有优惠码。敬请关注 — 新优惠码即将推出！",
       infoPageTitle: "关于 & 信息", infoPageSub: "了解更多关于应用的信息并联系我们。",
       infoSectionTitle: "应用目的",
-      infoText: "此应用让您快速访问阿里巴巴批发产品和最新B2B优惠，通过联盟链接实现。我们的目标是简化采购，并将最佳供应商优惠集中在一个地方。",
+      infoText: "此应用让您快速访问批发产品和最新B2B优惠，通过联盟链接实现。我们的目标是简化采购，并将最佳供应商优惠集中在一个地方。",
       infoShareText: "与合作伙伴分享活动，一起节省！您分享的人越多，受益的人就越多。",
       rateTitle: "为应用评分", rateSub: "如果您喜欢我们的应用，请在 Google Play 上给我们 5 星！", rateBtn: "在 Google Play 上评分",
       contactTitle: "联系", copy: "复制",
@@ -1218,7 +1214,7 @@
     }
   };
 
-  /* ============ PRIVACY & TERMS ============ */
+  /* ============ PRIVACY & TERMS (ALİBABA KELİMESİ KORUNDU) ============ */
   var PRIVACY = {
     en: "<p><strong>Privacy Policy</strong></p><p>Daa Studio built the Alibaba Affiliate Marketing app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p><p>This page informs visitors regarding our policies with the collection, use, and disclosure of Personal Information.</p><p>If you choose to use our Service, you agree to the collection and use of information in relation to this policy. We will not use or share your information with anyone except as described in this Privacy Policy.</p><h4>Information Collection and Use</h4><p>For a better experience, we may require you to provide certain personally identifiable information. The information we request is retained on your device and is not collected by us in any way.</p><p>The app uses third-party services that may collect information used to identify you: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p><h4>Log Data</h4><p>Whenever you use our Service, in case of an error we collect data and information (through third-party products) called Log Data. This may include your IP address, device name, OS version, app configuration, time and date of use, and other statistics.</p><h4>Cookies</h4><p>The app may use third-party code and libraries that use cookies to collect information and improve services. You can accept or refuse these cookies.</p><h4>Service Providers</h4><p>We may employ third-party companies to facilitate our Service, provide it on our behalf, perform related services, or assist in analyzing usage. They have access to Personal Information to perform tasks on our behalf and are obligated not to disclose or use it for other purposes.</p><h4>Security</h4><p>Alibaba Affiliate Marketing app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. We value your trust and strive to use commercially acceptable means to protect your Personal Information, but no method of transmission or storage is 100% secure.</p><h4>Links to Other Sites</h4><p>This Service may contain links to other sites. If you click a third-party link, you will be directed to that site. We strongly advise you to review their Privacy Policy.</p><h4>Children's Privacy</h4><p>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p><h4>Changes to This Privacy Policy</h4><p>We may update our Privacy Policy from time to time. You are advised to review this page periodically. This policy is effective as of 2021-11-01.</p><h4>Contact Us</h4><p>If you have questions or suggestions, contact us at daastudio42@gmail.com.</p>",
     tr: "<p><strong>Gizlilik Politikası</strong></p><p>Daa Studio, Alibaba Affiliate Marketing uygulamasını ücretsiz bir uygulama olarak geliştirmiştir. Bu HİZMET, Daa Studio tarafından ücretsiz olarak sunulmaktadır ve olduğu gibi kullanılması amaçlanmıştır.</p><p>Bu sayfa, ziyaretçileri Kişisel Bilgilerin toplanması, kullanılması ve ifşa edilmesiyle ilgili politikalarımız hakkında bilgilendirir.</p><p>Hizmetimizi kullanmayı seçerseniz, bu politikayla ilgili bilgilerin toplanmasına ve kullanılmasına onay vermiş olursunuz. Bilgilerinizi bu Gizlilik Politikasında açıklananlar dışında kimseyle paylaşmayız.</p><h4>Bilgi Toplama ve Kullanımı</h4><p>Daha iyi bir deneyim için sizden belirli kişisel bilgiler sağlamanızı isteyebiliriz. Talep ettiğimiz bilgiler cihazınızda saklanır ve tarafımızca toplanmaz.</p><p>Uygulama, sizi tanımlamak için bilgi toplayabilecek üçüncü taraf hizmetleri kullanır: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p><h4>Günlük Verileri</h4><p>Hizmetimizi kullandığınızda, bir hata durumunda telefonunuzda Günlük Verileri toplanır. Bu veriler IP adresinizi, cihaz adınızı, işletim sistemi sürümünü, kullanım tarih ve saatinizi ve diğer istatistikleri içerebilir.</p><h4>Çerezler</h4><p>Uygulama, bilgi toplamak ve hizmetleri geliştirmek için çerez kullanan üçüncü taraf kod ve kitaplıkları kullanabilir. Bu çerezleri kabul edebilir veya reddedebilirsiniz.</p><h4>Hizmet Sağlayıcılar</h4><p>Hizmetimizi kolaylaştırmak, sağlamak, ilgili hizmetleri gerçekleştirmek veya kullanımı analiz etmemize yardımcı olmak için üçüncü taraf şirketler kullanabiliriz. Bu taraflar, kendilerine verilen görevleri yerine getirmek için Kişisel Bilgilerinize erişebilir ve başka amaçla kullanmamakla yükümlüdür.</p><h4>Güvenlik</h4><p>Alibaba Affiliate Marketing uygulaması yapımcısı ve yapımcıları hiçbir sorumluluk ve zarardan sorumlu değildir. Tüm sorumluluk kullanıcıya aittir. Kişisel Bilgilerinizi korumak için ticari olarak kabul edilebilir yöntemler kullanmaya çalışıyoruz, ancak hiçbir iletim veya depolama yöntemi %100 güvenli değildir.</p><h4>Diğer Sitelere Bağlantılar</h4><p>Bu Hizmet diğer sitelere bağlantılar içerebilir. Üçüncü taraf bir bağlantıya tıklarsanız o siteye yönlendirilirsiniz. Gizlilik Politikalarını incelemenizi öneririz.</p><h4>Çocukların Gizliliği</h4><p>Bu Hizmetler 13 yaşın altındaki hiç kimseye hitap etmez. 13 yaşın altındaki çocuklardan bilerek kişisel bilgi toplamıyoruz.</p><h4>Değişiklikler</h4><p>Gizlilik Politikamızı zaman zaman güncelleyebiliriz. Bu sayfayı periyodik olarak incelemeniz önerilir. Bu politika 2021-11-01 tarihinden itibaren geçerlidir.</p><h4>Bize Ulaşın</h4><p>Sorularınız için daastudio42@gmail.com adresinden bizimle iletişime geçin.</p>"
@@ -1273,7 +1269,6 @@
     if (searchInput) searchInput.placeholder = t("hotSearchPlaceholder");
     renderCategories();
     renderPromoList();
-    // Eğer hot list açıksa ve arama modundaysa, arama sonuçlarını yeniden render et
     if (currentHotCategory && isSearchMode) {
       var q = $("hotSearchInput").value;
       performSearch(q);
@@ -1352,7 +1347,7 @@
         a.className = "promo-img-card";
         a.href = p.url; a.rel = "noopener noreferrer"; a.target = "_blank";
         var img = document.createElement("img");
-        img.src = p.img; img.alt = "Alibaba Promo"; img.loading = "lazy";
+        img.src = p.img; img.alt = "Affiliate Marketing Promo"; img.loading = "lazy";
         a.appendChild(img);
         list.appendChild(a);
       });
@@ -1435,9 +1430,8 @@
   });
 
   /* ============ HOT PRODUCTS ============ */
-  // Fisher-Yates Shuffle - her seferinde farklı sıra için
   function shuffleArray(arr) {
-    var a = arr.slice(); // kopya al
+    var a = arr.slice();
     for (var i = a.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
       var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
@@ -1512,7 +1506,6 @@
         return;
       }
     }
-    // Her açılışta farklı sıra için karıştır
     currentDisplayList = shuffleArray(hotProductsCache[catKey]);
     loadMoreHotProducts();
     setupHotObserver();
@@ -1603,7 +1596,6 @@
 
     query = (query || "").trim().toLowerCase();
     if (!query) {
-      // Arama boşsa normal moda dön
       isSearchMode = false;
       currentDisplayList = shuffleArray(hotProductsCache[currentHotCategory]);
       hotDisplayIndex = 0;
@@ -1613,7 +1605,6 @@
     }
 
     isSearchMode = true;
-    // Orijinal listeden filtrele
     var filtered = hotProductsCache[currentHotCategory].filter(function(p){
       return (p.title && p.title.toLowerCase().includes(query)) ||
              (p.category && p.category.toLowerCase().includes(query)) ||
@@ -1625,12 +1616,10 @@
       return;
     }
 
-    // Arama sonuçlarını da karıştır (farklı sıralama için)
     filtered = shuffleArray(filtered);
     currentDisplayList = filtered;
     hotDisplayIndex = 0;
 
-    // Arama sonuçları için sınırlı yükleme (hepsi 100'den az olabilir)
     var end = Math.min(HOT_MAX_LIMIT, filtered.length);
     var batch = filtered.slice(0, end);
     batch.forEach(function(p){
