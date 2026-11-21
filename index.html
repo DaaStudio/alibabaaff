@@ -285,8 +285,6 @@
   }
   .product-card:hover { transform: translateY(-3px); border-color: var(--brand); }
   .product-img-wrap { position: relative; width: 100%; padding-top: 100%; background: var(--bg2); overflow: hidden; }
-  
-  /* GELİŞMİŞ YÜKLEME ANİMASYONU - HATA DURUMUNDA DA DÖNER */
   .product-img-loading {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: var(--card2);
@@ -300,13 +298,11 @@
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
-  
   .product-img { 
     position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; 
     transition: opacity 0.4s ease; opacity: 0; z-index: 2;
   }
   .product-img.loaded { opacity: 1; }
-  
   .product-card:hover .product-img { transform: scale(1.05); }
   .product-badge {
     position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
@@ -459,7 +455,7 @@
 <div class="page" id="page-promo">
   <section class="hero">
     <div class="hero-badge"><span class="dot"></span><span data-i18n="heroBadge">Global B2B Marketplace</span></div>
-    <h1><span data-i18n="promoTitle">Promo Codes</span></h1>
+    <h1 data-i18n="promoTitle">Promo Codes</h1>
     <p data-i18n="promoSub">Exclusive promo codes for Affiliate Marketing. Check back soon!</p>
   </section>
   <div class="container">
@@ -516,7 +512,7 @@
 <div class="page" id="page-info">
   <section class="hero">
     <div class="hero-badge"><span class="dot"></span><span data-i18n="heroBadge">Global B2B Marketplace</span></div>
-    <h1><span data-i18n="infoPageTitle">About & Info</span></h1>
+    <h1 data-i18n="infoPageTitle">About & Info</h1>
     <p data-i18n="infoPageSub">Learn more about the app and get in touch.</p>
   </section>
   <div class="container">
@@ -1300,8 +1296,7 @@
   $("themeSwitch").addEventListener("click", function(){ applyTheme(currentTheme === "dark" ? "light" : "dark"); });
   applyTheme(currentTheme);
 
-  /* ============ APP MODE (DEFAULT: OPEN IN MEDIA = false) ============ */
-  var appMode = false; // DEFAULT: Open in Media (kapalı)
+  var appMode = false;
   try { 
     var savedMode = localStorage.getItem("appMode");
     if (savedMode !== null) appMode = savedMode === "true";
@@ -1334,26 +1329,41 @@
     return dict[key] !== undefined ? dict[key] : (I18N.en[key] !== undefined ? I18N.en[key] : key);
   }
 
+  /* ============ DİL UYGULAMA - DÜZELTİLMİŞ SIRALAMA ============ */
   function applyLang(lang) {
     if (!I18N[lang]) lang = "en";
     currentLang = lang;
     try { localStorage.setItem("lang", lang); } catch(e) {}
     document.documentElement.lang = lang;
+
+    // 1. ÖNCE RENDER İŞLEMLERİNİ YAP (yeni elementler oluşturulur)
+    renderCategories();
+    renderPromoList();
+
+    // 2. SONRA TÜM data-i18n ELEMENTLERİNİ GÜNCELLE
     document.querySelectorAll("[data-i18n]").forEach(function(el){
       var k = el.getAttribute("data-i18n");
       if (I18N[lang][k] !== undefined) el.textContent = I18N[lang][k];
     });
+
+    // 3. LANG BUTONLARINI GÜNCELLE
     document.querySelectorAll(".lang-btn").forEach(function(b){
       b.classList.toggle("active", b.getAttribute("data-lang") === lang);
     });
+
+    // 4. DİĞER DİNAMİK İÇERİKLER
     $("toast").textContent = I18N[lang].copied;
     $("privacyBody").innerHTML = PRIVACY[lang] || PRIVACY.en;
     $("termsBody").innerHTML = TERMS[lang] || TERMS.en;
+    
+    // 5. APP MODE LABEL'INI GÜNCELLE
     applyAppMode(appMode);
+    
+    // 6. SEARCH PLACEHOLDER
     var searchInput = $("hotSearchInput");
     if (searchInput) searchInput.placeholder = t("hotSearchPlaceholder");
-    renderCategories();
-    renderPromoList();
+
+    // 7. AKTİF ARAMA VARSA YENİDEN UYGULA
     if (currentHotCategory && isSearchMode) {
       var q = $("hotSearchInput").value;
       performSearch(q);
@@ -1420,21 +1430,23 @@
     });
   }
 
+  /* ============ PROMO LIST - t() FONKSİYONU İLE DOĞRUDAN ÇEVİRİ ============ */
   function renderPromoList() {
     var specialGrid = $("promoSpecialGrid");
     var list = $("promoList");
     if (!specialGrid || !list) return;
     
+    // DOĞRUDAN t() FONKSİYONU KULLAN - data-i18n DEĞİL
     specialGrid.innerHTML = 
       '<a href="https://offer.alibaba.com/cps/u6la1bhj?bm=cps&src=saf" class="promo-special-card" target="_blank" rel="noopener noreferrer">' +
         '<div class="promo-special-icon">⚡</div>' +
-        '<h3 data-i18n="promoFlashTitle">Flash Deals</h3>' +
-        '<p data-i18n="promoFlashDesc">FREE shipping capped at US$20 on your first order via Logistics</p>' +
+        '<h3>' + t("promoFlashTitle") + '</h3>' +
+        '<p>' + t("promoFlashDesc") + '</p>' +
       '</a>' +
       '<a href="https://offer.alibaba.com/cps/3j064s17?bm=cps&src=saf" class="promo-special-card" target="_blank" rel="noopener noreferrer">' +
         '<div class="promo-special-icon">🚚</div>' +
-        '<h3 data-i18n="promoFreeTitle">FREE shipping</h3>' +
-        '<p data-i18n="promoFreeDesc">On your first order via Logistics</p>' +
+        '<h3>' + t("promoFreeTitle") + '</h3>' +
+        '<p>' + t("promoFreeDesc") + '</p>' +
       '</a>';
 
     list.innerHTML = "";
@@ -1568,13 +1580,11 @@
         if (!response.ok) throw new Error("HTTP " + response.status);
         var text = await response.text();
         hotProductsCache[catKey] = parseHotData(text);
-        console.log(catKey + " için " + hotProductsCache[catKey].length + " ürün yüklendi.");
         if (hotProductsCache[catKey].length === 0) {
           $("hot-sentinel").innerHTML = '<div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand); width:100%;"><div style="font-size:2rem; margin-bottom:10px;">⚠️</div><p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Boş veya Format Hatalı</p><p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6;">Lütfen dosya yolunu ve içeriğini kontrol edin.</p></div>';
           return;
         }
       } catch (e) {
-        console.error("Dosya okunamadı:", e);
         $("hot-sentinel").innerHTML = '<div style="color:var(--brand); text-align:center; padding:30px 20px; background:var(--card); border-radius:16px; border:1px dashed var(--brand); width:100%;"><div style="font-size:2rem; margin-bottom:10px;">⚠️</div><p style="font-weight:800; font-size:1.1rem; margin-bottom:8px;">Dosya Okunamadı</p><p style="font-size:0.85rem; color:var(--text-dim); line-height:1.6;">Hata: ' + e.message + '</p></div>';
         return;
       }
@@ -1612,7 +1622,6 @@
     }
   }
 
-  /* ============ GÖRSEL YÜKLEME - HATA DURUMUNDA LOADING DEVAM EDER ============ */
   function appendProductCard(grid, p) {
     var card = document.createElement("a");
     card.className = "product-card";
